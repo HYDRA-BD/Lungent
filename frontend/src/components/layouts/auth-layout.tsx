@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Logo } from "@/components/shared/logo"
-import { LanguageSwitcher } from "@/components/shared/language-switcher"
+import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { cn } from "@/lib/utils"
 
 export interface AuthLayoutProps {
@@ -22,7 +22,7 @@ export function AuthLayout({
     <div className="min-h-screen flex flex-col justify-between bg-muted/20 p-4 sm:p-6 lg:p-8">
       <div className="flex items-center justify-between max-w-5xl mx-auto w-full">
         <Logo size="sm" variant="compact" href="/" />
-        <LanguageSwitcher variant="compact" />
+        <ThemeToggle />
       </div>
 
       <div className="flex items-center justify-center py-8">

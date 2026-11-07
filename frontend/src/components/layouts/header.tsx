@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Logo } from '@/components/shared/logo'
-import { LanguageSwitcher } from '@/components/shared/language-switcher'
+import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { buttonVariants } from '@/components/ui/button'
 import { useLanguage } from '@/i18n'
 import {
@@ -22,8 +22,7 @@ import { cn } from '@/lib/utils'
 
 export function Header() {
   const pathname = usePathname()
-  const { dict, t, locale } = useLanguage()
-  const isBn = locale === 'bn'
+  const { dict, t } = useLanguage()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false)
   const portalsRef = useRef<HTMLDivElement>(null)
@@ -70,32 +69,32 @@ export function Header() {
   const portalLinks = [
     {
       href: '/portal/patient',
-      label: isBn ? 'রোগী পোর্টাল' : 'Patient Portal',
-      desc: isBn ? 'ব্যক্তিগত ঝুঁকি ও স্বাস্থ্য রেকর্ড' : 'Personal risk & health record',
+      label: 'Patient Portal',
+      desc: 'Personal risk & health record',
       icon: <HeartPulse className="size-4" />,
       iconBg: 'bg-primary/10 text-primary',
       badge: 'Demo',
     },
     {
       href: '/portal/community',
-      label: isBn ? 'স্বাস্থ্যকর্মী পোর্টাল' : 'Health Worker Portal',
-      desc: isBn ? 'কমিউনিটি স্ক্রিনিং ইনটেক ডেমো' : 'Field screening intake demo',
+      label: 'Health Worker Portal',
+      desc: 'Field screening intake demo',
       icon: <Building2 className="size-4" />,
       iconBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
       badge: 'Demo',
     },
     {
       href: '/portal/clinician',
-      label: isBn ? 'ক্লিনিক্যাল পোর্টাল' : 'Clinician Portal',
-      desc: isBn ? 'ব্যাখ্যামূলক এমএল ও ৩-টায়ার পলিসি' : 'Interpretable ML & 3-tier policy',
+      label: 'Clinician Portal',
+      desc: 'Interpretable ML & 3-tier policy',
       icon: <Stethoscope className="size-4" />,
       iconBg: 'bg-sky-500/10 text-sky-600 dark:text-sky-400',
       badge: 'Demo',
     },
     {
       href: '/portal/admin',
-      label: isBn ? 'প্রশাসন পোর্টাল' : 'Admin Portal',
-      desc: isBn ? 'মাল্টি-ফ্যাসিলিটি গভর্ন্যান্স অডিট' : 'Multi-facility oversight & audit',
+      label: 'Admin Portal',
+      desc: 'Multi-facility oversight & audit',
       icon: <ShieldCheck className="size-4" />,
       iconBg: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
       badge: 'Demo',
@@ -110,13 +109,13 @@ export function Header() {
     pathname.startsWith('/healthcare-worker')
 
   const navLinks = [
-    { href: '/', label: dict.nav.home },
-    { href: '/ai-assessment', label: isBn ? 'এআই ঝুঁকি মূল্যায়ন' : 'AI Risk Assessment' },
-    { href: '/how-it-works', label: dict.nav.howItWorks },
-    { href: '/about', label: dict.nav.about },
-    { href: '/docs', label: isBn ? 'ডকুমেন্টেশন' : 'Docs' },
-    { href: '/library', label: dict.nav.library },
-    { href: '/faqs', label: dict.nav.faqs },
+    { href: '/', label: 'Home' },
+    { href: '/ai-assessment', label: 'AI Risk Assessment' },
+    { href: '/how-it-works', label: 'How It Works' },
+    { href: '/about', label: 'About' },
+    { href: '/docs', label: 'Docs' },
+    { href: '/library', label: 'Health Library' },
+    { href: '/faqs', label: 'FAQs' },
   ]
 
   const isActive = (href: string) => {
@@ -139,11 +138,11 @@ export function Header() {
               'relative px-3.5 py-2 rounded-xl transition-all duration-200 text-[15px] xl:text-base font-medium',
               pathname === '/'
                 ? 'bg-primary/10 text-primary font-bold shadow-xs border border-primary/25'
-                : 'text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 hover:scale-[1.02]'
+                : 'text-slate-700 dark:text-slate-200 hover:text-primary dark:hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 hover:scale-[1.02]'
             )}
             aria-current={pathname === '/' ? 'page' : undefined}
           >
-            {dict.nav.home}
+            Home
           </Link>
 
           {/* AI Risk Assessment */}
@@ -153,11 +152,11 @@ export function Header() {
               'relative px-3.5 py-2 rounded-xl transition-all duration-200 text-[15px] xl:text-base font-medium',
               pathname.startsWith('/ai-assessment')
                 ? 'bg-primary/10 text-primary font-bold shadow-xs border border-primary/25'
-                : 'text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 hover:scale-[1.02]'
+                : 'text-slate-700 dark:text-slate-200 hover:text-primary dark:hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 hover:scale-[1.02]'
             )}
             aria-current={pathname.startsWith('/ai-assessment') ? 'page' : undefined}
           >
-            {isBn ? 'এআই ঝুঁকি মূল্যায়ন' : 'AI Risk Assessment'}
+            AI Risk Assessment
           </Link>
 
           {/* Portals Dropdown */}
@@ -174,12 +173,12 @@ export function Header() {
                 'relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all duration-200 text-[15px] xl:text-base font-medium cursor-pointer',
                 isPortalsActive
                   ? 'bg-primary/10 text-primary font-bold shadow-xs border border-primary/25'
-                  : 'text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 hover:scale-[1.02]'
+                  : 'text-slate-700 dark:text-slate-200 hover:text-primary dark:hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 hover:scale-[1.02]'
               )}
               aria-expanded={portalsDropdownOpen}
               aria-haspopup="true"
             >
-              <span>{isBn ? 'পোর্টালসমূহ' : 'Portals'}</span>
+              <span>Portals</span>
               <ChevronDown
                 className={cn('size-4 transition-transform duration-200', portalsDropdownOpen && 'rotate-180')}
               />
@@ -188,7 +187,7 @@ export function Header() {
             {portalsDropdownOpen && (
               <div className="absolute top-full left-0 mt-1 w-80 rounded-2xl border border-gray-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 p-2 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
                 <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground border-b border-border/40 mb-1">
-                  {isBn ? 'ওয়ার্কস্পেস ও পোর্টাল নির্বাচন করুন' : 'Select Workspace or Demo'}
+                  Select Workspace or Demo
                 </div>
                 {portalLinks.map((portal) => (
                   <Link
@@ -235,7 +234,7 @@ export function Header() {
                   'relative px-3.5 py-2 rounded-xl transition-all duration-200 text-[15px] xl:text-base font-medium',
                   active
                     ? 'bg-primary/10 text-primary font-bold shadow-xs border border-primary/25'
-                    : 'text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 hover:scale-[1.02]'
+                    : 'text-slate-700 dark:text-slate-200 hover:text-primary dark:hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 hover:scale-[1.02]'
                 )}
                 aria-current={active ? 'page' : undefined}
               >
@@ -245,30 +244,30 @@ export function Header() {
           })}
         </nav>
 
-        {/* Desktop CTAs & Localization */}
+        {/* Desktop CTAs & Theme Toggle */}
         <div className="hidden lg:flex items-center gap-2.5 xl:gap-3.5">
-          <LanguageSwitcher variant="compact" />
+          <ThemeToggle />
 
           <Link
             href="/login"
-            className={buttonVariants({ variant: 'ghost', size: 'default', className: 'text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:text-primary' })}
+            className={buttonVariants({ variant: 'ghost', size: 'default', className: 'text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:text-primary dark:hover:text-primary' })}
           >
             <LogIn className="size-4 mr-1.5" />
-            <span>{dict.nav.signIn}</span>
+            <span>Sign In</span>
           </Link>
 
           <Link
             href="/register"
             className={buttonVariants({ variant: 'default', size: 'default', className: 'text-[15px] font-bold shadow-sm hover:scale-105 active:scale-98 transition-all duration-200 hover:shadow-md hover:shadow-primary/25' })}
           >
-            <span>{dict.nav.register}</span>
+            <span>Get Started</span>
             <ArrowRight className="size-4 ml-1.5" />
           </Link>
         </div>
 
         {/* Mobile Action Controls */}
         <div className="flex lg:hidden items-center gap-2">
-          <LanguageSwitcher variant="compact" />
+          <ThemeToggle />
 
           <button
             type="button"
@@ -302,7 +301,7 @@ export function Header() {
                   pathname === '/' ? 'bg-primary/10 text-primary font-bold' : 'text-foreground hover:bg-muted'
                 )}
               >
-                <span>{dict.nav.home}</span>
+                <span>Home</span>
               </Link>
               <Link
                 href="/ai-assessment"
@@ -314,14 +313,14 @@ export function Header() {
                     : 'text-foreground hover:bg-muted'
                 )}
               >
-                <span>{isBn ? 'এআই ঝুঁকি মূল্যায়ন' : 'AI Risk Assessment'}</span>
+                <span>AI Risk Assessment</span>
               </Link>
             </div>
 
             {/* Portals Showcase in Mobile Drawer */}
             <div className="rounded-2xl border border-gray-200/80 dark:border-slate-800 bg-muted/30 p-3 space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2 block">
-                {isBn ? 'পোর্টাল ও ডেমো নির্বাচন' : 'Portals & Demos'}
+                Portals & Demos
               </span>
               <div className="space-y-1">
                 {portalLinks.map((portal) => (
@@ -329,7 +328,7 @@ export function Header() {
                     key={portal.href}
                     href={portal.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-primary/10 transition-colors"
+                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/15 transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
                       <div className={cn('size-7 rounded-lg flex items-center justify-center shrink-0', portal.iconBg)}>
@@ -375,7 +374,7 @@ export function Header() {
               className={buttonVariants({ variant: 'outline', size: 'lg', className: 'w-full justify-center text-base font-semibold' })}
             >
               <LogIn className="size-4 mr-2" />
-              <span>{dict.nav.signIn}</span>
+              <span>Sign In</span>
             </Link>
 
             <Link
@@ -383,7 +382,7 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
               className={buttonVariants({ variant: 'default', size: 'lg', className: 'w-full justify-center text-base font-bold shadow-md' })}
             >
-              <span>{dict.nav.register}</span>
+              <span>Get Started</span>
               <ArrowRight className="size-4 ml-2" />
             </Link>
           </div>

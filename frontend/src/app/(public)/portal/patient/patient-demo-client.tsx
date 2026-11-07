@@ -22,7 +22,7 @@ import { Logo } from '@/components/shared/logo'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { buttonVariants } from '@/components/ui/button'
-import { LanguageSwitcher } from '@/components/shared/language-switcher'
+import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { cn } from '@/lib/utils'
 
 export function PatientDemoClient() {
@@ -89,7 +89,7 @@ export function PatientDemoClient() {
 
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-medium hidden sm:inline">Interactive Pitch View</span>
-            <LanguageSwitcher variant="compact" />
+            <ThemeToggle />
           </div>
         </div>
       </header>

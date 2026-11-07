@@ -10,8 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { useLanguage } from '@/i18n'
 
 export function TermsClient() {
-  const { dict, locale } = useLanguage()
-  const isBn = locale === 'bn'
+  const { dict } = useLanguage()
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -47,12 +46,10 @@ export function TermsClient() {
             <AlertTriangle className="size-5 text-warning shrink-0 mt-0.5" />
             <div className="space-y-1 leading-relaxed text-muted-foreground">
               <p className="font-semibold text-foreground">
-                {isBn ? 'আইনগত পর্যালোচনা সাপেক্ষ খসড়া বিজ্ঞপ্তি' : 'Legal & Regulatory Advisory Notice'}
+                Legal & Regulatory Advisory Notice
               </p>
               <p>
-                {isBn
-                  ? 'এই ব্যবহারের শর্তাবলী প্রাথমিক পাইলট পরীক্ষার জন্য প্রস্তুতকৃত একটি খসড়া। আনুষ্ঠানিক প্রকাশের পূর্বে বিশেষজ্ঞ আইনজ্ঞ দ্বারা পর্যালোচনা করা হবে।'
-                  : 'These Terms of Use represent an administrative draft for pilot evaluation. Prior to general production, terms will be finalized with certified healthcare legal practitioners.'}
+                These Terms of Use represent an administrative draft for pilot evaluation. Prior to general production, terms will be finalized with certified healthcare legal practitioners.
               </p>
             </div>
           </div>
@@ -62,7 +59,7 @@ export function TermsClient() {
             <ShieldAlert className="size-5 text-destructive shrink-0 mt-0.5" />
             <div className="space-y-1 leading-relaxed text-muted-foreground">
               <p className="font-semibold text-destructive">
-                {isBn ? 'চিকিৎসা দাবিত্যাগ ও বাধ্যবাধকতা' : 'Critical Medical Non-Diagnosis Warning'}
+                Critical Medical Non-Diagnosis Warning
               </p>
               <p>
                 {dict.terms.disclaimerBody}
@@ -92,9 +89,9 @@ export function TermsClient() {
               </h2>
               <p>{dict.terms.permittedUseBody}</p>
               <ul className="list-disc list-inside space-y-1 text-xs pt-1">
-                <li>{isBn ? 'প্ল্যাটফর্মের সুরক্ষা ব্যবস্থা বা অনুমোদন প্রক্রিয়ায় হস্তক্ষেপ নিষিদ্ধ।' : 'Prohibited from attempting to circumvent access control or security guards.'}</li>
-                <li>{isBn ? 'অনুমোদিত স্বাস্থ্যকর্মী হিসেবে মিথ্যা পরিচয় প্রদান আইনত দণ্ডনীয়।' : 'Misrepresenting clinical credentials or impersonating medical personnel is strictly prohibited.'}</li>
-                <li>{isBn ? 'প্ল্যাটফর্মের কোনো তথ্য ক্ষতিকারক উদ্দেশ্যে স্ক্র্যাপ বা এক্সপোর্ট করা যাবে না।' : 'Automated scraping or unauthorized mass data extraction is forbidden.'}</li>
+                <li>Prohibited from attempting to circumvent access control or security guards.</li>
+                <li>Misrepresenting clinical credentials or impersonating medical personnel is strictly prohibited.</li>
+                <li>Automated scraping or unauthorized mass data extraction is forbidden.</li>
               </ul>
             </section>
 
@@ -107,12 +104,10 @@ export function TermsClient() {
 
             <section className="space-y-2 border-t border-border/80 pt-6">
               <h2 className="text-base sm:text-lg font-bold text-foreground">
-                {isBn ? 'যোগাযোগ' : 'Inquiries & Feedback'}
+                Inquiries & Feedback
               </h2>
               <p>
-                {isBn
-                  ? 'ব্যবহারের শর্তাবলী সম্পর্কিত যেকোনো প্রশ্নের জন্য আমাদের প্রাতিষ্ঠানিক ইমেইলে যোগাযোগ করুন:'
-                  : 'For questions regarding these terms, reach our governance department at:'}
+                For questions regarding these terms, reach our governance department at:
               </p>
               <p className="font-semibold text-primary">
                 governance@lungent.org

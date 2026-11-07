@@ -1,20 +1,14 @@
 import type { Metadata } from 'next'
-import { Geist, Hind_Siliguri } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { LanguageProvider } from '@/i18n'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 import { OfflineConnectivityBanner } from '@/components/shared/offline-connectivity-banner'
 import './globals.css'
 
 const geist = Geist({
   subsets: ['latin'],
   variable: '--font-sans',
-  display: 'swap',
-})
-
-const hindSiliguri = Hind_Siliguri({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['bengali'],
-  variable: '--font-bangla',
   display: 'swap',
 })
 
@@ -35,14 +29,22 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn('font-sans antialiased', geist.variable, hindSiliguri.variable)}
+      className={cn('font-sans antialiased', geist.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-background text-foreground flex flex-col">
-        <LanguageProvider>
-          <OfflineConnectivityBanner />
-          {children}
-        </LanguageProvider>
+      <body className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-200">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="lungent_theme"
+        >
+          <LanguageProvider>
+            <OfflineConnectivityBanner />
+            {children}
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -20,6 +20,7 @@ import {
   Eye,
 } from 'lucide-react'
 import { Logo } from '@/components/shared/logo'
+import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { buttonVariants } from '@/components/ui/button'
@@ -104,8 +105,9 @@ export function ClinicianDemoClient() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-medium hidden sm:inline">Interactive Pitch View</span>
+            <ThemeToggle />
           </div>
         </div>
       </header>

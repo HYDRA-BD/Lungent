@@ -205,7 +205,7 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
                   <Globe className="size-3.5" /> Language
                 </span>
                 <span className="font-medium text-foreground">
-                  {user.preferred_language === 'bn' ? 'বাংলা (Bangla)' : 'English'}
+                  English
                 </span>
               </div>
             </CardContent>
@@ -373,7 +373,6 @@ export function ProfileClient({ initialUser }: ProfileClientProps) {
                     onChange={(e) => setValue('preferredLanguage', e.target.value as 'en' | 'bn', { shouldDirty: true })}
                     options={[
                       { value: 'en', label: 'English (Default)' },
-                      { value: 'bn', label: 'বাংলা (Bangla)' },
                     ]}
                     disabled={isSubmitting}
                   />

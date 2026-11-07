@@ -14,7 +14,7 @@ import {
   Bell,
 } from "lucide-react"
 import { Logo } from "@/components/shared/logo"
-import { LanguageSwitcher } from "@/components/shared/language-switcher"
+import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { Avatar } from "@/components/ui/avatar"
 import { DropdownMenu } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
@@ -72,7 +72,7 @@ export function DashboardLayout({
         </div>
 
         <div className="flex items-center gap-3">
-          <LanguageSwitcher variant="compact" />
+          <ThemeToggle />
 
           {/* Notifications Placeholder */}
           <button

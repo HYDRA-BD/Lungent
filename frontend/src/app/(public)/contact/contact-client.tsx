@@ -50,8 +50,7 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>
 
 export function ContactClient() {
-  const { dict, locale } = useLanguage()
-  const isBn = locale === 'bn'
+  const { dict } = useLanguage()
 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -90,7 +89,7 @@ export function ContactClient() {
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <Badge variant="default" className="text-xs">
               <Mail className="size-3.5 mr-1.5" />
-              <span>{isBn ? 'যোগাযোগ ও সহায়তা মাধ্যম' : 'Platform Support & Channels'}</span>
+              <span>Platform Support & Channels</span>
             </Badge>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground font-sans">
               {dict.contact.title}
@@ -111,7 +110,7 @@ export function ContactClient() {
               </div>
               <div className="space-y-1.5 leading-relaxed">
                 <p className="font-bold text-destructive text-base">
-                  {isBn ? 'জরুরি চিকিৎসা বিষয়ক সতর্কতা' : 'Acute Emergency Protocol'}
+                  Acute Emergency Protocol
                 </p>
                 <p className="text-muted-foreground text-sm">
                   {dict.common.emergencyNotice}
@@ -148,9 +147,7 @@ export function ContactClient() {
                     <span>{dict.contact.verifiedChannelsTitle}</span>
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    {isBn
-                      ? 'শুধুমাত্র অনুমোদিত প্রাতিষ্ঠানিক ইমেইল চ্যানেলে যোগাযোগ করুন।'
-                      : 'Verified official communication channels for platform operations.'}
+                    Verified official communication channels for platform operations.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 pt-1 text-xs">
@@ -191,11 +188,9 @@ export function ContactClient() {
               {/* No Invented Details Notice */}
               <div className="rounded-xl border border-border/60 bg-muted/20 p-4 text-[11px] text-muted-foreground leading-relaxed">
                 <p className="font-semibold text-foreground mb-0.5">
-                  {isBn ? 'স্বচ্ছতা ও সুরক্ষা নীতি:' : 'Transparency Standard:'}
+                  Transparency Standard:
                 </p>
-                {isBn
-                  ? 'লানজেন্ট শুধুমাত্র যাচাইকৃত ডিজিটাল যোগাযোগ মাধ্যম পরিচালনা করে। কোনো ভুয়া ফোন নম্বর, ব্যক্তিগত ঠিকানা বা অননুমোদিত অনুমোদন প্রদর্শন করা হয় না।'
-                  : 'Lungent publishes only strictly verified communication channels. We do not invent fake physical addresses, phone numbers, or unverified hospital affiliations.'}
+                Lungent publishes only strictly verified communication channels. We do not invent fake physical addresses, phone numbers, or unverified hospital affiliations.
               </div>
             </div>
 
@@ -228,7 +223,7 @@ export function ContactClient() {
                         size="sm"
                         onClick={() => setIsSubmitted(false)}
                       >
-                        {isBn ? 'আরেকটি বার্তা পাঠান' : 'Send Another Message'}
+                        Send Another Message
                       </Button>
                     </div>
                   ) : (

@@ -168,8 +168,7 @@ export default function RegisterPage() {
         <FormField label="Preferred Language">
           <Select
             options={[
-              { value: 'en', label: 'English' },
-              { value: 'bn', label: 'বাংলা (Bengali)' },
+              { value: 'en', label: 'English (Default)' },
             ]}
             {...formRegister('preferredLanguage')}
           />

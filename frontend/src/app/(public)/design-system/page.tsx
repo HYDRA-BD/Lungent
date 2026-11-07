@@ -15,7 +15,7 @@ import { Footer } from '@/components/layouts/footer'
 import { SectionContainer } from '@/components/layouts/section-container'
 import { PageHeader } from '@/components/layouts/page-header'
 import { Logo } from '@/components/shared/logo'
-import { LanguageSwitcher } from '@/components/shared/language-switcher'
+import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { Button, IconButton } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar } from '@/components/ui/avatar'
@@ -86,7 +86,7 @@ function DesignSystemContent() {
             badge={<Badge variant="default" size="sm">Phase 1.2 Specification</Badge>}
             actions={
               <div className="flex items-center gap-2">
-                <LanguageSwitcher variant="pill" />
+                <ThemeToggle />
               </div>
             }
           />
@@ -212,60 +212,41 @@ function DesignSystemContent() {
             <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-6">
               <div className="space-y-1">
                 <h3 className="text-xl font-bold tracking-tight text-foreground">
-                  Bilingual Typography Hierarchy (English & বাংলা)
+                  Clinical Typography Hierarchy
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  English rendered via <span className="font-semibold">Geist</span> and Bengali rendered
-                  via <span className="font-semibold">Hind Siliguri</span> with calibrated vertical line heights.
+                  Rendered via <span className="font-semibold">Geist Sans</span> with calibrated clinical vertical rhythm and high legibility.
                 </p>
               </div>
 
               <div className="space-y-6 divide-y divide-border/60">
-                <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-mono text-muted-foreground">Display / Page Heading (English)</span>
-                    <h1 className="text-3xl font-extrabold text-foreground">
-                      Intelligent Lung Health Assessment
-                    </h1>
-                  </div>
-                  <div className="space-y-1 font-bangla">
-                    <span className="text-xs font-mono text-muted-foreground">Display / Page Heading (বাংলা)</span>
-                    <h1 className="text-3xl font-bold text-foreground">
-                      বুদ্ধিমান ফুসফুস স্বাস্থ্য মূল্যায়ন
-                    </h1>
-                  </div>
+                <div className="pt-4 space-y-1">
+                  <span className="text-xs font-mono text-muted-foreground">Display / Page Heading</span>
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground">
+                    Intelligent Lung Health Assessment
+                  </h1>
                 </div>
 
-                <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-mono text-muted-foreground">Section Title (English)</span>
-                    <h2 className="text-xl font-bold text-foreground">
-                      Screening Eligibility & Low-Dose CT Guidance
-                    </h2>
-                  </div>
-                  <div className="space-y-1 font-bangla">
-                    <span className="text-xs font-mono text-muted-foreground">Section Title (বাংলা)</span>
-                    <h2 className="text-xl font-bold text-foreground">
-                      স্ক্রিনিং যোগ্যতা এবং লো-ডোজ সিটি নির্দেশিকা
-                    </h2>
-                  </div>
+                <div className="pt-4 space-y-1">
+                  <span className="text-xs font-mono text-muted-foreground">Section Title</span>
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+                    Screening Eligibility & Low-Dose CT Guidance
+                  </h2>
                 </div>
 
-                <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-mono text-muted-foreground">Clinical Body Text (English)</span>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Lung cancer risk estimation accounts for cumulative tobacco pack-years, personal
-                      pulmonary disease history, occupational biomass exposures, and regional air quality indicators.
-                    </p>
-                  </div>
-                  <div className="space-y-1 font-bangla">
-                    <span className="text-xs font-mono text-muted-foreground">Clinical Body Text (বাংলা)</span>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      ফুসফুসের ক্যান্সারের ঝুঁকি নিরূপণ ধূমপানের ইতিহাস, পারিবারিক চিকিৎসাগত তথ্য, পরিবেশগত
-                      বায়ু দূষণ এবং বায়োমাস ধোঁয়ার সংস্পর্শের ওপর ভিত্তি করে গণনা করা হয়।
-                    </p>
-                  </div>
+                <div className="pt-4 space-y-1">
+                  <span className="text-xs font-mono text-muted-foreground">Clinical Body Text</span>
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-3xl">
+                    Lung cancer risk estimation accounts for cumulative tobacco pack-years, personal
+                    pulmonary disease history, occupational biomass exposures, and regional air quality indicators.
+                  </p>
+                </div>
+
+                <div className="pt-4 space-y-1">
+                  <span className="text-xs font-mono text-muted-foreground">Monospace Clinical Metadata & Codes</span>
+                  <p className="text-xs font-mono text-primary font-semibold">
+                    ICD-10: C34.9 · USPSTF Grade B · PLCOm2012 Model Calibration: 0.942
+                  </p>
                 </div>
               </div>
             </div>

@@ -15,7 +15,7 @@ import {
 import { useLanguage } from '@/i18n'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { LanguageSwitcher } from '@/components/shared/language-switcher'
+import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { markNotificationReadAction } from '@/modules/patient-portal/actions'
 import type { PatientNotificationItem } from '@/modules/patient-portal/types'
 import { NotificationPreferencesCard } from '@/modules/notifications/components/notification-preferences-card'
@@ -110,7 +110,7 @@ export function PatientNotificationsClient({
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-center">
-          <LanguageSwitcher variant="compact" />
+          <ThemeToggle />
 
           {activeTab === 'feed' && unreadCount > 0 && (
             <Button

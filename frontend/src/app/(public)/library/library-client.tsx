@@ -23,8 +23,7 @@ import { LIBRARY_ARTICLES, type LibraryArticle } from '@/lib/data/library-conten
 import { cn } from '@/lib/utils'
 
 export function LibraryClient() {
-  const { dict, locale } = useLanguage()
-  const isBn = locale === 'bn'
+  const { dict } = useLanguage()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -45,10 +44,8 @@ export function LibraryClient() {
       const query = searchQuery.toLowerCase().trim()
       if (!query) return matchesCategory
 
-      const matchesTitle =
-        article.titleEn.toLowerCase().includes(query) || article.titleBn.toLowerCase().includes(query)
-      const matchesSummary =
-        article.summaryEn.toLowerCase().includes(query) || article.summaryBn.toLowerCase().includes(query)
+      const matchesTitle = article.titleEn.toLowerCase().includes(query)
+      const matchesSummary = article.summaryEn.toLowerCase().includes(query)
       const matchesTags = article.tags.some((t) => t.toLowerCase().includes(query))
 
       return matchesCategory && (matchesTitle || matchesSummary || matchesTags)
@@ -100,7 +97,7 @@ export function LibraryClient() {
               className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4.5 py-1.5 text-sm sm:text-[15px] font-semibold text-primary border border-primary/20 shadow-xs hover:border-primary/40 transition-colors"
             >
               <BookOpen className="size-4 text-primary animate-pulse" aria-hidden="true" />
-              <span>{isBn ? 'প্রমাণ-ভিত্তিক স্বাস্থ্য শিক্ষা' : 'Evidence-Based Patient Education'}</span>
+              <span>Evidence-Based Patient Education</span>
             </motion.div>
 
             <motion.h1
@@ -109,9 +106,9 @@ export function LibraryClient() {
               transition={{ duration: 0.55, delay: 0.1, ease: 'easeOut' }}
               className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground font-sans leading-[1.12]"
             >
-              <span>{isBn ? 'ফুসফুস স্বাস্থ্য' : 'Lung Health'}</span>{' '}
+              <span>Lung Health</span>{' '}
               <span className="bg-gradient-to-r from-primary via-teal-600 to-sky-600 bg-clip-text text-transparent inline-block">
-                {isBn ? 'তথ্য ভাণ্ডার' : 'Information Library'}
+                Information Library
               </span>
             </motion.h1>
 
@@ -142,7 +139,7 @@ export function LibraryClient() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={dict.library.searchPlaceholder}
-                className="pl-12 h-14 text-base bg-card rounded-2xl shadow-xs border-border/80 focus-visible:ring-primary/30"
+                className="pl-12 h-14 text-base bg-card dark:bg-slate-900 rounded-2xl shadow-xs border-border/80 dark:border-slate-800 focus-visible:ring-primary/30"
                 aria-label={dict.library.searchPlaceholder}
               />
               {searchQuery && (
@@ -169,7 +166,7 @@ export function LibraryClient() {
                       'whitespace-nowrap px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer',
                       isSelected
                         ? 'bg-primary text-primary-foreground shadow-sm font-bold scale-105'
-                        : 'bg-muted/70 text-slate-700 dark:text-slate-300 hover:bg-muted hover:text-foreground border border-border/80'
+                        : 'bg-muted/70 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-muted dark:hover:bg-slate-800 hover:text-foreground border border-border/80 dark:border-slate-800'
                     )}
                   >
                     {cat.label}
@@ -186,18 +183,16 @@ export function LibraryClient() {
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-16 space-y-4 bg-muted/20 rounded-3xl border border-dashed border-border max-w-xl mx-auto p-8"
+              className="text-center py-16 space-y-4 bg-muted/20 dark:bg-slate-900/40 rounded-3xl border border-dashed border-border dark:border-slate-800 max-w-xl mx-auto p-8"
             >
-              <div className="size-12 rounded-2xl bg-muted flex items-center justify-center mx-auto text-muted-foreground">
+              <div className="size-12 rounded-2xl bg-muted dark:bg-slate-800 flex items-center justify-center mx-auto text-muted-foreground">
                 <BookOpen className="size-6" />
               </div>
               <h3 className="text-lg font-bold text-foreground">
                 {dict.common.noResults}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {isBn
-                  ? 'আপনার অনুসন্ধানের সাথে মিলে এমন কোনো বিষয় পাওয়া যায়নি। ভিন্ন শব্দ ব্যবহার করে পুনরায় চেষ্টা করুন।'
-                  : 'Try adjusting your search terms or selecting "All Topics" to see available resources.'}
+                Try adjusting your search terms or selecting &quot;All Topics&quot; to see available resources.
               </p>
               <Button
                 variant="outline"
@@ -206,7 +201,7 @@ export function LibraryClient() {
                   setSearchQuery('')
                   setSelectedCategory('all')
                 }}
-                className="rounded-xl font-semibold cursor-pointer"
+                className="rounded-xl font-semibold cursor-pointer dark:border-slate-800 dark:hover:bg-slate-800"
               >
                 Reset Filters
               </Button>
@@ -215,10 +210,10 @@ export function LibraryClient() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {filteredArticles.map((article, index) => {
                 const isExpanded = expandedArticleId === article.id
-                const title = isBn ? article.titleBn : article.titleEn
-                const summary = isBn ? article.summaryBn : article.summaryEn
-                const content = isBn ? article.contentBn : article.contentEn
-                const takeaway = isBn ? article.keyTakeawayBn : article.keyTakeawayEn
+                const title = article.titleEn
+                const summary = article.summaryEn
+                const content = article.contentEn
+                const takeaway = article.keyTakeawayEn
 
                 return (
                   <motion.div
@@ -232,7 +227,7 @@ export function LibraryClient() {
                   >
                     <Card
                       className={cn(
-                        'h-full transition-all duration-200 flex flex-col justify-between rounded-3xl border-border/80 bg-card shadow-xs hover:shadow-xl hover:shadow-primary/5 hover:border-primary/50',
+                        'h-full transition-all duration-200 flex flex-col justify-between rounded-3xl border-border/80 dark:border-slate-800 bg-card dark:bg-slate-900 shadow-xs hover:shadow-xl hover:shadow-primary/5 hover:border-primary/50',
                         isExpanded ? 'border-primary ring-1 ring-primary/20' : ''
                       )}
                     >
@@ -241,7 +236,7 @@ export function LibraryClient() {
                           {getCategoryBadge(article.category)}
                           <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
                             <FileText className="size-3.5" />
-                            {isBn ? 'ক্লিনিক্যাল গাইডেন্স' : 'Patient Literacy'}
+                            Patient Literacy
                           </span>
                         </div>
                         <CardTitle className="text-xl sm:text-2xl font-bold leading-snug tracking-tight">
@@ -261,7 +256,7 @@ export function LibraryClient() {
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <CardContent className="space-y-4 pt-3 border-t border-border/60 text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed">
+                            <CardContent className="space-y-4 pt-3 border-t border-border/60 dark:border-slate-800 text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed">
                               {content.map((paragraph, pIndex) => (
                                 <p key={pIndex} className="whitespace-pre-line">
                                   {paragraph}
@@ -269,10 +264,10 @@ export function LibraryClient() {
                               ))}
 
                               {/* Key Takeaway Callout */}
-                              <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 space-y-1.5 text-sm sm:text-[15px]">
+                              <div className="rounded-2xl border border-primary/20 bg-primary/5 dark:bg-primary/10 p-5 space-y-1.5 text-sm sm:text-[15px]">
                                 <p className="font-bold text-primary flex items-center gap-2">
                                   <Sparkles className="size-4" />
-                                  <span>{isBn ? 'মূল শিক্ষণীয় বিষয়' : 'Key Clinical Takeaway'}</span>
+                                  <span>Key Clinical Takeaway</span>
                                 </p>
                                 <p className="text-foreground font-medium leading-relaxed">{takeaway}</p>
                               </div>
@@ -283,7 +278,7 @@ export function LibraryClient() {
                                 {article.tags.map((t) => (
                                   <span
                                     key={t}
-                                    className="text-xs font-semibold bg-muted px-2.5 py-1 rounded-lg text-muted-foreground"
+                                    className="text-xs font-semibold bg-muted dark:bg-slate-800 px-2.5 py-1 rounded-lg text-muted-foreground"
                                   >
                                     #{t}
                                   </span>
@@ -294,14 +289,14 @@ export function LibraryClient() {
                         )}
                       </AnimatePresence>
 
-                      <CardFooter className="pt-3 border-t border-border/40 flex items-center justify-between">
+                      <CardFooter className="pt-3 border-t border-border/40 dark:border-slate-800 flex items-center justify-between">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleExpand(article.id)}
                           className="text-sm sm:text-[15px] font-bold text-primary hover:text-primary/80 p-0 h-auto cursor-pointer hover:bg-transparent"
                         >
-                          <span>{isExpanded ? (isBn ? 'সংক্ষেপ করুন' : 'Show Less') : (isBn ? 'বিস্তারিত পড়ুন' : dict.library.readArticle)}</span>
+                          <span>{isExpanded ? 'Show Less' : dict.library.readArticle}</span>
                           {isExpanded ? (
                             <ChevronUp className="size-4 ml-1" />
                           ) : (
@@ -310,7 +305,7 @@ export function LibraryClient() {
                         </Button>
 
                         <span className="text-xs text-muted-foreground font-medium">
-                          {isBn ? 'সচেতনতামূলক নথি' : 'Educational Guide'}
+                          Educational Guide
                         </span>
                       </CardFooter>
                     </Card>
@@ -327,10 +322,10 @@ export function LibraryClient() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl border border-border/80 bg-muted/30 p-6 sm:p-8 text-center text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto space-y-2 shadow-xs"
+            className="rounded-3xl border border-border/80 dark:border-slate-800 bg-muted/30 dark:bg-slate-900/40 p-6 sm:p-8 text-center text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto space-y-2 shadow-xs"
           >
             <p className="font-bold text-foreground text-sm sm:text-base">
-              {isBn ? 'স্বাস্থ্য তথ্য পর্যালোচনা বিজ্ঞপ্তি' : 'Health Literacy Quality Standard'}
+              Health Literacy Quality Standard
             </p>
             <p className="leading-relaxed">{dict.library.reviewedNote}</p>
           </motion.div>

@@ -8,28 +8,20 @@ import {
   Search,
   ArrowRight,
   MessageSquare,
-  Activity,
   FileQuestion,
 } from 'lucide-react'
 import { Header } from '@/components/layouts/header'
 import { Footer } from '@/components/layouts/footer'
 import { SectionContainer } from '@/components/layouts/section-container'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from '@/components/ui/accordion'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { useLanguage } from '@/i18n'
-import { FAQS_DATA } from '@/lib/data/faq-content'
+import { FAQS_DATA, type FAQItem } from '@/lib/data/faq-content'
 import { cn } from '@/lib/utils'
 
 export function FAQsClient() {
-  const { dict, locale } = useLanguage()
-  const isBn = locale === 'bn'
+  const { dict } = useLanguage()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -44,15 +36,13 @@ export function FAQsClient() {
   ]
 
   const filteredFaqs = useMemo(() => {
-    return FAQS_DATA.filter((item) => {
-      const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory
+    return FAQS_DATA.filter((faq: FAQItem) => {
+      const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory
       const query = searchQuery.toLowerCase().trim()
       if (!query) return matchesCategory
 
-      const matchesQuestion =
-        item.questionEn.toLowerCase().includes(query) || item.questionBn.toLowerCase().includes(query)
-      const matchesAnswer =
-        item.answerEn.toLowerCase().includes(query) || item.answerBn.toLowerCase().includes(query)
+      const matchesQuestion = faq.questionEn.toLowerCase().includes(query)
+      const matchesAnswer = faq.answerEn.toLowerCase().includes(query)
 
       return matchesCategory && (matchesQuestion || matchesAnswer)
     })
@@ -82,7 +72,7 @@ export function FAQsClient() {
               className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4.5 py-1.5 text-sm sm:text-[15px] font-semibold text-primary border border-primary/20 shadow-xs hover:border-primary/40 transition-colors"
             >
               <FileQuestion className="size-4 text-primary animate-pulse" aria-hidden="true" />
-              <span>{isBn ? 'সরাসরি প্রশ্নোত্তর' : 'Patient & Clinician FAQs'}</span>
+              <span>Patient & Clinician FAQs</span>
             </motion.div>
 
             <motion.h1
@@ -91,9 +81,9 @@ export function FAQsClient() {
               transition={{ duration: 0.55, delay: 0.1, ease: 'easeOut' }}
               className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground font-sans leading-[1.12]"
             >
-              <span>{isBn ? 'প্রায়শই জিজ্ঞাসিত' : 'Frequently Asked'}</span>{' '}
+              <span>Frequently Asked</span>{' '}
               <span className="bg-gradient-to-r from-primary via-teal-600 to-sky-600 bg-clip-text text-transparent inline-block">
-                {isBn ? 'প্রশ্নাবলী' : 'Questions'}
+                Questions
               </span>
             </motion.h1>
 
@@ -123,15 +113,15 @@ export function FAQsClient() {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={isBn ? 'প্রশ্ন বা উত্তর খুঁজুন...' : 'Search questions or keywords...'}
-                className="pl-13 h-14 text-base bg-card/90 rounded-2xl border-border/80 shadow-xs focus-visible:border-primary/60 focus-visible:ring-primary/20"
-                aria-label="Search FAQs"
+                placeholder="Search questions or keywords..."
+                className="pl-12 h-14 text-base bg-card dark:bg-slate-900 rounded-2xl shadow-xs border-border/80 dark:border-slate-800 focus-visible:ring-primary/30"
+                aria-label="Search questions or keywords"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground hover:text-foreground cursor-pointer px-2 py-1 rounded-lg hover:bg-muted"
+                  className="absolute right-4.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground hover:text-foreground cursor-pointer px-2 py-1 rounded-md hover:bg-muted"
                 >
                   Clear
                 </button>
@@ -139,7 +129,7 @@ export function FAQsClient() {
             </div>
 
             {/* Category Filter Pills */}
-            <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none justify-start sm:justify-center flex-wrap">
               {categories.map((cat) => {
                 const isSelected = selectedCategory === cat.id
                 return (
@@ -148,10 +138,10 @@ export function FAQsClient() {
                     type="button"
                     onClick={() => setSelectedCategory(cat.id)}
                     className={cn(
-                      'whitespace-nowrap px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer',
+                      'whitespace-nowrap px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer',
                       isSelected
-                        ? 'bg-primary text-primary-foreground shadow-sm font-bold scale-[1.03]'
-                        : 'bg-muted/60 text-slate-700 dark:text-slate-300 hover:bg-muted hover:text-foreground border border-border/70 hover:scale-[1.01]'
+                        ? 'bg-primary text-primary-foreground shadow-sm font-bold scale-105'
+                        : 'bg-muted/70 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-muted dark:hover:bg-slate-800 hover:text-foreground border border-border/80 dark:border-slate-800'
                     )}
                   >
                     {cat.label}
@@ -162,23 +152,23 @@ export function FAQsClient() {
           </motion.div>
         </SectionContainer>
 
-        {/* FAQs Accordion */}
+        {/* FAQ Accordion List */}
         <SectionContainer size="lg">
           <div className="max-w-3xl mx-auto">
             {filteredFaqs.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-16 space-y-3 bg-muted/20 rounded-3xl border border-dashed border-border"
+                className="text-center py-16 space-y-4 bg-muted/20 dark:bg-slate-900/40 rounded-3xl border border-dashed border-border dark:border-slate-800 p-8"
               >
-                <HelpCircle className="size-10 text-muted-foreground mx-auto" />
-                <h3 className="text-base font-semibold text-foreground">
+                <div className="size-12 rounded-2xl bg-muted dark:bg-slate-800 flex items-center justify-center mx-auto text-muted-foreground">
+                  <HelpCircle className="size-6" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground">
                   {dict.common.noResults}
                 </h3>
-                <p className="text-xs text-muted-foreground">
-                  {isBn
-                    ? 'আপনার অনুসন্ধানের সাথে কোনো প্রশ্ন মেলেনি। অন্য শব্দ বা বিষয় নির্বাচন করে চেষ্টা করুন।'
-                    : 'No questions matched your search criteria. Try a different query.'}
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Try adjusting your search terms or selecting &quot;All Questions&quot; to see available questions.
                 </p>
                 <Button
                   variant="outline"
@@ -187,9 +177,9 @@ export function FAQsClient() {
                     setSearchQuery('')
                     setSelectedCategory('all')
                   }}
-                  className="mt-2"
+                  className="rounded-xl font-semibold cursor-pointer dark:border-slate-800 dark:hover:bg-slate-800"
                 >
-                  Reset Search
+                  Reset Filters
                 </Button>
               </motion.div>
             ) : (
@@ -200,20 +190,20 @@ export function FAQsClient() {
                 transition={{ duration: 0.45 }}
               >
                 <Accordion type="single" className="shadow-xs space-y-3">
-                  {filteredFaqs.map((faq) => {
-                    const question = isBn ? faq.questionBn : faq.questionEn
-                    const answer = isBn ? faq.answerBn : faq.answerEn
+                  {filteredFaqs.map((faq: FAQItem) => {
+                    const question = faq.questionEn
+                    const answer = faq.answerEn
 
                     return (
                       <AccordionItem
                         key={faq.id}
                         value={faq.id}
-                        className="rounded-2xl border border-border/80 bg-card px-5 transition-all duration-200 hover:border-primary/50 hover:shadow-md"
+                        className="rounded-2xl border border-border/80 dark:border-slate-800 bg-card dark:bg-slate-900 px-5 transition-all duration-200 hover:border-primary/50 hover:shadow-md"
                       >
                         <AccordionTrigger value={faq.id} className="text-base font-bold text-foreground py-4 hover:no-underline">
                           {question}
                         </AccordionTrigger>
-                        <AccordionContent value={faq.id} className="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed pb-4 pt-1 border-t border-border/40">
+                        <AccordionContent value={faq.id} className="text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed pb-4 pt-1 border-t border-border/40 dark:border-slate-800">
                           {answer}
                         </AccordionContent>
                       </AccordionItem>
@@ -232,7 +222,7 @@ export function FAQsClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5 }}
-            className="rounded-3xl border border-primary/25 bg-primary/5 p-8 sm:p-12 text-center space-y-6 max-w-3xl mx-auto shadow-xs"
+            className="rounded-3xl border border-primary/25 dark:border-primary/30 bg-primary/5 dark:bg-primary/10 p-8 sm:p-12 text-center space-y-6 max-w-3xl mx-auto shadow-xs"
           >
             <div className="size-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto shadow-2xs">
               <MessageSquare className="size-6" />
@@ -240,12 +230,10 @@ export function FAQsClient() {
 
             <div className="space-y-2">
               <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
-                {isBn ? 'আপনার প্রশ্নের উত্তর খুঁজে পাননি?' : 'Still Have Questions?'}
+                Still Have Questions?
               </h3>
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
-                {isBn
-                  ? 'আমাদের ক্লিনিক্যাল ও প্রযুক্তিগত দলের সাথে সরাসরি যোগাযোগ করুন।'
-                  : 'Reach out to our clinical engineering team or submit feedback on our algorithms.'}
+                Reach out to our clinical engineering team or submit feedback on our algorithms.
               </p>
             </div>
 
@@ -258,7 +246,7 @@ export function FAQsClient() {
                   className: 'rounded-xl font-bold shadow-md hover:scale-105 active:scale-98 transition-all',
                 })}
               >
-                <span>{isBn ? 'যোগাযোগ করুন' : 'Contact Support'}</span>
+                <span>Contact Support</span>
                 <ArrowRight className="size-4 ml-2" />
               </Link>
             </div>

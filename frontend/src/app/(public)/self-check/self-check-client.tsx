@@ -68,8 +68,8 @@ import { cn } from '@/lib/utils'
 
 export function SelfCheckClient() {
   const router = useRouter()
-  const { dict, locale } = useLanguage()
-  const isBn = locale === 'bn'
+  const { dict } = useLanguage()
+  const isBn = false
   const t = dict.selfCheck
 
   const [step, setStep] = useState<number>(0)
