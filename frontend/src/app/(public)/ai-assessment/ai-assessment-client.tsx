@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'motion/react'
 import {
@@ -155,6 +155,12 @@ export function AIAssessmentClient() {
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg')
   const [heightUnit, setHeightUnit] = useState<'cm' | 'ft'>('cm')
 
+  // Controlled input states for real-time conversion & direct typing
+  const [weightInput, setWeightInput] = useState<number | string>(75)
+  const [heightCmInput, setHeightCmInput] = useState<number | string>(172)
+  const [heightFeetInput, setHeightFeetInput] = useState<number | string>(5)
+  const [heightInchesInput, setHeightInchesInput] = useState<number | string>(8)
+
   const [form, setForm] = useState<FormData>({
     age: 55,
     sex: 1,
@@ -192,45 +198,148 @@ export function AIAssessmentClient() {
     }
   }, [result])
 
-  // Helper to recompute BMI from kg and cm
-  function calcBmi(kg: number, cm: number): number {
-    if (!cm || cm <= 0 || !kg || kg <= 0) return 25.0
-    const m = cm / 100
-    return Math.round((kg / (m * m)) * 10) / 10
+  // 1. Dynamic Metric Conversions for Weight & Height
+  const currentWeightKg = useMemo(() => {
+    const raw = typeof weightInput === 'number' ? weightInput : parseFloat(String(weightInput))
+    const val = isNaN(raw) ? 0 : raw
+    if (weightUnit === 'lbs') {
+      return val * 0.45359237
+    }
+    return val
+  }, [weightInput, weightUnit])
+
+  const currentHeightM = useMemo(() => {
+    if (heightUnit === 'ft') {
+      const rawFt = typeof heightFeetInput === 'number' ? heightFeetInput : parseFloat(String(heightFeetInput))
+      const rawIn = typeof heightInchesInput === 'number' ? heightInchesInput : parseFloat(String(heightInchesInput))
+      const ft = isNaN(rawFt) ? 0 : rawFt
+      const inch = isNaN(rawIn) ? 0 : rawIn
+      const totalInches = ft * 12 + inch
+      return (totalInches * 2.54) / 100
+    }
+    const rawCm = typeof heightCmInput === 'number' ? heightCmInput : parseFloat(String(heightCmInput))
+    const cm = isNaN(rawCm) ? 0 : rawCm
+    return cm / 100
+  }, [heightCmInput, heightFeetInput, heightInchesInput, heightUnit])
+
+  // 2. Real-Time Dynamic BMI: BMI = Weight (kg) / (Height (m))^2
+  const calculatedBmi = useMemo(() => {
+    if (currentWeightKg <= 0 || currentHeightM <= 0) return 25.0
+    const rawBmi = currentWeightKg / (currentHeightM * currentHeightM)
+    return Math.round(rawBmi * 10) / 10
+  }, [currentWeightKg, currentHeightM])
+
+  // 3. Real-Time Dynamic Pack-Years: Pack-Years = Packs per day * Years smoked
+  const calculatedPackYears = useMemo(() => {
+    const ppd = Math.max(0, form.packsPerDay || 0)
+    const yrs = Math.max(0, form.yearsSmoked || 0)
+    return Math.round(ppd * yrs * 10) / 10
+  }, [form.packsPerDay, form.yearsSmoked])
+
+  // Synchronize dynamic calculations into form state
+  useEffect(() => {
+    setForm(prev => {
+      const newWeightKg = Math.round(currentWeightKg * 10) / 10
+      const newHeightCm = Math.round(currentHeightM * 100)
+      if (
+        prev.weightKg === newWeightKg &&
+        prev.heightCm === newHeightCm &&
+        prev.bmi === calculatedBmi &&
+        prev.packYears === calculatedPackYears
+      ) {
+        return prev
+      }
+      return {
+        ...prev,
+        weightKg: newWeightKg,
+        heightCm: newHeightCm,
+        bmi: calculatedBmi,
+        packYears: calculatedPackYears,
+      }
+    })
+  }, [currentWeightKg, currentHeightM, calculatedBmi, calculatedPackYears])
+
+  // Unit switch handlers with instant value conversion
+  function handleWeightUnitChange(newUnit: 'kg' | 'lbs') {
+    if (newUnit === weightUnit) return
+    const raw = typeof weightInput === 'number' ? weightInput : parseFloat(String(weightInput))
+    const currentNum = isNaN(raw) ? 75 : raw
+    if (newUnit === 'lbs') {
+      const inLbs = Math.round(currentNum * 2.2046226 * 10) / 10
+      setWeightInput(inLbs)
+    } else {
+      const inKg = Math.round((currentNum / 2.2046226) * 10) / 10
+      setWeightInput(inKg)
+    }
+    setWeightUnit(newUnit)
   }
 
-  // Handle Weight changes
-  function handleWeightChange(val: number, unit: 'kg' | 'lbs') {
-    const kg = unit === 'kg' ? val : Math.round((val / 2.20462) * 10) / 10
-    const newBmi = calcBmi(kg, form.heightCm)
-    setForm(prev => ({ ...prev, weightKg: kg, bmi: newBmi }))
+  function handleHeightUnitChange(newUnit: 'cm' | 'ft') {
+    if (newUnit === heightUnit) return
+    if (newUnit === 'ft') {
+      const rawCm = typeof heightCmInput === 'number' ? heightCmInput : parseFloat(String(heightCmInput))
+      const cm = isNaN(rawCm) ? 172 : rawCm
+      const totalInches = Math.round(cm / 2.54)
+      setHeightFeetInput(Math.floor(totalInches / 12))
+      setHeightInchesInput(totalInches % 12)
+    } else {
+      const rawFt = typeof heightFeetInput === 'number' ? heightFeetInput : parseFloat(String(heightFeetInput))
+      const rawIn = typeof heightInchesInput === 'number' ? heightInchesInput : parseFloat(String(heightInchesInput))
+      const ft = isNaN(rawFt) ? 5 : rawFt
+      const inch = isNaN(rawIn) ? 8 : rawIn
+      const cm = Math.round((ft * 12 + inch) * 2.54)
+      setHeightCmInput(cm)
+    }
+    setHeightUnit(newUnit)
   }
 
-  // Handle Height changes
-  function handleHeightCmChange(cm: number) {
-    const newBmi = calcBmi(form.weightKg, cm)
-    setForm(prev => ({ ...prev, heightCm: cm, bmi: newBmi }))
-  }
+  // BMI Category & Visual Positioning (15 to 40 Scale)
+  const bmiCategory = useMemo(() => {
+    if (calculatedBmi < 18.5) {
+      return {
+        label: 'Underweight',
+        range: '< 18.5',
+        color: 'text-sky-600 dark:text-sky-400',
+        badgeBg: 'bg-sky-50 dark:bg-sky-950/50 border-sky-300 dark:border-sky-800 text-sky-700 dark:text-sky-300',
+        dotColor: 'bg-sky-500 ring-sky-300',
+      }
+    }
+    if (calculatedBmi <= 24.9) {
+      return {
+        label: 'Normal Weight',
+        range: '18.5 – 24.9',
+        color: 'text-teal-600 dark:text-teal-400',
+        badgeBg: 'bg-teal-50 dark:bg-teal-950/50 border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300',
+        dotColor: 'bg-teal-500 ring-teal-300',
+      }
+    }
+    if (calculatedBmi <= 29.9) {
+      return {
+        label: 'Overweight',
+        range: '25.0 – 29.9',
+        color: 'text-amber-600 dark:text-amber-400',
+        badgeBg: 'bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300',
+        dotColor: 'bg-amber-500 ring-amber-300',
+      }
+    }
+    return {
+      label: 'Obese',
+      range: '≥ 30.0',
+      color: 'text-rose-600 dark:text-rose-400',
+      badgeBg: 'bg-rose-50 dark:bg-rose-950/50 border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300',
+      dotColor: 'bg-rose-500 ring-rose-300',
+    }
+  }, [calculatedBmi])
 
-  function handleHeightFtInChange(feet: number, inches: number) {
-    const totalInches = (feet || 0) * 12 + (inches || 0)
-    const cm = Math.round(totalInches * 2.54)
-    const newBmi = calcBmi(form.weightKg, cm)
-    setForm(prev => ({ ...prev, heightCm: cm, bmi: newBmi }))
-  }
+  const bmiPercent = Math.min(Math.max(((calculatedBmi - 15) / (40 - 15)) * 100, 0), 100)
+
+  // Pack-Years Category & Visual Positioning (0 to 60 Scale)
+  const isHighRiskSmoker = calculatedPackYears >= 20
+  const packYearsPercent = Math.min(Math.max((calculatedPackYears / 60) * 100, 0), 100)
 
   function update<K extends keyof FormData>(key: K, val: FormData[K]) {
     setForm(prev => ({ ...prev, [key]: val }))
   }
-
-  // Derived display values for Height & Weight
-  const displayWeight = weightUnit === 'kg'
-    ? Math.round(form.weightKg * 10) / 10
-    : Math.round(form.weightKg * 2.20462 * 10) / 10
-
-  const totalInches = Math.round(form.heightCm / 2.54)
-  const displayFeet = Math.floor(totalInches / 12)
-  const displayInches = totalInches % 12
 
   async function handleSubmit() {
     setLoading(true)
@@ -439,14 +548,14 @@ export function AIAssessmentClient() {
                     <div className="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5 text-xs font-semibold">
                       <button
                         type="button"
-                        onClick={() => setWeightUnit('kg')}
+                        onClick={() => handleWeightUnitChange('kg')}
                         className={`px-2.5 py-1 rounded-md transition-colors ${weightUnit === 'kg' ? 'bg-white dark:bg-slate-700 text-foreground shadow-xs' : 'text-slate-500 hover:text-foreground'}`}
                       >
                         kg
                       </button>
                       <button
                         type="button"
-                        onClick={() => setWeightUnit('lbs')}
+                        onClick={() => handleWeightUnitChange('lbs')}
                         className={`px-2.5 py-1 rounded-md transition-colors ${weightUnit === 'lbs' ? 'bg-white dark:bg-slate-700 text-foreground shadow-xs' : 'text-slate-500 hover:text-foreground'}`}
                       >
                         lbs
@@ -457,10 +566,10 @@ export function AIAssessmentClient() {
                     <input
                       type="number"
                       step={0.5}
-                      min={30}
-                      max={300}
-                      value={displayWeight}
-                      onChange={e => handleWeightChange(+e.target.value, weightUnit)}
+                      min={20}
+                      max={500}
+                      value={weightInput}
+                      onChange={e => setWeightInput(e.target.value)}
                       className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-background px-3.5 py-2 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
                     />
                     <span className="absolute right-3.5 text-xs font-bold text-slate-400 uppercase pointer-events-none">
@@ -476,14 +585,14 @@ export function AIAssessmentClient() {
                     <div className="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5 text-xs font-semibold">
                       <button
                         type="button"
-                        onClick={() => setHeightUnit('cm')}
+                        onClick={() => handleHeightUnitChange('cm')}
                         className={`px-2.5 py-1 rounded-md transition-colors ${heightUnit === 'cm' ? 'bg-white dark:bg-slate-700 text-foreground shadow-xs' : 'text-slate-500 hover:text-foreground'}`}
                       >
                         cm
                       </button>
                       <button
                         type="button"
-                        onClick={() => setHeightUnit('ft')}
+                        onClick={() => handleHeightUnitChange('ft')}
                         className={`px-2.5 py-1 rounded-md transition-colors ${heightUnit === 'ft' ? 'bg-white dark:bg-slate-700 text-foreground shadow-xs' : 'text-slate-500 hover:text-foreground'}`}
                       >
                         ft / in
@@ -495,10 +604,10 @@ export function AIAssessmentClient() {
                     <div className="relative flex items-center">
                       <input
                         type="number"
-                        min={100}
+                        min={50}
                         max={250}
-                        value={form.heightCm}
-                        onChange={e => handleHeightCmChange(+e.target.value)}
+                        value={heightCmInput}
+                        onChange={e => setHeightCmInput(e.target.value)}
                         className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-background px-3.5 py-2 pr-12 text-base focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
                       />
                       <span className="absolute right-3.5 text-xs font-bold text-slate-400 uppercase pointer-events-none">
@@ -510,10 +619,10 @@ export function AIAssessmentClient() {
                       <div className="relative flex items-center">
                         <input
                           type="number"
-                          min={3}
-                          max={7}
-                          value={displayFeet}
-                          onChange={e => handleHeightFtInChange(+e.target.value, displayInches)}
+                          min={2}
+                          max={8}
+                          value={heightFeetInput}
+                          onChange={e => setHeightFeetInput(e.target.value)}
                           className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-background px-3.5 py-2 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
                         />
                         <span className="absolute right-3 text-xs font-bold text-slate-400 pointer-events-none">
@@ -525,8 +634,8 @@ export function AIAssessmentClient() {
                           type="number"
                           min={0}
                           max={11}
-                          value={displayInches}
-                          onChange={e => handleHeightFtInChange(displayFeet, +e.target.value)}
+                          value={heightInchesInput}
+                          onChange={e => setHeightInchesInput(e.target.value)}
                           className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-background px-3.5 py-2 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
                         />
                         <span className="absolute right-3 text-xs font-bold text-slate-400 pointer-events-none">
@@ -537,31 +646,59 @@ export function AIAssessmentClient() {
                   )}
                 </div>
 
-                {/* Computed BMI Display */}
-                <div className="sm:col-span-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <div className="flex items-center justify-between">
+                {/* Computed BMI Display — PURELY READ-ONLY VISUALIZER */}
+                <div className="sm:col-span-2 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <Scale className="size-4 text-primary" />
-                      <span className="text-sm font-semibold text-foreground">Calculated Body Mass Index (BMI)</span>
+                      <Scale className="size-4.5 text-primary" />
+                      <span className="text-sm font-bold text-foreground">Calculated Body Mass Index (BMI)</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded-md font-semibold bg-slate-200/80 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300">
+                        Read-Only
+                      </span>
                     </div>
-                    <span className="text-lg font-black text-primary">{form.bmi.toFixed(1)} kg/m²</span>
+                    <div className="flex items-center gap-2.5">
+                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${bmiCategory.badgeBg}`}>
+                        {bmiCategory.label}
+                      </span>
+                      <span className="text-2xl font-black text-foreground">
+                        {calculatedBmi.toFixed(1)}{' '}
+                        <span className="text-sm font-semibold text-muted-foreground">kg/m²</span>
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="range"
-                      min={10}
-                      max={60}
-                      step={0.1}
-                      value={form.bmi}
-                      onChange={e => update('bmi', +e.target.value)}
-                      className="flex-1 accent-primary h-2"
-                    />
-                  </div>
-                  <div className="flex justify-between text-xs text-muted-foreground font-medium pt-0.5">
-                    <span>Underweight (&lt;18.5)</span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Normal (18.5–24.9)</span>
-                    <span>Overweight (25–29.9)</span>
-                    <span>Obese (&ge;30)</span>
+
+                  {/* Read-Only Visual Indicator Bar (Non-interactive) */}
+                  <div className="space-y-2 pointer-events-none select-none" aria-hidden="true">
+                    <div className="relative w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                      <div className="absolute inset-0 flex w-full h-full">
+                        {/* Underweight: 15 to 18.5 -> 14% */}
+                        <div style={{ width: '14%' }} className="bg-sky-400/80" />
+                        {/* Normal: 18.5 to 25 -> 26% */}
+                        <div style={{ width: '26%' }} className="bg-teal-500/85" />
+                        {/* Overweight: 25 to 30 -> 20% */}
+                        <div style={{ width: '20%' }} className="bg-amber-400/85" />
+                        {/* Obese: 30 to 40+ -> 40% */}
+                        <div style={{ width: '40%' }} className="bg-rose-500/85" />
+                      </div>
+                    </div>
+
+                    {/* Indicator Dot */}
+                    <div className="relative w-full h-5">
+                      <div
+                        className="absolute top-0 -translate-x-1/2 flex flex-col items-center transition-all duration-300 ease-out"
+                        style={{ left: `${bmiPercent}%` }}
+                      >
+                        <div className={`size-4.5 rounded-full border-2 border-white dark:border-slate-900 shadow-md ${bmiCategory.dotColor} ring-2`} />
+                      </div>
+                    </div>
+
+                    {/* Scale Legend */}
+                    <div className="grid grid-cols-4 text-center text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 pt-0.5">
+                      <span className={calculatedBmi < 18.5 ? 'font-bold text-sky-600 dark:text-sky-400' : ''}>Underweight (&lt;18.5)</span>
+                      <span className={calculatedBmi >= 18.5 && calculatedBmi <= 24.9 ? 'font-bold text-teal-600 dark:text-teal-400' : ''}>Normal (18.5–24.9)</span>
+                      <span className={calculatedBmi >= 25 && calculatedBmi <= 29.9 ? 'font-bold text-amber-600 dark:text-amber-400' : ''}>Overweight (25–29.9)</span>
+                      <span className={calculatedBmi >= 30 ? 'font-bold text-rose-600 dark:text-rose-400' : ''}>Obese (&ge;30)</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -586,28 +723,7 @@ export function AIAssessmentClient() {
               </div>
 
               <div className="space-y-6">
-                {/* Pack-Years Range Slider */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <label className="text-sm font-semibold text-foreground">Pack-Years (total cumulative exposure)</label>
-                    <span className="text-base font-black text-foreground">{form.packYears.toFixed(1)} py</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="range"
-                      min={0}
-                      max={120}
-                      step={0.5}
-                      value={form.packYears}
-                      onChange={e => update('packYears', +e.target.value)}
-                      className="flex-1 accent-primary h-2"
-                    />
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Formula: (Packs Smoked Per Day) × (Years Smoked). USPSTF screening threshold: ≥ 20 pack-years.
-                  </p>
-                </div>
-
+                {/* Packs per day & Years smoked inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-foreground">Packs per day</label>
@@ -617,7 +733,7 @@ export function AIAssessmentClient() {
                       max={10}
                       step={0.25}
                       value={form.packsPerDay}
-                      onChange={e => update('packsPerDay', +e.target.value)}
+                      onChange={e => update('packsPerDay', Math.max(0, +e.target.value))}
                       className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-background px-3.5 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
                     />
                   </div>
@@ -629,17 +745,81 @@ export function AIAssessmentClient() {
                       min={0}
                       max={80}
                       value={form.yearsSmoked}
-                      onChange={e => update('yearsSmoked', +e.target.value)}
+                      onChange={e => update('yearsSmoked', Math.max(0, +e.target.value))}
                       className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-800 bg-background px-3.5 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
                     />
                   </div>
                 </div>
 
-                {/* USPSTF Criteria Status */}
-                <div className={`rounded-xl border p-4 text-sm font-medium ${form.packYears >= 20 ? 'border-amber-300 bg-amber-50/80 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200' : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-300'}`}>
-                  {form.packYears >= 20
-                    ? '⚠️ USPSTF High-Risk Screening Threshold Met (≥ 20 pack-years)'
-                    : `Current exposure: ${form.packYears.toFixed(1)} pack-years — below the 20 pack-year LDCT threshold.`}
+                {/* Computed Pack-Years Display — PURELY READ-ONLY VISUALIZER */}
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Wind className="size-4.5 text-primary" />
+                        <span className="text-sm font-bold text-foreground">Cumulative Exposure (Pack-Years)</span>
+                        <span className="text-[11px] px-2 py-0.5 rounded-md font-semibold bg-slate-200/80 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300">
+                          Read-Only
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pt-1">
+                        Dynamic formula: ({form.packsPerDay} packs/day) × ({form.yearsSmoked} years) = {calculatedPackYears.toFixed(1)} pack-years
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${isHighRiskSmoker ? 'bg-rose-50 dark:bg-rose-950/50 border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300' : 'bg-teal-50 dark:bg-teal-950/50 border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300'}`}>
+                        {isHighRiskSmoker ? 'High Risk (≥ 20 py)' : 'Below Threshold (< 20 py)'}
+                      </span>
+                      <span className={`text-2xl font-black ${isHighRiskSmoker ? 'text-rose-600 dark:text-rose-400' : 'text-foreground'}`}>
+                        {calculatedPackYears.toFixed(1)} <span className="text-sm font-semibold text-muted-foreground">py</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Read-Only Visual Indicator Bar (Non-interactive) */}
+                  <div className="space-y-2 pointer-events-none select-none" aria-hidden="true">
+                    <div className="relative w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                      {/* Sub-threshold & High-Risk Zones */}
+                      <div className="absolute inset-0 flex w-full h-full">
+                        <div style={{ width: '33.33%' }} className="bg-teal-500/20 dark:bg-teal-900/30" />
+                        <div style={{ width: '66.67%' }} className="bg-rose-500/20 dark:bg-rose-900/30" />
+                      </div>
+                      {/* Active Progress Fill */}
+                      <div
+                        className={`h-full transition-all duration-300 ease-out ${isHighRiskSmoker ? 'bg-gradient-to-r from-amber-500 to-rose-600' : 'bg-teal-500'}`}
+                        style={{ width: `${packYearsPercent}%` }}
+                      />
+                    </div>
+
+                    {/* Indicator Dot & 20 py Threshold Tick */}
+                    <div className="relative w-full h-5">
+                      <div className="absolute top-0 -translate-x-1/2 flex flex-col items-center" style={{ left: '33.33%' }}>
+                        <div className="w-0.5 h-3 bg-slate-400 dark:bg-slate-500" />
+                      </div>
+
+                      <div
+                        className="absolute top-0 -translate-x-1/2 flex flex-col items-center transition-all duration-300 ease-out"
+                        style={{ left: `${packYearsPercent}%` }}
+                      >
+                        <div className={`size-4.5 rounded-full border-2 border-white dark:border-slate-900 shadow-md ${isHighRiskSmoker ? 'bg-rose-600 ring-2 ring-rose-300' : 'bg-teal-500 ring-2 ring-teal-300'}`} />
+                      </div>
+                    </div>
+
+                    {/* Legend */}
+                    <div className="flex justify-between text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 pt-0.5">
+                      <span>0 py (Never Smoked)</span>
+                      <span className="font-semibold text-amber-600 dark:text-amber-400">20 py (USPSTF Screening Threshold)</span>
+                      <span>40 py</span>
+                      <span>60+ py</span>
+                    </div>
+                  </div>
+
+                  {/* Dynamic USPSTF Status Banner */}
+                  <div className={`rounded-xl border p-4 text-sm font-medium ${isHighRiskSmoker ? 'border-amber-300 bg-amber-50/80 text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200' : 'border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-300'}`}>
+                    {isHighRiskSmoker
+                      ? '⚠️ USPSTF High-Risk Screening Threshold Met (≥ 20 pack-years) — Clinical LDCT evaluation recommended.'
+                      : `Current exposure: ${calculatedPackYears.toFixed(1)} pack-years — below the 20 pack-year LDCT screening threshold.`}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -908,6 +1088,32 @@ export function AIAssessmentClient() {
                         onClick={() => {
                           setResult(null)
                           setError(null)
+                          setWeightUnit('kg')
+                          setHeightUnit('cm')
+                          setWeightInput(75)
+                          setHeightCmInput(172)
+                          setHeightFeetInput(5)
+                          setHeightInchesInput(8)
+                          setForm({
+                            age: 55,
+                            sex: 1,
+                            weightKg: 75.0,
+                            heightCm: 172,
+                            bmi: 25.4,
+                            packYears: 20,
+                            packsPerDay: 1,
+                            yearsSmoked: 20,
+                            respBurden: false,
+                            asthma: false,
+                            copd: false,
+                            chronicBurden: false,
+                            heartAttack: false,
+                            chd: false,
+                            stroke: false,
+                            diabetes: false,
+                            lowAccess: false,
+                            state: 'Ohio',
+                          })
                           window.scrollTo({ top: 0, behavior: 'smooth' })
                         }}
                         className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card px-6 py-4 text-base font-semibold hover:bg-muted hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
