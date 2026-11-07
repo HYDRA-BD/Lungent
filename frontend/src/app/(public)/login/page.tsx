@@ -5,14 +5,14 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { motion, AnimatePresence } from 'motion/react'
 import { AuthLayout } from '@/components/layouts/auth-layout'
 import { FormField } from '@/components/forms/form-field'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { loginSchema, type LoginInput } from '@/modules/authentication/validation'
 import { login } from '@/modules/authentication/service'
-import { LogIn } from 'lucide-react'
+import { LogIn, Mail, Lock, CheckCircle2, Sparkles, ArrowRight } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 function LoginForm() {
@@ -25,11 +25,13 @@ function LoginForm() {
   const auth = dict.auth
 
   const [serverError, setServerError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -39,9 +41,16 @@ function LoginForm() {
     },
   })
 
+  const fillDemoCredentials = () => {
+    setValue('email', 'patient@lungent.org', { shouldValidate: true })
+    setValue('password', 'Lungent2026!', { shouldValidate: true })
+    setServerError(null)
+  }
+
   const onSubmit = async (data: LoginInput) => {
     setIsSubmitting(true)
     setServerError(null)
+    setSuccessMessage(null)
 
     try {
       const result = await login(data)
@@ -56,59 +65,120 @@ function LoginForm() {
         return
       }
 
-      // Successful login -> route to requested target or role's default workspace
-      const target = redirectTo || result.data.defaultWorkspace
-      router.push(target)
-      router.refresh()
-    } catch {
-      setServerError('An unexpected authentication error occurred. Please try again.')
+      setSuccessMessage('Authentication verified! Redirecting to Patient Portal...')
+      const target = redirectTo || result.data.defaultWorkspace || '/portal/patient'
+
+      // Brief delay to display smooth success feedback
+      setTimeout(() => {
+        router.push(target)
+        router.refresh()
+      }, 700)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected authentication error occurred.'
+      setServerError(msg)
       setIsSubmitting(false)
     }
   }
 
   return (
     <AuthLayout
-      title={auth.signInTitle}
-      subtitle={auth.signInSubtitle}
+      title="Welcome Back"
+      subtitle="Sign in to access your clinical risk assessments and patient health record."
+      badge="Secure Health Access"
       footer={
-        <p>
-          {auth.dontHaveAccount}{' '}
-          <Link href="/register" className="font-semibold text-primary hover:underline">
-            {auth.registerHere}
-          </Link>
-        </p>
+        <div className="space-y-3">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            {auth.dontHaveAccount}{' '}
+            <Link
+              href="/register"
+              className="font-bold text-primary hover:underline inline-flex items-center gap-1"
+            >
+              <span>{auth.registerHere}</span>
+              <ArrowRight className="size-3.5" />
+            </Link>
+          </p>
+
+          {/* Quick Demo Credentials shortcut */}
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={fillDemoCredentials}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-primary transition-colors py-1 px-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              <Sparkles className="size-3 text-primary" />
+              <span>Fill Demo Credentials (patient@lungent.org)</span>
+            </button>
+          </div>
+        </div>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        {verified && (
-          <Alert variant="success">
-            <AlertTitle>{auth.emailVerifiedSuccess}</AlertTitle>
-          </Alert>
-        )}
+        <AnimatePresence mode="wait">
+          {verified && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <Alert variant="success" className="rounded-xl border-emerald-300 dark:border-emerald-800">
+                <CheckCircle2 className="size-4 text-emerald-600" />
+                <AlertTitle className="text-emerald-800 dark:text-emerald-300">
+                  {auth.emailVerifiedSuccess}
+                </AlertTitle>
+              </Alert>
+            </motion.div>
+          )}
 
-        {serverError && (
-          <Alert variant="destructive">
-            <AlertTitle>Authentication Failed</AlertTitle>
-            <AlertDescription>{serverError}</AlertDescription>
-          </Alert>
-        )}
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="p-3.5 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5 text-sm font-medium">
+                <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+                <span>{successMessage}</span>
+              </div>
+            </motion.div>
+          )}
 
+          {serverError && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <Alert variant="destructive" className="rounded-xl">
+                <AlertTitle>Authentication Failed</AlertTitle>
+                <AlertDescription className="text-xs leading-relaxed mt-1">
+                  {serverError}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Email Field */}
         <FormField
-          label={auth.emailLabel}
+          label="Email Address"
           required
           error={errors.email?.message}
         >
           <Input
             type="email"
-            placeholder="name@example.com"
+            placeholder="patient@example.com"
             autoComplete="email"
+            disabled={isSubmitting}
+            leftIcon={<Mail className="size-4 text-slate-400" />}
+            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
             {...register('email')}
           />
         </FormField>
 
-        <div className="space-y-1">
+        {/* Password Field */}
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-foreground">{auth.passwordLabel}</span>
+            <span className="text-sm font-semibold text-foreground">Password</span>
             <Link
               href="/forgot-password"
               className="text-xs text-primary hover:underline font-medium"
@@ -123,20 +193,34 @@ function LoginForm() {
               type="password"
               placeholder="••••••••"
               autoComplete="current-password"
+              disabled={isSubmitting}
+              leftIcon={<Lock className="size-4 text-slate-400" />}
+              className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
               {...register('password')}
             />
           </FormField>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          size="lg"
-          loading={isSubmitting}
-          rightIcon={<LogIn className="size-4" />}
-        >
-          {auth.signInButton}
-        </Button>
+        {/* Submit Button */}
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3.5 px-6 rounded-xl bg-primary text-primary-foreground font-bold text-base shadow-sm hover:bg-primary/90 hover:scale-[1.02] hover:shadow-md transition-all active:scale-[0.99] disabled:opacity-60 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
+          >
+            {isSubmitting ? (
+              <>
+                <span className="size-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                <span>Signing in...</span>
+              </>
+            ) : (
+              <>
+                <span>Sign In to Portal</span>
+                <LogIn className="size-4" />
+              </>
+            )}
+          </button>
+        </div>
       </form>
     </AuthLayout>
   )
@@ -144,7 +228,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-muted/20" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <LoginForm />
     </Suspense>
   )

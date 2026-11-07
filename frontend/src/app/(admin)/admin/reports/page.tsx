@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { ReportingService } from '@/modules/reporting/service'
 import { AdminReportsClient } from './admin-reports-client'
 
+export const instant = false
+
 export const metadata: Metadata = {
   title: 'Report Generation Oversight | Lungent Admin Portal',
   description: 'Operational metrics and audit telemetry for clinical report generation.',

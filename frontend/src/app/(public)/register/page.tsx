@@ -5,16 +5,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { motion, AnimatePresence } from 'motion/react'
 import { AuthLayout } from '@/components/layouts/auth-layout'
 import { FormField } from '@/components/forms/form-field'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { registerSchema, type RegisterInput } from '@/modules/authentication/validation'
 import { register } from '@/modules/authentication/service'
-import { ArrowRight, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2 } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 export default function RegisterPage() {
@@ -23,6 +22,7 @@ export default function RegisterPage() {
   const auth = dict.auth
 
   const [serverError, setServerError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
@@ -49,6 +49,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterInput) => {
     setIsSubmitting(true)
     setServerError(null)
+    setSuccessMessage(null)
 
     try {
       const result = await register(data)
@@ -59,51 +60,88 @@ export default function RegisterPage() {
         return
       }
 
-      if (result.data.requiresVerification) {
-        router.push(`/verify-email?email=${encodeURIComponent(data.email)}`)
-      } else {
-        router.push('/patient')
-      }
-    } catch {
-      setServerError('An unexpected connection error occurred. Please try again.')
+      setSuccessMessage('Account registered successfully! Redirecting to Patient Portal...')
+
+      setTimeout(() => {
+        if (result.data.requiresVerification) {
+          router.push(`/verify-email?email=${encodeURIComponent(data.email)}`)
+        } else {
+          router.push('/portal/patient')
+        }
+      }, 700)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected registration error occurred.'
+      setServerError(msg)
       setIsSubmitting(false)
     }
   }
 
   return (
     <AuthLayout
-      title={auth.registerTitle}
-      subtitle={auth.registerSubtitle}
+      title="Create an Account"
+      subtitle="Join Lungent for clinical AI pre-screening, risk stratification, and patient decision support."
+      badge="Patient Registration"
       footer={
-        <p>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           {auth.alreadyHaveAccount}{' '}
-          <Link href="/login" className="font-semibold text-primary hover:underline">
-            {auth.signInButton}
+          <Link
+            href="/login"
+            className="font-bold text-primary hover:underline inline-flex items-center gap-1"
+          >
+            <span>{auth.signInButton}</span>
+            <ArrowRight className="size-3.5" />
           </Link>
         </p>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        {serverError && (
-          <Alert variant="destructive">
-            <AlertTitle>Registration Error</AlertTitle>
-            <AlertDescription>{serverError}</AlertDescription>
-          </Alert>
-        )}
+        <AnimatePresence mode="wait">
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="p-3.5 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 flex items-center gap-2.5 text-sm font-medium">
+                <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
+                <span>{successMessage}</span>
+              </div>
+            </motion.div>
+          )}
 
+          {serverError && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <Alert variant="destructive" className="rounded-xl">
+                <AlertTitle>Registration Error</AlertTitle>
+                <AlertDescription className="text-xs leading-relaxed mt-1">
+                  {serverError}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Full Name */}
         <FormField
           label="Full Name"
           required
           error={errors.fullName?.message}
-          helperText="As it appears on official medical or identity records."
         >
           <Input
-            placeholder="e.g. Ayesha Rahman"
+            placeholder="e.g. Sarah Jenkins"
             autoComplete="name"
+            disabled={isSubmitting}
+            leftIcon={<User className="size-4 text-slate-400" />}
+            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
             {...formRegister('fullName')}
           />
         </FormField>
 
+        {/* Email Address */}
         <FormField
           label="Email Address"
           required
@@ -111,25 +149,16 @@ export default function RegisterPage() {
         >
           <Input
             type="email"
-            placeholder="name@example.com"
+            placeholder="patient@example.com"
             autoComplete="email"
+            disabled={isSubmitting}
+            leftIcon={<Mail className="size-4 text-slate-400" />}
+            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
             {...formRegister('email')}
           />
         </FormField>
 
-        <FormField
-          label="Phone Number (Optional)"
-          error={errors.phoneNumber?.message}
-          helperText="Used for SMS screening reminders in Bangladesh (+8801XXXXXXXXX)"
-        >
-          <Input
-            type="tel"
-            placeholder="+8801700000000"
-            autoComplete="tel"
-            {...formRegister('phoneNumber')}
-          />
-        </FormField>
-
+        {/* Password & Confirm Password */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FormField
             label="Password"
@@ -140,6 +169,9 @@ export default function RegisterPage() {
               type="password"
               placeholder="••••••••"
               autoComplete="new-password"
+              disabled={isSubmitting}
+              leftIcon={<Lock className="size-4 text-slate-400" />}
+              className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
               {...formRegister('password')}
             />
           </FormField>
@@ -153,27 +185,23 @@ export default function RegisterPage() {
               type="password"
               placeholder="••••••••"
               autoComplete="new-password"
+              disabled={isSubmitting}
+              leftIcon={<Lock className="size-4 text-slate-400" />}
+              className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
               {...formRegister('confirmPassword')}
             />
           </FormField>
         </div>
 
-        <div className="text-[11px] text-muted-foreground bg-muted/40 p-2.5 rounded-lg space-y-1">
-          <span className="font-semibold text-foreground flex items-center gap-1">
-            <ShieldCheck className="size-3.5 text-primary" /> Password Requirements:
+        {/* Security / Password Note */}
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 space-y-1">
+          <span className="font-semibold text-foreground flex items-center gap-1.5">
+            <ShieldCheck className="size-3.5 text-primary" /> Password Guidelines:
           </span>
-          <p>Minimum 8 characters with at least one uppercase letter, one number, and one special character.</p>
+          <p>Must be at least 8 characters. All passwords are salted & cryptographically hashed.</p>
         </div>
 
-        <FormField label="Preferred Language">
-          <Select
-            options={[
-              { value: 'en', label: 'English (Default)' },
-            ]}
-            {...formRegister('preferredLanguage')}
-          />
-        </FormField>
-
+        {/* Terms of Service Checkbox */}
         <div className="space-y-1 pt-1">
           <Checkbox
             id="acceptTerms"
@@ -189,15 +217,26 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          size="lg"
-          loading={isSubmitting}
-          rightIcon={<ArrowRight className="size-4" />}
-        >
-          Create Account
-        </Button>
+        {/* Submit Button */}
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3.5 px-6 rounded-xl bg-primary text-primary-foreground font-bold text-base shadow-sm hover:bg-primary/90 hover:scale-[1.02] hover:shadow-md transition-all active:scale-[0.99] disabled:opacity-60 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
+          >
+            {isSubmitting ? (
+              <>
+                <span className="size-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                <span>Creating Account...</span>
+              </>
+            ) : (
+              <>
+                <span>Create Patient Account</span>
+                <ArrowRight className="size-4" />
+              </>
+            )}
+          </button>
+        </div>
       </form>
     </AuthLayout>
   )

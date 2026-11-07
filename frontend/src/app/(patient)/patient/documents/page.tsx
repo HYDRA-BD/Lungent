@@ -3,6 +3,8 @@ import { PatientPortalService } from '@/modules/patient-portal/service'
 import { ReportingService } from '@/modules/reporting/service'
 import { PatientDocumentsClient } from './patient-documents-client'
 
+export const instant = false
+
 export const metadata: Metadata = {
   title: 'Reports & Documents | Lungent Patient Portal',
   description: 'Access authorized clinical assessment summaries, referral letters, and formal clinical documents.',

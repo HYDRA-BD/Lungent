@@ -4,6 +4,8 @@ import { getCurrentUserWithRoles } from '@/modules/authentication/service'
 import { ProfileClient } from './profile-client'
 import type { Metadata } from 'next'
 
+export const instant = false
+
 export const metadata: Metadata = {
   title: 'User Profile & Settings | Lungent',
   description: 'Manage your personal profile, preferred language, role permissions, and facility affiliations.',

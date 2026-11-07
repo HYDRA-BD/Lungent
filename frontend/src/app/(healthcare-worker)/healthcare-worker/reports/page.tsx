@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { ReportingService } from '@/modules/reporting/service'
 import { WorkerReportsClient } from './worker-reports-client'
 
+export const instant = false
+
 export const metadata: Metadata = {
   title: 'Field Reports & Summaries | Lungent Healthcare Worker Workspace',
   description: 'Community outreach assessment reports, screening summaries, and specialist referral consultation letters.',

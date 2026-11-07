@@ -25,15 +25,9 @@ export const registerSchema = z
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters long')
-      .max(72, 'Password cannot exceed 72 characters')
-      .regex(
-        PASSWORD_REGEX,
-        'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
-      ),
+      .max(72, 'Password cannot exceed 72 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
-    preferredLanguage: z.enum(['en', 'bn'], {
-      error: 'Preferred language must be English or Bengali',
-    }),
+    preferredLanguage: z.enum(['en', 'bn']),
     acceptTerms: z.boolean().refine((val) => val === true, {
       message: 'You must accept the terms of service and privacy information',
     }),

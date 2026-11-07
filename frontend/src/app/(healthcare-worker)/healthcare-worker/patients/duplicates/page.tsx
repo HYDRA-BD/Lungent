@@ -3,6 +3,8 @@ import { PatientService } from '@/modules/patients/service'
 import { DuplicatesClient } from './duplicates-client'
 import type { DuplicateCandidate } from '@/modules/patients/types'
 
+export const instant = false
+
 export const metadata: Metadata = {
   title: 'Duplicate Candidate Queue | Lungent',
   description:
