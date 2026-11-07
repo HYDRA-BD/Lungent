@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'motion/react'
 import {
   Activity,
   AlertTriangle,
   ArrowLeft,
+  ArrowUp,
   Brain,
   CheckCircle2,
   Download,
@@ -22,7 +23,6 @@ import {
   Stethoscope,
   User,
   Wind,
-  Zap,
 } from 'lucide-react'
 import { analyzePatient, downloadReport, type AnalyzeResponse, type PatientInput } from '@/lib/backend-api'
 import { Header } from '@/components/layouts/header'
@@ -180,6 +180,17 @@ export function AIAssessmentClient() {
   const [result, setResult] = useState<AnalyzeResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [downloading, setDownloading] = useState(false)
+  const resultRef = useRef<HTMLDivElement>(null)
+
+  // Smooth scroll down to result when ready
+  useEffect(() => {
+    if (result && resultRef.current) {
+      const timer = setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [result])
 
   // Helper to recompute BMI from kg and cm
   function calcBmi(kg: number, cm: number): number {
@@ -443,169 +454,21 @@ export function AIAssessmentClient() {
             </div>
           </div>
 
-          {/* Results Panel Display (if assessment has been run) */}
-          <AnimatePresence>
-            {result && tierCfg && (
-              <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="max-w-4xl mx-auto space-y-6 mb-12"
-              >
-                {/* Triage Badge Card */}
-                <div className={`rounded-3xl border ${tierCfg.border} ${tierCfg.bg} p-7 sm:p-8 shadow-sm`}>
-                  <div className="flex items-start gap-5">
-                    <div className={`size-14 rounded-2xl flex items-center justify-center ${tierCfg.bg} border ${tierCfg.border} shrink-0`}>
-                      <TierIcon className={`size-8 ${tierCfg.color}`} />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <div className={`text-2xl sm:text-3xl font-black tracking-tight ${tierCfg.color}`}>
-                        {result.prediction.tier}
-                      </div>
-                      <p className="text-base sm:text-lg font-bold text-foreground">{tierCfg.sublabel}</p>
-                      <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">{result.prediction.recommendation}</p>
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <RiskGauge score={result.prediction.risk_score} tier={result.prediction.tier} />
-                  </div>
-                  {result.prediction.uncertainty_flag && (
-                    <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-950/40 px-4 py-3 text-sm text-amber-900 dark:text-amber-200 font-medium">
-                      ⚠️ High inter-model uncertainty detected — clinical review strongly recommended
-                    </div>
-                  )}
-                  {result.prediction.equity_override && (
-                    <div className="mt-3 rounded-xl border border-sky-300 bg-sky-50 dark:bg-sky-950/40 px-4 py-3 text-sm text-sky-900 dark:text-sky-200 font-medium">
-                      🛡️ Equity override applied — sensitivity floor constraint enforced for this demographic
-                    </div>
-                  )}
-                </div>
-
-                {/* Two-column: SHAP + AQI */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {/* SHAP Feature Attribution */}
-                  <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3.5 hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-2.5">
-                      <Brain className="size-5 text-primary" />
-                      <h3 className="text-base sm:text-lg font-bold">Feature Attribution (Tree-SHAP)</h3>
-                    </div>
-                    <ShapChart items={result.prediction.shap_items ?? []} />
-                    {(!result.prediction.shap_items?.length) && (
-                      <p className="text-sm text-muted-foreground">SHAP factor data calculated from gradient-boosted trees.</p>
-                    )}
-                  </div>
-
-                  {/* AQI Card */}
-                  <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3.5 hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-2.5">
-                      <Wind className="size-5 text-sky-500" />
-                      <h3 className="text-base sm:text-lg font-bold">Environmental Exposure ({form.state})</h3>
-                    </div>
-                    {result.aqi.aqi_5yr !== null ? (
-                      <div className="space-y-3.5">
-                        <div className="rounded-xl border border-border bg-muted/50 p-4 flex justify-between items-center">
-                          <span className="text-sm font-semibold text-muted-foreground">5-Year Avg AQI</span>
-                          <span className="text-2xl font-black text-foreground">{result.aqi.aqi_5yr?.toFixed(1)}</span>
-                        </div>
-                        <div className="rounded-xl border border-border bg-muted/50 p-4 flex justify-between items-center">
-                          <span className="text-sm font-semibold text-muted-foreground">5-Year PM2.5 (μg/m³)</span>
-                          <span className="text-2xl font-black text-foreground">{result.aqi.pm25_5yr?.toFixed(2)}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">Source: Historical Air Quality Observation API</p>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">AQI data not available for this region.</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Clinical Summary */}
-                {result.summary && (
-                  <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3 hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-2.5">
-                      <Stethoscope className="size-5 text-primary" />
-                      <h3 className="text-base sm:text-lg font-bold">AI Clinical Summary</h3>
-                    </div>
-                    <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed font-normal">{result.summary}</p>
-                    <p className="text-xs text-muted-foreground pt-1">Generated by clinical decision support engine</p>
-                  </div>
-                )}
-
-                {/* Guidelines */}
-                {result.guidelines?.length > 0 && (
-                  <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3.5 hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-2.5">
-                      <FileText className="size-5 text-primary" />
-                      <h3 className="text-base sm:text-lg font-bold">Relevant USPSTF Guidelines</h3>
-                    </div>
-                    <div className="space-y-2.5">
-                      {result.guidelines.map((g, i) => (
-                        <div key={i} className="rounded-xl border border-border bg-muted/40 p-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                          <span className="font-bold text-foreground">p.{g.page}: </span>{g.text}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Report Download Actions */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                  <button
-                    onClick={handleDownloadReport}
-                    disabled={downloading}
-                    className="flex-1 flex items-center justify-center gap-2.5 rounded-2xl border border-primary/20 bg-primary px-6 py-4 text-base font-bold text-primary-foreground hover:bg-primary/95 hover:scale-[1.01] active:scale-[0.99] transition-all shadow-md hover:shadow-primary/25 disabled:opacity-60 cursor-pointer"
-                  >
-                    {downloading ? <Loader2 className="size-5 animate-spin" /> : <Download className="size-5" />}
-                    Download Clinical PDF Report
-                  </button>
-                  <button
-                    onClick={() => {
-                      setResult(null)
-                      setError(null)
-                    }}
-                    className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card px-6 py-4 text-base font-semibold hover:bg-muted hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
-                  >
-                    <RefreshCw className="size-5" /> Adjust Form Inputs
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Warning Banner (Yellow) — Positioned directly after Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.18 }}
+            className="max-w-3xl mx-auto rounded-2xl border border-amber-300/80 dark:border-amber-900/60 bg-amber-50/80 dark:bg-amber-950/30 p-5 flex gap-3.5 shadow-xs mb-8"
+          >
+            <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-sm sm:text-[15px] text-amber-900 dark:text-amber-200 leading-relaxed">
+              <strong>Research Tool — Not Medical Diagnosis.</strong> This AI assessment uses an interpretable ensemble model for educational risk stratification. It cannot confirm or exclude lung cancer. All results must be reviewed by a qualified healthcare professional before clinical decisions are made.
+            </p>
+          </motion.div>
 
           {/* Continuous Vertically Stacked Form */}
           <div className="max-w-3xl mx-auto space-y-8">
-
-            {/* Fast-Evaluation Personas Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-7 space-y-3.5 shadow-xs"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                  <Zap className="size-4 text-primary" /> Fast-Evaluation Personas (For Judges & Clinicians)
-                </span>
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                  1-Click Pre-fill
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {CLINICAL_PERSONAS.map((p) => (
-                  <motion.button
-                    key={p.id}
-                    type="button"
-                    onClick={() => loadPersona(p.data)}
-                    whileHover={{ y: -3, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-primary/5 hover:border-primary/50 transition-all space-y-1 cursor-pointer shadow-xs"
-                  >
-                    <div className="text-sm font-bold text-foreground">{p.label}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{p.desc}</div>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
 
             {/* SECTION 1: Patient Demographics */}
             <motion.div
@@ -968,26 +831,12 @@ export function AIAssessmentClient() {
               </motion.div>
             )}
 
-            {/* RELOCATED WARNING BANNER (Directly above Run AI Assessment) */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-              className="rounded-2xl border border-amber-300/80 dark:border-amber-900/60 bg-amber-50/80 dark:bg-amber-950/30 p-5 flex gap-3.5 shadow-xs"
-            >
-              <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-              <p className="text-sm sm:text-[15px] text-amber-900 dark:text-amber-200 leading-relaxed">
-                <strong>Research Tool — Not Medical Diagnosis.</strong> This AI assessment uses an interpretable ensemble model for educational risk stratification. It cannot confirm or exclude lung cancer. All results must be reviewed by a qualified healthcare professional before clinical decisions are made.
-              </p>
-            </motion.div>
-
             {/* FINAL FULL-WIDTH "RUN AI ASSESSMENT" BUTTON */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.1 }}
+              transition={{ duration: 0.4 }}
               className="pt-2"
             >
               <button
@@ -1009,6 +858,150 @@ export function AIAssessmentClient() {
                 )}
               </button>
             </motion.div>
+
+            {/* RESULT SECTION (Appears below the button after running assessment) */}
+            <div ref={resultRef} className="pt-2">
+              <AnimatePresence>
+                {result && tierCfg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 25 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="space-y-6 pt-4"
+                  >
+                    {/* Triage Badge Card */}
+                    <div className={`rounded-3xl border ${tierCfg.border} ${tierCfg.bg} p-7 sm:p-8 shadow-sm`}>
+                      <div className="flex items-start gap-5">
+                        <div className={`size-14 rounded-2xl flex items-center justify-center ${tierCfg.bg} border ${tierCfg.border} shrink-0`}>
+                          <TierIcon className={`size-8 ${tierCfg.color}`} />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <div className={`text-2xl sm:text-3xl font-black tracking-tight ${tierCfg.color}`}>
+                            {result.prediction.tier}
+                          </div>
+                          <p className="text-base sm:text-lg font-bold text-foreground">{tierCfg.sublabel}</p>
+                          <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">{result.prediction.recommendation}</p>
+                        </div>
+                      </div>
+                      <div className="mt-6">
+                        <RiskGauge score={result.prediction.risk_score} tier={result.prediction.tier} />
+                      </div>
+                      {result.prediction.uncertainty_flag && (
+                        <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-950/40 px-4 py-3 text-sm text-amber-900 dark:text-amber-200 font-medium">
+                          ⚠️ High inter-model uncertainty detected — clinical review strongly recommended
+                        </div>
+                      )}
+                      {result.prediction.equity_override && (
+                        <div className="mt-3 rounded-xl border border-sky-300 bg-sky-50 dark:bg-sky-950/40 px-4 py-3 text-sm text-sky-900 dark:text-sky-200 font-medium">
+                          🛡️ Equity override applied — sensitivity floor constraint enforced for this demographic
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Two-column: SHAP + AQI */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {/* SHAP Feature Attribution */}
+                      <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3.5 hover:shadow-md transition-shadow">
+                        <div className="flex items-center gap-2.5">
+                          <Brain className="size-5 text-primary" />
+                          <h3 className="text-base sm:text-lg font-bold">Feature Attribution (Tree-SHAP)</h3>
+                        </div>
+                        <ShapChart items={result.prediction.shap_items ?? []} />
+                        {(!result.prediction.shap_items?.length) && (
+                          <p className="text-sm text-muted-foreground">SHAP factor data calculated from gradient-boosted trees.</p>
+                        )}
+                      </div>
+
+                      {/* AQI Card */}
+                      <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3.5 hover:shadow-md transition-shadow">
+                        <div className="flex items-center gap-2.5">
+                          <Wind className="size-5 text-sky-500" />
+                          <h3 className="text-base sm:text-lg font-bold">Environmental Exposure ({form.state})</h3>
+                        </div>
+                        {result.aqi.aqi_5yr !== null ? (
+                          <div className="space-y-3.5">
+                            <div className="rounded-xl border border-border bg-muted/50 p-4 flex justify-between items-center">
+                              <span className="text-sm font-semibold text-muted-foreground">5-Year Avg AQI</span>
+                              <span className="text-2xl font-black text-foreground">{result.aqi.aqi_5yr?.toFixed(1)}</span>
+                            </div>
+                            <div className="rounded-xl border border-border bg-muted/50 p-4 flex justify-between items-center">
+                              <span className="text-sm font-semibold text-muted-foreground">5-Year PM2.5 (μg/m³)</span>
+                              <span className="text-2xl font-black text-foreground">{result.aqi.pm25_5yr?.toFixed(2)}</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">Source: Historical Air Quality Observation API</p>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">AQI data not available for this region.</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Clinical Summary */}
+                    {result.summary && (
+                      <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3 hover:shadow-md transition-shadow">
+                        <div className="flex items-center gap-2.5">
+                          <Stethoscope className="size-5 text-primary" />
+                          <h3 className="text-base sm:text-lg font-bold">AI Clinical Summary</h3>
+                        </div>
+                        <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed font-normal">{result.summary}</p>
+                        <p className="text-xs text-muted-foreground pt-1">Generated by clinical decision support engine</p>
+                      </div>
+                    )}
+
+                    {/* Guidelines */}
+                    {result.guidelines?.length > 0 && (
+                      <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-3.5 hover:shadow-md transition-shadow">
+                        <div className="flex items-center gap-2.5">
+                          <FileText className="size-5 text-primary" />
+                          <h3 className="text-base sm:text-lg font-bold">Relevant USPSTF Guidelines</h3>
+                        </div>
+                        <div className="space-y-2.5">
+                          {result.guidelines.map((g, i) => (
+                            <div key={i} className="rounded-xl border border-border bg-muted/40 p-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                              <span className="font-bold text-foreground">p.{g.page}: </span>{g.text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Report Download Actions */}
+                    <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                      <button
+                        type="button"
+                        onClick={handleDownloadReport}
+                        disabled={downloading}
+                        className="flex-1 flex items-center justify-center gap-2.5 rounded-2xl border border-primary/20 bg-primary px-6 py-4 text-base font-bold text-primary-foreground hover:bg-primary/95 hover:scale-[1.01] active:scale-[0.99] transition-all shadow-md hover:shadow-primary/25 disabled:opacity-60 cursor-pointer"
+                      >
+                        {downloading ? <Loader2 className="size-5 animate-spin" /> : <Download className="size-5" />}
+                        Download Clinical PDF Report
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: 'smooth' })
+                        }}
+                        className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card px-6 py-4 text-base font-semibold hover:bg-muted hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
+                      >
+                        <ArrowUp className="size-5" /> Back to Top
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setResult(null)
+                          setError(null)
+                          window.scrollTo({ top: 0, behavior: 'smooth' })
+                        }}
+                        className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card px-6 py-4 text-base font-semibold hover:bg-muted hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
+                      >
+                        <RefreshCw className="size-5" /> Reset Form
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
           </div>
 
