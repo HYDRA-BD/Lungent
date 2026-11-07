@@ -100,104 +100,98 @@ export function PatientDemoClient() {
         <div className="text-center space-y-4 max-w-3xl mx-auto pt-2">
           <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/10 px-4 py-1.5 text-xs font-bold text-teal-700 dark:text-teal-400 border border-teal-500/20">
             <HeartPulse className="size-3.5" />
-            <span>Patient Empowerment & Accessibility</span>
+            <span>Patient Empowerment</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground">
-            Personalized Risk Assessment <br />
+            Accessible Risk Awareness <br />
             <span className="bg-gradient-to-r from-teal-600 via-primary to-emerald-600 bg-clip-text text-transparent">
               Without the Imaging Barrier
             </span>
           </h1>
 
           <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-            An accessible, non-imaging screening interface designed to empower individuals in underserved and rural communities to understand their preliminary lung cancer risk.
+            Bridging the gap between advanced AI research and accessible healthcare for underserved communities.
           </p>
         </div>
 
         {/* 3 Core Structural Cards: Problem, Solution, Workflow */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-          {/* 1. The Prevailing Problem */}
+          {/* Section 1: The Problem & Why It Is Serious */}
           <Card className="rounded-2xl border-rose-200/80 dark:border-rose-950/60 bg-white/80 dark:bg-slate-900/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
             <CardHeader className="space-y-3 pb-3">
               <div className="size-11 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-2xs">
                 <AlertTriangle className="size-5" />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                1. The Prevailing Problem
+                1. The Problem & Why It Is Serious
               </span>
               <CardTitle className="text-xl font-bold text-foreground">
-                The Prohibitive Imaging Barrier
+                The Screening Gap
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               <p>
-                Traditional LDCT screening requires expensive medical infrastructure, creating massive barriers for rural and underserved populations. Many patients don't realize they are at risk until late stages.
+                Lung cancer often goes undetected until late stages because traditional Low-Dose CT (LDCT) screening requires expensive infrastructure and specialist access.
               </p>
               <p>
-                High travel costs, long hospital queues, and an absence of local diagnostic facilities prevent early proactive consultation when treatment is most effective.
+                For rural and underserved populations, these barriers lead to delayed diagnoses and significantly worse survival rates. Many individuals simply do not realize they are at risk.
               </p>
             </CardContent>
             <CardFooter className="pt-2 text-xs font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 border-t border-border/40">
-              <span>Severe access & cost hurdles</span>
+              <span>Severe infrastructure & access barriers</span>
             </CardFooter>
           </Card>
 
-          {/* 2. The Solution */}
+          {/* Section 2: The Lungent Solution */}
           <Card className="rounded-2xl border-teal-200/80 dark:border-teal-950/60 bg-white/80 dark:bg-slate-900/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
             <CardHeader className="space-y-3 pb-3">
               <div className="size-11 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-2xs">
                 <Lightbulb className="size-5" />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
-                2. The Solution
+                2. The Lungent Solution
               </span>
               <CardTitle className="text-xl font-bold text-foreground">
-                Intuitive Non-Imaging Screening
+                Non-Imaging, Interpretable AI
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               <p>
-                An intuitive interface where patients input basic demographic, behavioral (smoking history), and clinical data to receive an interpretable, preliminary risk assessment.
+                Lungent changes this by utilizing a low-cost, non-imaging approach.
               </p>
               <p>
-                Zero radiation, zero lab work, and zero waiting rooms. Patients receive clear insights in both Bengali and English in under three minutes from any smartphone or tablet.
+                By analyzing easily accessible demographic, behavioral, and clinical survey data (like the CDC BRFSS dataset), our interpretable machine learning model can estimate preliminary lung cancer risk without a single X-ray or scan.
               </p>
             </CardContent>
             <CardFooter className="pt-2 text-xs font-semibold text-teal-600 dark:text-teal-400 flex items-center gap-1 border-t border-border/40">
-              <span>Empowering, radiation-free pre-screening</span>
+              <span>CDC BRFSS validated survey model</span>
             </CardFooter>
           </Card>
 
-          {/* 3. How It Solves It */}
+          {/* Section 3: How It Solves the Problem */}
           <Card className="rounded-2xl border-indigo-200/80 dark:border-indigo-950/60 bg-white/80 dark:bg-slate-900/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
             <CardHeader className="space-y-3 pb-3">
               <div className="size-11 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-2xs">
                 <Workflow className="size-5" />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                3. How It Solves It
+                3. How It Solves the Problem
               </span>
               <CardTitle className="text-xl font-bold text-foreground">
-                Actionable 3-Tier Guidance
+                Actionable Clinical Guidance
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              <div className="flex items-start gap-2">
-                <span className="font-bold text-foreground shrink-0">Step 1:</span>
-                <span><strong>Quick Input:</strong> Answer simple questions on age, smoking pack-years, and living environment.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="font-bold text-foreground shrink-0">Step 2:</span>
-                <span><strong>Interpretable ML:</strong> Machine learning ensemble evaluates risk factors and explains findings in plain language.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="font-bold text-foreground shrink-0">Step 3:</span>
-                <span><strong>3-Tier Policy:</strong> Delivers a clear RULE-OUT, REVIEW, or REFER recommendation to guide timely doctor visits.</span>
-              </div>
+            <CardContent className="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p>
+                The portal translates complex risk models into a simple, 3-tier decision policy: <strong>RULE-OUT</strong>, <strong>REVIEW</strong>, or <strong>REFER</strong>.
+              </p>
+              <p>
+                This empowers individuals to understand their risk and provides clear guidance on whether they should seek further professional medical evaluation, ultimately facilitating earlier clinical intervention.
+              </p>
             </CardContent>
             <CardFooter className="pt-2 text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 border-t border-border/40">
-              <span>Bridges patients to healthcare professionals</span>
+              <span>Empowers timely clinical intervention</span>
             </CardFooter>
           </Card>
         </div>
