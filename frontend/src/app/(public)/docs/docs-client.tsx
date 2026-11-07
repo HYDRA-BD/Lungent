@@ -6,15 +6,21 @@ import { motion, AnimatePresence } from 'motion/react'
 import {
   Activity,
   ArrowLeft,
+  BookOpen,
   Brain,
+  ClipboardList,
   Code2,
   Database,
   ExternalLink,
+  FileCheck,
   Layers,
   Network,
   Scale,
+  SearchCheck,
+  ShieldAlert,
   ShieldCheck,
   Terminal,
+  Wind,
 } from 'lucide-react'
 import { Header } from '@/components/layouts/header'
 import { Footer } from '@/components/layouts/footer'
@@ -186,41 +192,250 @@ export function DocsClient() {
                   })}
                 </div>
 
-                {/* High-level system flow without exposing internal research algorithms */}
+                {/* End-to-End Clinical Flow */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.45 }}
-                  className="rounded-3xl border border-border/80 bg-card p-6 md:p-8 space-y-5 shadow-xs"
+                  className="rounded-3xl border border-border/80 bg-card p-6 md:p-8 space-y-8 shadow-xs"
                 >
-                  <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                    <Layers className="size-5 text-primary" /> End-to-End Clinical Flow
-                  </h3>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-5">
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground flex items-center gap-2.5">
+                        <span className="p-2 rounded-xl bg-primary/10 text-primary border border-primary/20">
+                          <Layers className="size-5" />
+                        </span>
+                        End-to-End Clinical Flow
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                        From community health intake to explainable ML stratification and clinical referral.
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 self-start sm:self-auto">
+                      <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                      6-Stage Decision Pipeline
+                    </div>
+                  </div>
 
-                  <div className="p-5 rounded-2xl bg-muted/40 font-mono text-xs text-slate-700 dark:text-slate-300 overflow-x-auto border border-border/60">
-                    <pre className="leading-relaxed">
-{`[Patient Intake / Questionnaire]
-        │ (Age, Tobacco History, Comorbidities, Region)
-        ▼
-[Ambient Environmental Inhalation Context]
-        │ (Longitudinal PM2.5 / Air Quality Data)
-        ▼
-[Machine Learning Risk Stratification Engine]
-        │ (Ensemble Gradient-Boosted Classifiers + Probability Calibration)
-        ▼
-[Clinical Safety & Access Triage Gate]
-        ├── Rule-Out (Low Risk, Routine Annual Monitoring)
-        ├── Review   (Moderate / Borderline Risk, Shared Decision-Making)
-        └── Refer    (High Risk, Fast-Track for Low-Dose CT Diagnostic Workup)
-        │
-   ┌────┴─────────────────────────────┐
-   ▼                                   ▼
-[Explainability (XAI Attribution)] [Evidence-Based Guideline Matching]
-   │                                   │
-   └─────────────┬─────────────────────┘
-                 ▼
-[Clinical Referral Summary & Signed PDF Report]`}</pre>
+                  {/* Flowchart Steps */}
+                  <div className="relative space-y-6 before:absolute before:left-5 before:top-6 before:bottom-6 before:w-0.5 before:bg-gradient-to-b before:from-primary/40 before:via-sky-400/30 before:to-emerald-400/30 dark:before:from-primary/30 dark:before:via-sky-400/20 dark:before:to-emerald-400/20 md:before:left-6">
+                    {/* Step 1: Patient Intake */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.05 }}
+                      className="relative pl-12 md:pl-16 group"
+                    >
+                      <div className="absolute left-2.5 md:left-3.5 -translate-x-1/2 top-4 size-9 rounded-full bg-white dark:bg-slate-900 border-2 border-primary text-primary flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
+                        <ClipboardList className="size-4" />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-primary">Step 1</span>
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">Intake & Stratification Input</span>
+                        </div>
+                        <h4 className="text-base font-bold text-foreground">Patient Intake</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                          Demographics, Age, Tobacco History, Comorbidities.
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-medium">Demographics & Age</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-medium">Tobacco Pack-Years</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 font-medium">Pulmonary Comorbidities</span>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 2: Environmental Context */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.1 }}
+                      className="relative pl-12 md:pl-16 group"
+                    >
+                      <div className="absolute left-2.5 md:left-3.5 -translate-x-1/2 top-4 size-9 rounded-full bg-white dark:bg-slate-900 border-2 border-sky-500 text-sky-500 flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
+                        <Wind className="size-4" />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">Step 2</span>
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">Ambient Exposure Mapping</span>
+                        </div>
+                        <h4 className="text-base font-bold text-foreground">Environmental Context</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                          Ambient Inhalation Context (Longitudinal PM2.5 / Air Quality Data).
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-medium">Longitudinal PM2.5 Exposure</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-medium">Geospatial Air Quality (AQI)</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-medium">Particulate Burden Scoring</span>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 3: ML Risk Stratification */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.15 }}
+                      className="relative pl-12 md:pl-16 group"
+                    >
+                      <div className="absolute left-2.5 md:left-3.5 -translate-x-1/2 top-4 size-9 rounded-full bg-white dark:bg-slate-900 border-2 border-indigo-500 text-indigo-500 flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
+                        <Brain className="size-4" />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Step 3</span>
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">Core Pre-Screening Engine</span>
+                        </div>
+                        <h4 className="text-base font-bold text-foreground">ML Risk Stratification</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                          Ensemble Gradient-Boosted Classifiers + Probability Calibration.
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium">XGBoost & CatBoost Ensembles</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium">Platt & Isotonic Calibration</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium">Class-Imbalance Calibrated</span>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 4: Triage Gate */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.2 }}
+                      className="relative pl-12 md:pl-16 group"
+                    >
+                      <div className="absolute left-2.5 md:left-3.5 -translate-x-1/2 top-4 size-9 rounded-full bg-white dark:bg-slate-900 border-2 border-amber-500 text-amber-500 flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
+                        <ShieldAlert className="size-4" />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Step 4</span>
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">Safety Protocol Gate</span>
+                        </div>
+                        <h4 className="text-base font-bold text-foreground">Triage Gate</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                          Clinical Safety & Access Triage Gate.
+                        </p>
+
+                        {/* 3-tier policy visually with distinct colored badges */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                          {/* Rule-Out (Green) */}
+                          <div className="p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/70 dark:bg-emerald-950/40 space-y-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="size-2 rounded-full bg-emerald-500" />
+                              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300">Rule-Out</span>
+                              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 ml-auto">Green</span>
+                            </div>
+                            <p className="text-xs text-emerald-900/80 dark:text-emerald-200/80 leading-snug">
+                              Low Risk: Routine annual monitoring & community primary prevention.
+                            </p>
+                          </div>
+
+                          {/* Review (Yellow) */}
+                          <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/40 space-y-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="size-2 rounded-full bg-amber-500" />
+                              <span className="text-xs font-bold text-amber-800 dark:text-amber-300">Review</span>
+                              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 ml-auto">Yellow</span>
+                            </div>
+                            <p className="text-xs text-amber-900/80 dark:text-amber-200/80 leading-snug">
+                              Moderate / Borderline Risk: Shared decision-making & clinical reassessment.
+                            </p>
+                          </div>
+
+                          {/* Refer (Red) */}
+                          <div className="p-3.5 rounded-xl border border-rose-200 dark:border-rose-800/60 bg-rose-50/70 dark:bg-rose-950/40 space-y-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="size-2 rounded-full bg-rose-500" />
+                              <span className="text-xs font-bold text-rose-800 dark:text-rose-300">Refer</span>
+                              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 ml-auto">Red</span>
+                            </div>
+                            <p className="text-xs text-rose-900/80 dark:text-rose-200/80 leading-snug">
+                              High Risk: Fast-track prioritization for Low-Dose CT (LDCT) workup.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 5: Explainability & Guidelines */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.25 }}
+                      className="relative pl-12 md:pl-16 group"
+                    >
+                      <div className="absolute left-2.5 md:left-3.5 -translate-x-1/2 top-4 size-9 rounded-full bg-white dark:bg-slate-900 border-2 border-teal-500 text-teal-500 flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
+                        <SearchCheck className="size-4" />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">Step 5</span>
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">Interpretability & Evidence</span>
+                        </div>
+                        <h4 className="text-base font-bold text-foreground">Explainability & Guidelines</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                          XAI Attribution & Evidence-Based Guideline Matching.
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                              <Brain className="size-3.5 text-teal-600 dark:text-teal-400" />
+                              XAI Attribution
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                              SHAP factor contributions explaining individual risk elevations.
+                            </p>
+                          </div>
+                          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                              <BookOpen className="size-3.5 text-teal-600 dark:text-teal-400" />
+                              Guideline Matching
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                              RAG retrieval against USPSTF, NCCN, and WHO clinical protocols.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 6: Output */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.3 }}
+                      className="relative pl-12 md:pl-16 group"
+                    >
+                      <div className="absolute left-2.5 md:left-3.5 -translate-x-1/2 top-4 size-9 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500 text-emerald-500 flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-110 transition-transform">
+                        <FileCheck className="size-4" />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs hover:-translate-y-1 hover:shadow-md transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Step 6</span>
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">Final Output & Workup</span>
+                        </div>
+                        <h4 className="text-base font-bold text-foreground">Output</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                          Clinical Referral Summary & Signed PDF Report.
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium">Clinical Referral Summary</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium">Digitally Signed PDF Report</span>
+                          <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium">EHR-Ready FHIR Package</span>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
                 </motion.div>
               </motion.div>
