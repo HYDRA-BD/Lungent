@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion, AnimatePresence } from 'motion/react'
 import { Logo } from '@/components/shared/logo'
 import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { buttonVariants } from '@/components/ui/button'
@@ -124,8 +125,8 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md transition-all shadow-xs">
-      <div className="container mx-auto flex h-18 sm:h-20 items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-[100] relative overflow-visible w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-950 shadow-xs">
+      <div className="container mx-auto flex h-[72px] sm:h-20 items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Logo size="md" variant="compact" href="/" />
 
@@ -282,112 +283,133 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation */}
-      {mobileMenuOpen && (
-        <div
-          id="mobile-navigation"
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-x-0 top-18 sm:top-20 bottom-0 z-50 bg-background/98 backdrop-blur-md border-b border-border p-6 overflow-y-auto lg:hidden animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col justify-between"
-        >
-          <nav aria-label="Mobile Navigation" className="space-y-4">
-            {/* Standard Nav Links */}
-            <div className="space-y-1">
-              <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  'flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-colors',
-                  pathname === '/' ? 'bg-primary/10 text-primary font-bold' : 'text-foreground hover:bg-muted'
-                )}
-              >
-                <span>Home</span>
-              </Link>
-              <Link
-                href="/ai-assessment"
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  'flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-colors',
-                  pathname.startsWith('/ai-assessment')
-                    ? 'bg-primary/10 text-primary font-bold'
-                    : 'text-foreground hover:bg-muted'
-                )}
-              >
-                <span>AI Risk Assessment</span>
-              </Link>
-            </div>
+      {/* Mobile Dropdown Navigation */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            id="mobile-navigation"
+            role="dialog"
+            aria-modal="true"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="absolute top-full left-0 w-full z-[100] bg-white dark:bg-slate-950 shadow-lg border-b border-slate-200 dark:border-slate-800 flex flex-col p-6 gap-4 max-h-[calc(100vh-80px)] overflow-y-auto"
+          >
+            <nav aria-label="Mobile Navigation" className="flex flex-col gap-3">
+              {/* Primary Links: Home & AI Risk Assessment */}
+              <div className="flex flex-col gap-1.5">
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all',
+                    pathname === '/'
+                      ? 'bg-primary/10 text-primary font-bold border border-primary/25 shadow-xs'
+                      : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900'
+                  )}
+                  aria-current={pathname === '/' ? 'page' : undefined}
+                >
+                  <span>Home</span>
+                  {pathname === '/' && <div className="size-2 rounded-full bg-primary" />}
+                </Link>
 
-            {/* Portals Showcase in Mobile Drawer */}
-            <div className="rounded-2xl border border-gray-200/80 dark:border-slate-800 bg-muted/30 p-3 space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-2 block">
-                Portals & Demos
-              </span>
-              <div className="space-y-1">
-                {portalLinks.map((portal) => (
-                  <Link
-                    key={portal.href}
-                    href={portal.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/15 transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className={cn('size-7 rounded-lg flex items-center justify-center shrink-0', portal.iconBg)}>
-                        {portal.icon}
-                      </div>
-                      <span className="text-sm font-semibold text-foreground">{portal.label}</span>
-                    </div>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-teal-500/30 text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40">
-                      {portal.badge}
-                    </span>
-                  </Link>
-                ))}
+                <Link
+                  href="/ai-assessment"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    'flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all',
+                    pathname.startsWith('/ai-assessment')
+                      ? 'bg-primary/10 text-primary font-bold border border-primary/25 shadow-xs'
+                      : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900'
+                  )}
+                  aria-current={pathname.startsWith('/ai-assessment') ? 'page' : undefined}
+                >
+                  <span>AI Risk Assessment</span>
+                  {pathname.startsWith('/ai-assessment') && <div className="size-2 rounded-full bg-primary" />}
+                </Link>
               </div>
+
+              {/* Portals Showcase in Mobile Dropdown */}
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/80 p-3.5 flex flex-col gap-2">
+                <div className="flex items-center justify-between px-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Portals &amp; Demos
+                  </span>
+                  <span className="text-[11px] font-semibold text-primary">Interactive</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  {portalLinks.map((portal) => (
+                    <Link
+                      key={portal.href}
+                      href={portal.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/15 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={cn('size-8 rounded-lg flex items-center justify-center shrink-0 shadow-2xs', portal.iconBg)}>
+                          {portal.icon}
+                        </div>
+                        <div>
+                          <span className="text-sm font-bold text-foreground block">{portal.label}</span>
+                          <span className="text-[11px] text-muted-foreground block line-clamp-1">{portal.desc}</span>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-teal-500/30 text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40">
+                        {portal.badge}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Secondary Navigation Links */}
+              <div className="flex flex-col gap-1.5">
+                {navLinks.slice(2).map((link) => {
+                  const active = isActive(link.href)
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        'flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all',
+                        active
+                          ? 'bg-primary/10 text-primary font-bold border border-primary/25 shadow-xs'
+                          : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900'
+                      )}
+                      aria-current={active ? 'page' : undefined}
+                    >
+                      <span>{link.label}</span>
+                      {active && <div className="size-2 rounded-full bg-primary" />}
+                    </Link>
+                  )
+                })}
+              </div>
+            </nav>
+
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className={buttonVariants({ variant: 'outline', size: 'lg', className: 'w-full justify-center text-base font-semibold rounded-xl' })}
+              >
+                <LogIn className="size-4 mr-2" />
+                <span>Sign In</span>
+              </Link>
+
+              <Link
+                href="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className={buttonVariants({ variant: 'default', size: 'lg', className: 'w-full justify-center text-base font-bold shadow-md rounded-xl' })}
+              >
+                <span>Get Started</span>
+                <ArrowRight className="size-4 ml-2" />
+              </Link>
             </div>
-
-            {/* Remaining standard links */}
-            <div className="space-y-1">
-              {navLinks.slice(2).map((link) => {
-                const active = isActive(link.href)
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      'flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-colors',
-                      active ? 'bg-primary/10 text-primary font-bold' : 'text-foreground hover:bg-muted'
-                    )}
-                    aria-current={active ? 'page' : undefined}
-                  >
-                    <span>{link.label}</span>
-                    {active && <div className="size-2 rounded-full bg-primary" />}
-                  </Link>
-                )
-              })}
-            </div>
-          </nav>
-
-          <div className="pt-6 border-t border-border/80 space-y-3">
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className={buttonVariants({ variant: 'outline', size: 'lg', className: 'w-full justify-center text-base font-semibold' })}
-            >
-              <LogIn className="size-4 mr-2" />
-              <span>Sign In</span>
-            </Link>
-
-            <Link
-              href="/register"
-              onClick={() => setMobileMenuOpen(false)}
-              className={buttonVariants({ variant: 'default', size: 'lg', className: 'w-full justify-center text-base font-bold shadow-md' })}
-            >
-              <span>Get Started</span>
-              <ArrowRight className="size-4 ml-2" />
-            </Link>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }
