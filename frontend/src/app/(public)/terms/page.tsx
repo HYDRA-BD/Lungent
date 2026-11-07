@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { TermsClient } from './terms-client'
 
 export const metadata: Metadata = {
-  title: 'Terms of Use (Draft) — Lungent',
+  title: 'Terms of Use — Lungent',
   description:
     'Lungent Terms of Use draft outlining platform scope, non-diagnostic disclaimers, authorized user requirements, and limitation of liability.',
   openGraph: {

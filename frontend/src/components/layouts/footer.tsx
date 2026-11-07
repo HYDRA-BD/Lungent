@@ -124,12 +124,12 @@ export function Footer() {
             <ul className="space-y-2.5 text-sm font-medium">
               <li>
                 <Link href="/privacy" className="hover:text-primary transition-colors">
-                  Privacy Policy (Draft)
+                  Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="hover:text-primary transition-colors">
-                  Terms of Use (Draft)
+                  Terms of Use
                 </Link>
               </li>
               <li>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { PrivacyClient } from './privacy-client'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy (Draft) — Lungent',
+  title: 'Privacy Policy — Lungent',
   description:
     'Lungent Privacy Policy draft covering data collection principles, encryption protocols, PostgreSQL Row Level Security safeguards, and patient rights.',
   openGraph: {
