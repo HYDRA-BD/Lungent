@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { motion, AnimatePresence } from 'motion/react'
 import {
   Activity, AlertTriangle, ArrowLeft, ArrowRight, Brain,
   CheckCircle2, ChevronRight, Download, FileText, Info,
@@ -253,66 +254,125 @@ export function AIAssessmentClient() {
   const TierIcon = tierCfg?.icon ?? Shield
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen flex-col bg-background selection:bg-primary/20">
+      {/* Ambient Respiration & Floating Glow (Pulmonary AI Aesthetic) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[680px] pointer-events-none overflow-hidden -z-10">
+        <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-teal-400/15 dark:bg-teal-500/10 blur-3xl animate-lung-breathe" />
+        <div
+          className="absolute top-28 right-1/4 w-80 h-80 rounded-full bg-sky-400/15 dark:bg-sky-500/10 blur-3xl animate-lung-breathe"
+          style={{ animationDelay: '3.5s' }}
+        />
+      </div>
+
       <Header />
-      <main className="flex-1 py-10">
+      <main className="flex-1 py-12 sm:py-16">
         <SectionContainer size="lg">
 
           {/* Page Header */}
-          <div className="mb-8 space-y-3">
-            <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors">
-              <ArrowLeft className="size-4" /> Back to Home
-            </Link>
-            <div className="flex items-center gap-4">
-              <div className="size-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-                <Brain className="size-6" />
-              </div>
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">AI Risk Assessment</h1>
-                <p className="text-sm sm:text-base text-muted-foreground mt-0.5">Calibrated Clinical Decision Support · Multi-Factor Risk Stratification</p>
+          <div className="mb-10 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors">
+                <ArrowLeft className="size-3.5" /> Back to Home
+              </Link>
+            </motion.div>
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4.5">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.45 }}
+                className="size-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 shadow-2xs"
+              >
+                <Brain className="size-7" />
+              </motion.div>
+
+              <div className="space-y-1">
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary border border-primary/20 mb-1"
+                >
+                  <Activity className="size-3.5 animate-pulse" />
+                  <span>Clinical Decision Support Engine</span>
+                </motion.div>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.08 }}
+                  className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground font-sans leading-[1.12]"
+                >
+                  AI Risk <span className="bg-gradient-to-r from-primary via-teal-600 to-sky-600 bg-clip-text text-transparent">Assessment</span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.16 }}
+                  className="text-base sm:text-lg text-slate-600 dark:text-slate-300"
+                >
+                  Calibrated Clinical Decision Support · Multi-Factor Non-Imaging Risk Stratification
+                </motion.p>
               </div>
             </div>
           </div>
 
           {/* Clinical Disclaimer Banner */}
-          <div className="mb-8 rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 flex gap-3.5 shadow-2xs">
-            <AlertTriangle className="size-5 text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-sm sm:text-[15px] text-amber-900 leading-relaxed">
-              <strong>Research Tool — Not Medical Diagnosis.</strong> This AI assessment uses a research-grade model for educational risk stratification. It cannot confirm or exclude lung cancer. All results must be reviewed by a qualified healthcare professional before clinical decisions are made.
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.45, delay: 0.2 }}
+            className="mb-8 rounded-2xl border border-amber-300/80 dark:border-amber-900/60 bg-amber-50/80 dark:bg-amber-950/30 p-5 flex gap-3.5 shadow-2xs"
+          >
+            <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-sm sm:text-[15px] text-amber-900 dark:text-amber-200 leading-relaxed">
+              <strong>Research Tool — Not Medical Diagnosis.</strong> This AI assessment uses an interpretable ensemble model for educational risk stratification. It cannot confirm or exclude lung cancer. All results must be reviewed by a qualified healthcare professional before clinical decisions are made.
             </p>
-          </div>
+          </motion.div>
 
           {step !== 'results' && (
             <div className="max-w-2xl mx-auto space-y-8">
               {/* Evaluator Quick-Load Persona Toolbar */}
-              <div className="rounded-2xl border border-border bg-card p-5 space-y-3 shadow-xs">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.25 }}
+                className="rounded-3xl border border-border/80 bg-card p-6 space-y-3.5 shadow-xs"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm sm:text-[15px] font-bold text-foreground flex items-center gap-2">
                     <Zap className="size-4 text-primary" /> Fast-Evaluation Personas (For Judges & Clinicians)
                   </span>
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary">1-Click Pre-fill</span>
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">1-Click Pre-fill</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {CLINICAL_PERSONAS.map((p) => (
-                    <button
+                    <motion.button
                       key={p.id}
                       type="button"
                       onClick={() => loadPersona(p.data)}
-                      className="text-left p-3.5 rounded-xl border border-border/80 bg-muted/40 hover:bg-primary/5 hover:border-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all space-y-1 cursor-pointer"
+                      whileHover={{ y: -3, scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="text-left p-3.5 rounded-2xl border border-border/80 bg-muted/40 hover:bg-primary/5 hover:border-primary/50 transition-all space-y-1.5 cursor-pointer shadow-2xs"
                     >
                       <div className="text-sm font-bold text-foreground">{p.label}</div>
-                      <div className="text-xs text-muted-foreground leading-relaxed">{p.desc}</div>
-                    </button>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{p.desc}</div>
+                    </motion.button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Step Indicator */}
               <div className="flex items-center gap-3">
                 {stepLabels.map((label, i) => (
                   <React.Fragment key={i}>
                     <div className={`flex items-center gap-2 text-sm font-semibold ${i <= stepIdx ? 'text-primary' : 'text-muted-foreground'}`}>
-                      <div className={`size-6 rounded-full flex items-center justify-center text-xs font-bold ${i < stepIdx ? 'bg-primary text-primary-foreground' : i === stepIdx ? 'bg-primary/20 text-primary border border-primary' : 'bg-muted text-muted-foreground'}`}>
+                      <div className={`size-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${i < stepIdx ? 'bg-primary text-primary-foreground' : i === stepIdx ? 'bg-primary/20 text-primary border border-primary ring-2 ring-primary/20' : 'bg-muted text-muted-foreground'}`}>
                         {i < stepIdx ? '✓' : i + 1}
                       </div>
                       <span className="hidden sm:inline">{label}</span>
