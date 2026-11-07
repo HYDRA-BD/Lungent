@@ -4,15 +4,6 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
-  async redirects() {
-    return [
-      {
-        source: '/portal/patient',
-        destination: '/patient',
-        permanent: false,
-      },
-    ];
-  },
   async headers() {
     return [
       {
