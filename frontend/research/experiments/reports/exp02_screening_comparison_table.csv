@@ -1,0 +1,5 @@
+roc_auc,pr_auc,sensitivity,specificity,precision,f1,accuracy,brier_score,true_positives,false_positives,true_negatives,false_negatives,model,cv_roc_auc_mean,cv_roc_auc_std,train_time_sec
+0.909,0.9903,0.7642,0.9909,0.9987,0.8659,0.786,0.1327,7109,9,980,2193,Random_Forest,0.9095,0.0034,3.32
+0.9085,0.9902,0.768,0.9869,0.9982,0.8681,0.789,0.1356,7144,13,976,2158,Logistic_Regression_Baseline,0.9098,0.0029,1.68
+0.9074,0.9901,0.7783,0.9737,0.9964,0.874,0.7971,0.1309,7240,26,963,2062,Hist_Gradient_Boosting,0.9086,0.0031,8.72
+0.9015,0.9868,0.7644,0.9919,0.9989,0.866,0.7862,0.1388,7110,8,981,2192,Decision_Tree,0.9034,0.0045,1.26

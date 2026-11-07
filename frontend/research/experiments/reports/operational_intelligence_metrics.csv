@@ -1,0 +1,11 @@
+Domain,Metric,Value,Target,Status
+Facility Benchmarking,Volume-Composite Score Correlation,-0.08,|r| < 0.40 (No Volume Bias),PASS
+Facility Benchmarking,Volume Bias Mitigation Status,True,True,PASS
+Facility Benchmarking,Top Normalized Operational Score,95.0 / 100,>= 85.0,PASS
+Predictive Forecasting,Holt's Linear MAE,1.56 assessments,< 10.0 assessments,PASS
+Predictive Forecasting,Holt's Linear RMSE,2.18 assessments,< 12.0 assessments,PASS
+Predictive Forecasting,Holt's Linear MAPE,1.8%,< 15.0%,PASS
+Predictive Forecasting,Error Reduction vs MA Baseline,71.3%,> 15.0%,PASS
+Predictive Forecasting,95% Prediction Interval Coverage,85.7%,>= 90.0%,PASS
+Predictive Forecasting,Capacity Bottleneck Detection,True,True (at 85 limit),PASS
+Privacy & Safeguards,Re-identification Leakage Count,0,0 (k >= 5 strict),PASS

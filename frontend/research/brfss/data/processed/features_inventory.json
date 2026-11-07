@@ -1,0 +1,525 @@
+{
+  "demographics": [
+    {
+      "variable": "_STATE",
+      "label": "STATE FIPS CODE",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 54
+    },
+    {
+      "variable": "_AGEG5YR",
+      "label": "REPORTED AGE IN FIVE-YEAR AGE CATEGORIES",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 14
+    },
+    {
+      "variable": "SEXVAR",
+      "label": "SEX OF RESPONDENT",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 2
+    },
+    {
+      "variable": "_SEX",
+      "label": "CALCULATED SEX VARIABLE",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 2
+    },
+    {
+      "variable": "EDUCA",
+      "label": "EDUCATION LEVEL",
+      "non_null_count": 445127,
+      "non_null_pct": 100.0,
+      "unique_values": 7
+    },
+    {
+      "variable": "_EDUCAG",
+      "label": "COMPUTED LEVEL OF EDUCATION COMPLETED CA",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 5
+    },
+    {
+      "variable": "_INCOMG1",
+      "label": "COMPUTED INCOME CATEGORIES",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 8
+    },
+    {
+      "variable": "EMPLOY1",
+      "label": "EMPLOYMENT STATUS",
+      "non_null_count": 438936,
+      "non_null_pct": 98.6,
+      "unique_values": 9
+    },
+    {
+      "variable": "MARITAL",
+      "label": "MARITAL STATUS",
+      "non_null_count": 445124,
+      "non_null_pct": 100.0,
+      "unique_values": 7
+    },
+    {
+      "variable": "VETERAN3",
+      "label": "ARE YOU A VETERAN",
+      "non_null_count": 440959,
+      "non_null_pct": 99.1,
+      "unique_values": 4
+    }
+  ],
+  "tobacco_exposure": [
+    {
+      "variable": "SMOKE100",
+      "label": "SMOKED AT LEAST 100 CIGARETTES",
+      "non_null_count": 413355,
+      "non_null_pct": 92.9,
+      "unique_values": 4
+    },
+    {
+      "variable": "SMOKDAY2",
+      "label": "FREQUENCY OF DAYS NOW SMOKING",
+      "non_null_count": 164053,
+      "non_null_pct": 36.9,
+      "unique_values": 5
+    },
+    {
+      "variable": "STOPSMK2",
+      "label": "STOPPED SMOKING IN PAST 12 MONTHS",
+      "non_null_count": 18889,
+      "non_null_pct": 4.2,
+      "unique_values": 4
+    },
+    {
+      "variable": "LASTSMK2",
+      "label": "INTERVAL SINCE LAST SMOKED",
+      "non_null_count": 47409,
+      "non_null_pct": 10.7,
+      "unique_values": 10
+    },
+    {
+      "variable": "USENOW3",
+      "label": "USE OF SMOKELESS TOBACCO PRODUCTS",
+      "non_null_count": 412532,
+      "non_null_pct": 92.7,
+      "unique_values": 5
+    },
+    {
+      "variable": "ECIGNOW2",
+      "label": "DO YOU NOW USE E-CIGARETTES, OR VAPING P",
+      "non_null_count": 411553,
+      "non_null_pct": 92.5,
+      "unique_values": 6
+    },
+    {
+      "variable": "_SMOKER3",
+      "label": "COMPUTED SMOKING STATUS",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 5
+    },
+    {
+      "variable": "_RFSMOK3",
+      "label": "CURRENT SMOKING CALCULATED VARIABLE",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 3
+    },
+    {
+      "variable": "_CURECI2",
+      "label": "CURRENT E-CIGARETTE USER CALCULATED VARI",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 3
+    },
+    {
+      "variable": "LCSFIRST",
+      "label": "HOW OLD WHEN YOU FIRST STARTED SMOKING?",
+      "non_null_count": 161715,
+      "non_null_pct": 36.3,
+      "unique_values": 85
+    },
+    {
+      "variable": "LCSLAST",
+      "label": "HOW OLD WHEN YOU LAST SMOKED?",
+      "non_null_count": 120619,
+      "non_null_pct": 27.1,
+      "unique_values": 98
+    },
+    {
+      "variable": "LCSNUMCG",
+      "label": "ON AVERAGE, HOW MANY CIGARETTES DO YOU S",
+      "non_null_count": 156140,
+      "non_null_pct": 35.1,
+      "unique_values": 126
+    },
+    {
+      "variable": "_YRSSMOK",
+      "label": "NUMBER OF YEARS SMOKED CIGARETTES",
+      "non_null_count": 147604,
+      "non_null_pct": 33.2,
+      "unique_values": 88
+    },
+    {
+      "variable": "_PACKDAY",
+      "label": "NUMBER OF PACKS OF CIGARETTES SMOKED PER",
+      "non_null_count": 150247,
+      "non_null_pct": 33.8,
+      "unique_values": 124
+    },
+    {
+      "variable": "_PACKYRS",
+      "label": "YEARS SMOKED REPORTED PACKS PER DAY",
+      "non_null_count": 142865,
+      "non_null_pct": 32.1,
+      "unique_values": 282
+    },
+    {
+      "variable": "_YRSQUIT",
+      "label": "NUMBER OF YEARS SINCE QUIT SMOKING CIGAR",
+      "non_null_count": 106330,
+      "non_null_pct": 23.9,
+      "unique_values": 84
+    },
+    {
+      "variable": "_SMOKGRP",
+      "label": "SMOKING GROUP",
+      "non_null_count": 409670,
+      "non_null_pct": 92.0,
+      "unique_values": 4
+    }
+  ],
+  "respiratory_and_health": [
+    {
+      "variable": "CHCCOPD3",
+      "label": "EVER TOLD YOU HAD C.O.P.D. EMPHYSEMA OR",
+      "non_null_count": 445130,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "COPDCOGH",
+      "label": "DID YOU HAVE A COUGH?",
+      "non_null_count": 7269,
+      "non_null_pct": 1.6,
+      "unique_values": 4
+    },
+    {
+      "variable": "COPDFLEM",
+      "label": "DID YOU COUGH UP PHLEGM?",
+      "non_null_count": 7262,
+      "non_null_pct": 1.6,
+      "unique_values": 4
+    },
+    {
+      "variable": "COPDBRTH",
+      "label": "DID YOU HAVE SHORTNESS OF BREATH?",
+      "non_null_count": 7249,
+      "non_null_pct": 1.6,
+      "unique_values": 4
+    },
+    {
+      "variable": "COPDBTST",
+      "label": "HAVE YOU EVER BEEN GIVEN A BREATHING TES",
+      "non_null_count": 7232,
+      "non_null_pct": 1.6,
+      "unique_values": 4
+    },
+    {
+      "variable": "COPDSMOK",
+      "label": "HOW MANY YEARS HAVE YOU SMOKED TOBACCO P",
+      "non_null_count": 7215,
+      "non_null_pct": 1.6,
+      "unique_values": 75
+    },
+    {
+      "variable": "ASTHMA3",
+      "label": "EVER TOLD HAD ASTHMA",
+      "non_null_count": 445130,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "ASTHNOW",
+      "label": "STILL HAVE ASTHMA",
+      "non_null_count": 66694,
+      "non_null_pct": 15.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "_LTASTH1",
+      "label": "LIFETIME ASTHMA CALCULATED VARIABLE",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 3
+    },
+    {
+      "variable": "_CASTHM1",
+      "label": "CURRENT ASTHMA CALCULATED VARIABLE",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 3
+    },
+    {
+      "variable": "_ASTHMS1",
+      "label": "COMPUTED ASTHMA STATUS",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "GENHLTH",
+      "label": "GENERAL HEALTH",
+      "non_null_count": 445129,
+      "non_null_pct": 100.0,
+      "unique_values": 7
+    },
+    {
+      "variable": "PHYSHLTH",
+      "label": "NUMBER OF DAYS PHYSICAL HEALTH NOT GOOD",
+      "non_null_count": 445127,
+      "non_null_pct": 100.0,
+      "unique_values": 33
+    },
+    {
+      "variable": "MENTHLTH",
+      "label": "NUMBER OF DAYS MENTAL HEALTH NOT GOOD",
+      "non_null_count": 445129,
+      "non_null_pct": 100.0,
+      "unique_values": 33
+    },
+    {
+      "variable": "POORHLTH",
+      "label": "POOR PHYSICAL OR MENTAL HEALTH",
+      "non_null_count": 255746,
+      "non_null_pct": 57.5,
+      "unique_values": 33
+    },
+    {
+      "variable": "CVDINFR4",
+      "label": "EVER DIAGNOSED WITH HEART ATTACK",
+      "non_null_count": 445128,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "CVDCRHD4",
+      "label": "EVER DIAGNOSED WITH ANGINA OR CORONARY H",
+      "non_null_count": 445130,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "CVDSTRK3",
+      "label": "EVER DIAGNOSED WITH A STROKE",
+      "non_null_count": 445130,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "_MICHD",
+      "label": "RESPONDENTS THAT HAVE EVER REPORTED HAVI",
+      "non_null_count": 440111,
+      "non_null_pct": 98.9,
+      "unique_values": 2
+    },
+    {
+      "variable": "DIABETE4",
+      "label": "(EVER TOLD) YOU HAD DIABETES",
+      "non_null_count": 445129,
+      "non_null_pct": 100.0,
+      "unique_values": 6
+    },
+    {
+      "variable": "_BMI5",
+      "label": "COMPUTED BODY MASS INDEX",
+      "non_null_count": 396326,
+      "non_null_pct": 89.0,
+      "unique_values": 3985
+    },
+    {
+      "variable": "_BMI5CAT",
+      "label": "COMPUTED BODY MASS INDEX CATEGORIES",
+      "non_null_count": 396326,
+      "non_null_pct": 89.0,
+      "unique_values": 4
+    }
+  ],
+  "cancer_variables": [
+    {
+      "variable": "CHCSCNC1",
+      "label": "(EVER TOLD) (YOU HAD) SKIN CANCER THAT I",
+      "non_null_count": 445130,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "CHCOCNC1",
+      "label": "(EVER TOLD) (YOU HAD) MELANOMA OR ANY OT",
+      "non_null_count": 445129,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "CNCRDIFF",
+      "label": "HOW MANY TYPES OF CANCER?",
+      "non_null_count": 23399,
+      "non_null_pct": 5.3,
+      "unique_values": 5
+    },
+    {
+      "variable": "CNCRAGE",
+      "label": "AGE TOLD HAD CANCER",
+      "non_null_count": 22565,
+      "non_null_pct": 5.1,
+      "unique_values": 99
+    },
+    {
+      "variable": "CNCRTYP2",
+      "label": "TYPE OF CANCER",
+      "non_null_count": 22544,
+      "non_null_pct": 5.1,
+      "unique_values": 32
+    },
+    {
+      "variable": "CSRVTRT3",
+      "label": "CURRENTLY RECEIVING TREATMENT FOR CANCER",
+      "non_null_count": 17302,
+      "non_null_pct": 3.9,
+      "unique_values": 7
+    },
+    {
+      "variable": "CSRVSUM",
+      "label": "DID YOU RECEIVE A SUMMARY OF CANCER TREA",
+      "non_null_count": 9783,
+      "non_null_pct": 2.2,
+      "unique_values": 4
+    },
+    {
+      "variable": "CSRVPAIN",
+      "label": "CURRENTLY HAVE PHYSICAL PAIN FROM CANCER",
+      "non_null_count": 17097,
+      "non_null_pct": 3.8,
+      "unique_values": 4
+    }
+  ],
+  "screening_and_utilization": [
+    {
+      "variable": "LCSSCNCR",
+      "label": "WERE ANY CT OR CAT SCANS DONE TO CHECK F",
+      "non_null_count": 165575,
+      "non_null_pct": 37.2,
+      "unique_values": 4
+    },
+    {
+      "variable": "LCSCTWHN",
+      "label": "WHEN DID YOU HAVE YOUR MOST RECENT CT OR",
+      "non_null_count": 31505,
+      "non_null_pct": 7.1,
+      "unique_values": 8
+    },
+    {
+      "variable": "_LCSREC",
+      "label": "LUNG CANCER SCREENING RECOMMENDATION STA",
+      "non_null_count": 51453,
+      "non_null_pct": 11.6,
+      "unique_values": 2
+    },
+    {
+      "variable": "PERSDOC3",
+      "label": "HAVE PERSONAL HEALTH CARE PROVIDER?",
+      "non_null_count": 445130,
+      "non_null_pct": 100.0,
+      "unique_values": 5
+    },
+    {
+      "variable": "MEDCOST1",
+      "label": "COULD NOT AFFORD TO SEE DOCTOR",
+      "non_null_count": 445128,
+      "non_null_pct": 100.0,
+      "unique_values": 4
+    },
+    {
+      "variable": "CHECKUP1",
+      "label": "LENGTH OF TIME SINCE LAST ROUTINE CHECKU",
+      "non_null_count": 445129,
+      "non_null_pct": 100.0,
+      "unique_values": 7
+    },
+    {
+      "variable": "PRIMINSR",
+      "label": "WHAT IS PRIMARY SOURCE OF HEALTH INSURAN",
+      "non_null_count": 445128,
+      "non_null_pct": 100.0,
+      "unique_values": 13
+    }
+  ],
+  "survey_design": [
+    {
+      "variable": "_STSTR",
+      "label": "SAMPLE DESIGN STRATIFICATION VARIABLE",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 2263
+    },
+    {
+      "variable": "_PSU",
+      "label": "PRIMARY SAMPLING UNIT",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 26152
+    },
+    {
+      "variable": "_LLCPWT",
+      "label": "FINAL WEIGHT: LAND-LINE AND CELL-PHONE D",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 254189
+    },
+    {
+      "variable": "FMONTH",
+      "label": "FILE MONTH",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 12
+    },
+    {
+      "variable": "IMONTH",
+      "label": "INTERVIEW MONTH",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 12
+    },
+    {
+      "variable": "IDAY",
+      "label": "INTERVIEW DAY",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 32
+    },
+    {
+      "variable": "IYEAR",
+      "label": "INTERVIEW YEAR",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 2
+    },
+    {
+      "variable": "DISPCODE",
+      "label": "FINAL DISPOSITION",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 2
+    },
+    {
+      "variable": "SEQNO",
+      "label": "ANNUAL SEQUENCE NUMBER",
+      "non_null_count": 445132,
+      "non_null_pct": 100.0,
+      "unique_values": 26152
+    }
+  ]
+}

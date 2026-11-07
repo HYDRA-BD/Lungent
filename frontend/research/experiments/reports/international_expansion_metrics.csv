@@ -1,0 +1,10 @@
+metric_category,metric_name,value
+Registry,lookups_executed,2000.0
+Registry,mean_latency_us,0.55
+Clinical Governance,guideline_checks,1000.0
+Clinical Governance,unauthorized_leakage_pct,0.0
+Privacy,sovereignty_accuracy_pct,100.0
+Geography,traversal_latency_us,7.32
+Environmental,aqi_accuracy_pct,100.0
+Rollout,bd_readiness_pct,100.0
+Rollout,my_readiness_pct,33.3

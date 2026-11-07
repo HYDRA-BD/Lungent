@@ -1,0 +1,56 @@
+{
+  "benchmark_timestamp": "2026-11-06T16:16:04Z",
+  "phase": "Phase 2.12 \u2014 International Expansion",
+  "country_registry": {
+    "num_lookups_executed": 2000,
+    "total_duration_ms": 1.09,
+    "mean_latency_per_lookup_us": 0.55,
+    "throughput_lookups_per_sec": 1833459.5,
+    "valid_country_lookups": 1600,
+    "invalid_or_unknown_lookups": 400,
+    "iso_validation_accuracy_pct": 100.0
+  },
+  "clinical_guideline_governance": {
+    "total_guideline_checks": 1000,
+    "duration_ms": 0.06,
+    "authorized_clinical_executions": 500,
+    "blocked_unapproved_executions": 500,
+    "unauthorized_leakage_rate_pct": 0.0,
+    "clinical_governance_invariant_satisfied": true
+  },
+  "privacy_and_cross_border": {
+    "total_transfer_requests": 800,
+    "duration_ms": 0.04,
+    "domestic_authorizations": 200,
+    "cross_border_authorizations": 200,
+    "cross_border_blocked": 400,
+    "sovereignty_enforcement_accuracy_pct": 100.0,
+    "patient_consent_gate_accuracy_pct": 100.0
+  },
+  "geographic_hierarchy": {
+    "hierarchy_nodes_in_tree": 456,
+    "total_traversals_executed": 1500,
+    "duration_ms": 10.98,
+    "mean_traversal_latency_us": 7.32,
+    "max_hierarchy_depth": 3,
+    "hierarchy_traversal_success_pct": 100.0
+  },
+  "environmental_providers": {
+    "readings_normalized": 1000,
+    "providers_tested": 3,
+    "duration_ms": 0.19,
+    "mean_normalization_latency_us": 0.19,
+    "aqi_calculation_accuracy_pct": 100.0,
+    "multi_provider_interoperability_verified": true
+  },
+  "phased_rollout": {
+    "total_rollout_steps": 12,
+    "bangladesh_completed_steps": 12,
+    "bangladesh_readiness_pct": 100.0,
+    "bangladesh_deployment_authorized": true,
+    "malaysia_completed_steps": 4,
+    "malaysia_readiness_pct": 33.3,
+    "malaysia_deployment_authorized": false,
+    "premature_deployment_gate_enforced": true
+  }
+}

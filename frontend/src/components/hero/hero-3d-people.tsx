@@ -1,0 +1,97 @@
+'use client'
+
+import React from 'react'
+import Image from 'next/image'
+import { motion, type MotionValue } from 'motion/react'
+import { HeartPulse, MessageSquareWarning } from 'lucide-react'
+
+interface Hero3DPeopleProps {
+  parallaxY?: MotionValue<number>
+  parallaxOpacity?: MotionValue<number>
+}
+
+export function Hero3DPeople({ parallaxY, parallaxOpacity }: Hero3DPeopleProps) {
+  return (
+    <div
+      style={{ perspective: 1000 }}
+      className="relative w-full max-w-[320px] xl:max-w-[380px] select-none"
+    >
+      {/* Scroll Parallax Wrapper */}
+      <motion.div
+        style={{
+          y: parallaxY,
+          opacity: parallaxOpacity,
+        }}
+        className="w-full flex items-center justify-end"
+      >
+        {/* Floating, Entrance & Interactive 3D Tilt Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            y: [0, -15, 0],
+          }}
+          transition={{
+            opacity: { duration: 0.55, ease: 'easeOut' },
+            scale: { duration: 0.55, ease: 'easeOut' },
+            y: {
+              duration: 4.6,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            },
+          }}
+          whileHover={{
+            rotateY: 15,
+            rotateX: 10,
+            scale: 1.05,
+            transition: { duration: 0.25, ease: 'easeOut' },
+          }}
+          style={{ transformStyle: 'preserve-3d' }}
+          className="relative group rounded-3xl border border-white/70 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-4 sm:p-5 backdrop-blur-xl shadow-2xl shadow-rose-950/10 dark:shadow-rose-950/30 transition-shadow duration-300 hover:shadow-rose-500/20"
+        >
+          {/* Ambient Glow */}
+          <div className="absolute -inset-3 rounded-3xl bg-gradient-to-tr from-rose-500/15 via-amber-500/10 to-transparent blur-2xl -z-10 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+          {/* Top Pill / Status Tag */}
+          <div className="flex flex-row items-center justify-between gap-2 pb-3 mb-2 border-b border-border/40 w-full">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="flex size-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+              <span className="text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider whitespace-nowrap">
+                EARLY ACCESS
+              </span>
+            </div>
+            <span className="text-[11px] sm:text-xs font-semibold text-muted-foreground bg-muted/80 px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0 whitespace-nowrap">
+              <MessageSquareWarning className="size-3 text-rose-500 shrink-0" />
+              Awareness
+            </span>
+          </div>
+
+          {/* 3D Rendered People Illustration */}
+          <div className="relative w-full aspect-square max-h-[280px] flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-rose-50/40 via-amber-50/20 to-transparent dark:from-rose-950/20 dark:via-slate-900/40 dark:to-transparent">
+            <Image
+              src="/images/3d-people.png"
+              alt="Worried patient consultation in 3D"
+              width={400}
+              height={400}
+              priority
+              className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-300 pointer-events-none select-none"
+            />
+          </div>
+
+          {/* Bottom Clinical Metadata */}
+          <div className="mt-3 flex flex-row items-center justify-between gap-2 text-xs text-muted-foreground pt-2 border-t border-border/30 w-full">
+            <span className="flex items-center gap-1.5 font-medium whitespace-nowrap text-[11px] sm:text-xs">
+              <HeartPulse className="size-3.5 text-rose-500 shrink-0" />
+              Pre-Screening
+            </span>
+            <span className="font-mono text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-semibold whitespace-nowrap">
+              Research AI
+            </span>
+          </div>
+        </motion.div>
+      </motion.div>
+    </div>
+  )
+}
+

@@ -1,0 +1,13 @@
+Domain,Metric,Value,Target,Status
+HL7 FHIR R4,Resource Generation Throughput,1687441.3 res/sec,> 1000 res/sec,PASS
+HL7 FHIR R4,Mean Latency per Resource,0.0006 ms,< 1.0 ms,PASS
+HL7 FHIR R4,Terminology Conformance (LOINC/SNOMED),100.0%,100%,PASS
+HL7 v2.5.1,Message Parsing Throughput,445160.7 msg/sec,> 500 msg/sec,PASS
+HL7 v2.5.1,Observation Extraction Accuracy,100.0%,100%,PASS
+DICOM CT Bridge,LDCT Dose Classification Accuracy,100.0%,100%,PASS
+DICOM CT Bridge,CTDIvol Protocol Threshold,<= 3.0 mGy,<= 3.0 mGy,PASS
+MPI Matching,Deterministic Matching Precision,100.0%,>= 99.0%,PASS
+MPI Matching,Overall Matching Precision,99.29%,>= 95.0%,PASS
+MPI Matching,UUID Preservation Rate,100.0%,100%,PASS
+Clinical Governance,Unreviewed Autonomous Mutation Rate,0.0%,0.0%,PASS
+Security & Consent,Unconsented Exchange Blocking Rate,100.0%,100.0%,PASS

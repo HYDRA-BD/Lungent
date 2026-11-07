@@ -1,0 +1,6 @@
+query,expected_code,top_retrieved_code,top_similarity_score,top_1_accuracy,top_2_accuracy
+unexplained hemoptysis coughing blood 2-week wait referral,EVID-NICE-NG12,EVID-NICE-NG12,0.3559,1,1
+low dose CT screening age 55 20 pack years,EVID-USPSTF-2021,EVID-USPSTF-2021,0.3323,1,1
+traditional clay chula biomass cooking smoke rural women,EVID-BIOMASS-SA-2021,EVID-BIOMASS-SA-2021,0.2818,1,1
+bidi hand-rolled unfiltered carbon monoxide nitrosamines,EVID-WHO-TOBACCO-2023,EVID-WHO-TOBACCO-2023,0.4508,1,1
+sputum GeneXpert tuberculosis vs non-resolving mass Bangladesh,EVID-NICRH-BD-2022,EVID-NICRH-BD-2022,0.3752,1,1

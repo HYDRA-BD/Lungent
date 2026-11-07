@@ -1,0 +1,238 @@
+{
+  "id": "ai-val-exp02-screening",
+  "model_id": "exp02-screening-non-adherence",
+  "model_name": "USPSTF Screening Non-Adherence Propensity (Random Forest)",
+  "model_version": "1.0.0-exp",
+  "lifecycle_tier": "prohibited",
+  "original_experiment_ref": "EXP-02",
+  "development_dataset_ref": "CDC BRFSS 2022 (N=51,453 USPSTF 2021 Eligible Adults)",
+  "validation_dataset_profile": {
+    "id": "ds-brfss2022-holdout-lcs",
+    "name": "BRFSS 2022 Lung Cancer Screening Holdout Split",
+    "source": "Centers for Disease Control and Prevention (CDC)",
+    "jurisdiction": "United States",
+    "collection_methodology": "Complex multi-stage stratified random-digit dialing telephone survey",
+    "sample_size": 10291,
+    "outcome_variable": "_LCSREC == 2 (Recommended for LDCT but did not receive CT in past year)",
+    "population_characteristics": "US adults aged 50-80 with >= 20 pack-years and current or former smoking within 15 years",
+    "is_independent": true,
+    "is_bangladesh_specific": false,
+    "is_authorized": true,
+    "limitations": [
+      "Captures US healthcare navigation barriers (Medicare/Medicaid coverage, private insurance)",
+      "US USPSTF guideline context (not established in Bangladesh healthcare policy)"
+    ]
+  },
+  "validation_protocol": "PROT-VAL-EXP02-2026.1: Holdout cross-validation, PR-AUC evaluation, and healthcare access barrier disparity audit.",
+  "validation_date": "2026-11-06T10:05:00.000Z",
+  "validation_status": "rejected",
+  "discrimination_metrics": {
+    "sample_size": 10291,
+    "prevalence": 0.9039,
+    "threshold": 0.5,
+    "roc_auc": 0.909,
+    "pr_auc": 0.9903,
+    "sensitivity": 0.7642,
+    "specificity": 0.9909,
+    "ppv": 0.9987,
+    "npv": 0.3089,
+    "accuracy": 0.786,
+    "f1": 0.8659,
+    "brier_score": 0.1327,
+    "confusion_matrix": {
+      "true_positives": 7109,
+      "false_positives": 9,
+      "true_negatives": 980,
+      "false_negatives": 2193
+    },
+    "confidence_intervals_95": {
+      "sensitivity": [
+        0.7555,
+        0.7728
+      ],
+      "specificity": [
+        0.9828,
+        0.9952
+      ],
+      "ppv": [
+        0.9976,
+        0.9993
+      ],
+      "npv": [
+        0.293,
+        0.3252
+      ]
+    }
+  },
+  "calibration_metrics": {
+    "calibration_slope": 1.2853,
+    "calibration_intercept": 2.5013,
+    "brier_score": 0.1327,
+    "deciles": [
+      {
+        "decile": 1,
+        "mean_predicted_prob": 0.05,
+        "observed_frequency": 0.0,
+        "count": 0
+      },
+      {
+        "decile": 2,
+        "mean_predicted_prob": 0.1696,
+        "observed_frequency": 0.6179,
+        "count": 1646
+      },
+      {
+        "decile": 3,
+        "mean_predicted_prob": 0.2375,
+        "observed_frequency": 0.7195,
+        "count": 934
+      },
+      {
+        "decile": 4,
+        "mean_predicted_prob": 0.3448,
+        "observed_frequency": 0.8214,
+        "count": 420
+      },
+      {
+        "decile": 5,
+        "mean_predicted_prob": 0.4447,
+        "observed_frequency": 0.9191,
+        "count": 173
+      },
+      {
+        "decile": 6,
+        "mean_predicted_prob": 0.5491,
+        "observed_frequency": 0.9118,
+        "count": 102
+      },
+      {
+        "decile": 7,
+        "mean_predicted_prob": 0.6507,
+        "observed_frequency": 1.0,
+        "count": 66
+      },
+      {
+        "decile": 8,
+        "mean_predicted_prob": 0.7361,
+        "observed_frequency": 1.0,
+        "count": 20
+      },
+      {
+        "decile": 9,
+        "mean_predicted_prob": 0.8773,
+        "observed_frequency": 1.0,
+        "count": 43
+      },
+      {
+        "decile": 10,
+        "mean_predicted_prob": 0.9898,
+        "observed_frequency": 1.0,
+        "count": 6887
+      }
+    ],
+    "overconfidence_assessment": "none",
+    "underconfidence_assessment": "moderate",
+    "recalibration_recommended": true,
+    "recalibration_rationale": "Observed calibration slope 1.285 and intercept 2.501. Recalibration recommended before target population deployment."
+  },
+  "clinical_utility_metrics": {
+    "intended_use": "Identify eligible individuals with high likelihood of failing to obtain annual low-dose computed tomography (LDCT) to target proactive community navigation.",
+    "target_population": "USPSTF 2021 screening eligible individuals.",
+    "net_benefit_at_thresholds": [
+      {
+        "threshold_probability": 0.01,
+        "model_net_benefit": 0.9029,
+        "treat_all_net_benefit": 0.9029,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.02,
+        "model_net_benefit": 0.9019,
+        "treat_all_net_benefit": 0.9019,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.05,
+        "model_net_benefit": 0.8988,
+        "treat_all_net_benefit": 0.8988,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.1,
+        "model_net_benefit": 0.8932,
+        "treat_all_net_benefit": 0.8932,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.15,
+        "model_net_benefit": 0.8751,
+        "treat_all_net_benefit": 0.8869,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.2,
+        "model_net_benefit": 0.7963,
+        "treat_all_net_benefit": 0.8799,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.25,
+        "model_net_benefit": 0.7558,
+        "treat_all_net_benefit": 0.8719,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.3,
+        "model_net_benefit": 0.7357,
+        "treat_all_net_benefit": 0.8627,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.4,
+        "model_net_benefit": 0.7048,
+        "treat_all_net_benefit": 0.8398,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.5,
+        "model_net_benefit": 0.6899,
+        "treat_all_net_benefit": 0.8078,
+        "treat_none_net_benefit": 0.0
+      }
+    ],
+    "false_positive_clinical_cost": "Community healthcare worker time spent reaching out to an individual who was already adherent.",
+    "false_negative_clinical_risk": "High-risk individual does not receive outreach, remaining unscreened with delayed lung cancer presentation.",
+    "bangladesh_workflow_applicability": "Fundamentally inapplicable. Bangladesh has no organized national LDCT lung cancer screening program or public insurance reimbursement for asymptomatic screening.",
+    "practical_feasibility_score": "inapplicable"
+  },
+  "bangladesh_generalizability": {
+    "evaluated": true,
+    "dataset_available": false,
+    "evidence_gap_summary": "The USPSTF lung cancer screening recommendation protocol (annual LDCT for 50-80yo with >=20 pack-years) does not exist as an operational clinical guideline or subsidized national program in Bangladesh. Applying an adherence propensity model to a non-existent clinical pathway is conceptually and operationally invalid.",
+    "distribution_shift_identified": true,
+    "missing_variables": [
+      "National lung cancer screening registry",
+      "Public health insurance claims for preventive thoracic LDCT",
+      "Standard primary care electronic referral pathways for screening"
+    ],
+    "prospective_requirements": "Establishment of national clinical consensus guidelines and subsidized LDCT screening infrastructure before any screening adherence model can be conceptualized."
+  },
+  "cab_review_decision": {
+    "decision": "rejected",
+    "reviewed_at": "2026-11-06T10:05:00.000Z",
+    "reviewed_by_member_id": "cab-mem-002",
+    "reviewed_by_member_name": "Dr. Rafiqul Islam (CAB Vice Chair)",
+    "conditions_or_restrictions": [
+      "Formally rejected for Bangladesh clinical decision-support and workflow integration.",
+      "May not be deployed in any clinical, community, or administrative portal within Bangladesh."
+    ],
+    "clinical_rationale": "The target variable (_LCSREC) presumes the existence of an active, institutionalized USPSTF annual LDCT screening program. In Bangladesh, low-dose CT is neither subsidized, routinely available in public upazila/district hospitals, nor endorsed as a national screening program. Deploying this model would generate clinically nonsensical task assignments."
+  },
+  "operational_activation": {
+    "is_activated": false,
+    "activated_at": null,
+    "activated_by": null,
+    "activation_blocked_reason": "Model rejected for Bangladesh clinical use due to structural absence of underlying LDCT screening program."
+  },
+  "safety_invariants_enforced": true
+}

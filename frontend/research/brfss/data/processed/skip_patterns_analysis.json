@@ -1,0 +1,33 @@
+{
+  "tobacco_skip_rule": {
+    "trigger_variable": "SMOKE100",
+    "condition": "SMOKE100 == 2 (No)",
+    "affected_variables": [
+      "SMOKDAY2",
+      "STOPSMK2",
+      "LASTSMK2"
+    ],
+    "structural_blank_conformance_pct": 100.0,
+    "interpretation": "Confirmed 100% adherence to CDC questionnaire routing logic. NaNs in SMOKDAY2 are NOT random missing values, but valid non-smoker skips."
+  },
+  "lung_cancer_screening_routing": {
+    "core_section": 13,
+    "target_population": "Adults aged 50-80 with significant tobacco smoking history",
+    "variables": [
+      "LCSSCNCR",
+      "_LCSREC",
+      "_PACKYRS",
+      "_YRSSMOK",
+      "_PACKDAY"
+    ],
+    "total_screenable_cohort_evaluated": 51453,
+    "interpretation": "Variables in Section 13 are structurally blank for non-smokers and age groups outside screening guidelines."
+  },
+  "cancer_survivorship_routing": {
+    "module_number": 9,
+    "target_variable": "CNCRTYP2",
+    "total_cancer_survivors_with_type": 22544,
+    "lung_cancer_cases_identified": 451,
+    "interpretation": "Administered only in states adopting Module 9 and only to self-reported cancer survivors. High structural non-response (94.9%) reflects state non-adoption and non-cancer status."
+  }
+}

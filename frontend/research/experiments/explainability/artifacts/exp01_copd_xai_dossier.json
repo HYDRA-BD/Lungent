@@ -1,0 +1,2396 @@
+{
+  "model_id": "exp01-copd-phenotype",
+  "model_name": "COPD Phenotype Predictor (Logistic Regression)",
+  "model_version": "1.0.0-exp",
+  "governance_status": "EXPERIMENTAL_RESEARCH_ONLY",
+  "non_causal_disclaimer": "Feature contributions reflect statistical associations in the US BRFSS cross-sectional survey dataset and DO NOT imply biological causation. Modifying an individual risk factor does not guarantee altered disease trajectory.",
+  "baseline_probability": 0.5237,
+  "baseline_log_odds": 0.0948,
+  "global_feature_importance_top10": [
+    {
+      "feature": "asthma_history_No",
+      "coefficient": -1.0404,
+      "odds_ratio": 0.3533,
+      "abs_impact": 1.0404
+    },
+    {
+      "feature": "age_group_12.0",
+      "coefficient": 0.8009,
+      "odds_ratio": 2.2276,
+      "abs_impact": 0.8009
+    },
+    {
+      "feature": "general_health_1.0",
+      "coefficient": -0.7933,
+      "odds_ratio": 0.4523,
+      "abs_impact": 0.7933
+    },
+    {
+      "feature": "age_group_13.0",
+      "coefficient": 0.7875,
+      "odds_ratio": 2.198,
+      "abs_impact": 0.7875
+    },
+    {
+      "feature": "general_health_5.0",
+      "coefficient": 0.7681,
+      "odds_ratio": 2.1558,
+      "abs_impact": 0.7681
+    },
+    {
+      "feature": "age_group_4.0",
+      "coefficient": -0.5995,
+      "odds_ratio": 0.5491,
+      "abs_impact": 0.5995
+    },
+    {
+      "feature": "asthma_history_Unknown",
+      "coefficient": 0.5946,
+      "odds_ratio": 1.8123,
+      "abs_impact": 0.5946
+    },
+    {
+      "feature": "age_group_3.0",
+      "coefficient": -0.5731,
+      "odds_ratio": 0.5638,
+      "abs_impact": 0.5731
+    },
+    {
+      "feature": "race_ethnicity_Asian",
+      "coefficient": -0.5628,
+      "odds_ratio": 0.5696,
+      "abs_impact": 0.5628
+    },
+    {
+      "feature": "age_group_11.0",
+      "coefficient": 0.5559,
+      "odds_ratio": 1.7435,
+      "abs_impact": 0.5559
+    }
+  ],
+  "global_shap_importance_top10": [
+    {
+      "feature": "asthma_history_No",
+      "mean_abs_shap": 0.303
+    },
+    {
+      "feature": "years_smoked",
+      "mean_abs_shap": 0.2432
+    },
+    {
+      "feature": "general_health_1.0",
+      "mean_abs_shap": 0.238
+    },
+    {
+      "feature": "general_health_2.0",
+      "mean_abs_shap": 0.2211
+    },
+    {
+      "feature": "smoking_status_Never_Smoker",
+      "mean_abs_shap": 0.2006
+    },
+    {
+      "feature": "asthma_history_Yes",
+      "mean_abs_shap": 0.1561
+    },
+    {
+      "feature": "education_level_6.0",
+      "mean_abs_shap": 0.1445
+    },
+    {
+      "feature": "age_group_12.0",
+      "mean_abs_shap": 0.1292
+    },
+    {
+      "feature": "pack_years",
+      "mean_abs_shap": 0.1142
+    },
+    {
+      "feature": "age_group_11.0",
+      "mean_abs_shap": 0.1118
+    }
+  ],
+  "local_explanations": [
+    {
+      "sample_index": 0,
+      "baseline_log_odds": 0.0948,
+      "baseline_probability": 0.5237,
+      "predicted_probability": 0.9352,
+      "margin_output": 3.7692,
+      "top_contributions": [
+        {
+          "feature": "years_smoked",
+          "feature_value": 2.606,
+          "shap_value": 0.953,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.953
+        },
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 0.0,
+          "shap_value": 0.8427,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.8427
+        },
+        {
+          "feature": "pack_years",
+          "feature_value": 2.532,
+          "shap_value": 0.5464,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.5464
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 1.0,
+          "shap_value": 0.4373,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4373
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.248,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.248
+        },
+        {
+          "feature": "smoking_status_Daily_Smoker",
+          "feature_value": 1.0,
+          "shap_value": 0.1938,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1938
+        },
+        {
+          "feature": "age_group_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.1821,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1821
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1601,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1601
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "education_level_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.116,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.116
+        },
+        {
+          "feature": "age_group_12.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0801,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0801
+        },
+        {
+          "feature": "age_group_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0737,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0737
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "years_smoked",
+          "feature_value": 2.606,
+          "shap_value": 0.953,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.953
+        },
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 0.0,
+          "shap_value": 0.8427,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.8427
+        },
+        {
+          "feature": "pack_years",
+          "feature_value": 2.532,
+          "shap_value": 0.5464,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.5464
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 1.0,
+          "shap_value": 0.4373,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4373
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.248,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.248
+        },
+        {
+          "feature": "smoking_status_Daily_Smoker",
+          "feature_value": 1.0,
+          "shap_value": 0.1938,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1938
+        },
+        {
+          "feature": "age_group_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.1821,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1821
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1601,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1601
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "education_level_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.116,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.116
+        },
+        {
+          "feature": "age_group_12.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0801,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0801
+        },
+        {
+          "feature": "age_group_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0737,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0737
+        },
+        {
+          "feature": "general_health_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0671,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0671
+        },
+        {
+          "feature": "age_group_11.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0667,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0667
+        },
+        {
+          "feature": "age_group_10.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0639,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0639
+        },
+        {
+          "feature": "general_health_3.0",
+          "feature_value": 1.0,
+          "shap_value": 0.0608,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0608
+        },
+        {
+          "feature": "sex_Female",
+          "feature_value": 0.0,
+          "shap_value": -0.0604,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0604
+        },
+        {
+          "feature": "physical_illness_days",
+          "feature_value": 0.32,
+          "shap_value": 0.0588,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0588
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "feature_value": 1.0,
+          "shap_value": 0.0551,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0551
+        },
+        {
+          "feature": "employment_status_1.0",
+          "feature_value": 1.0,
+          "shap_value": -0.043,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.043
+        },
+        {
+          "feature": "mental_illness_days",
+          "feature_value": -0.517,
+          "shap_value": -0.0426,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0426
+        },
+        {
+          "feature": "employment_status_7.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0345,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0345
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "feature_value": 0.0,
+          "shap_value": 0.0333,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0333
+        },
+        {
+          "feature": "smoking_status_Refused",
+          "feature_value": 0.0,
+          "shap_value": -0.0317,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0317
+        },
+        {
+          "feature": "age_group_13.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0315,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0315
+        },
+        {
+          "feature": "age_group_4.0",
+          "feature_value": 0.0,
+          "shap_value": 0.03,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.03
+        },
+        {
+          "feature": "bmi",
+          "feature_value": 0.479,
+          "shap_value": 0.029,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.029
+        },
+        {
+          "feature": "age_group_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0287,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0287
+        },
+        {
+          "feature": "income_category_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0282,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0282
+        },
+        {
+          "feature": "general_health_5.0",
+          "feature_value": 0.0,
+          "shap_value": -0.023,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.023
+        },
+        {
+          "feature": "smoking_status_Former_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.0223,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0223
+        },
+        {
+          "feature": "age_group_9.0",
+          "feature_value": 0.0,
+          "shap_value": -0.022,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.022
+        },
+        {
+          "feature": "income_category_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0215,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0215
+        },
+        {
+          "feature": "income_category_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0209
+        },
+        {
+          "feature": "education_level_4.0",
+          "feature_value": 1.0,
+          "shap_value": 0.0205,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0205
+        },
+        {
+          "feature": "income_category_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0177,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0177
+        },
+        {
+          "feature": "age_group_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.015,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.015
+        },
+        {
+          "feature": "employment_status_8.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0142,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0142
+        },
+        {
+          "feature": "age_group_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.013,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.013
+        },
+        {
+          "feature": "employment_status_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0115,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0115
+        },
+        {
+          "feature": "sex_Male",
+          "feature_value": 1.0,
+          "shap_value": -0.0114,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0114
+        },
+        {
+          "feature": "age_group_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0113,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0113
+        },
+        {
+          "feature": "income_category_5.0",
+          "feature_value": 1.0,
+          "shap_value": -0.0108,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0108
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "feature_value": 0.0,
+          "shap_value": -0.0105,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0105
+        },
+        {
+          "feature": "income_category_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0095,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0095
+        },
+        {
+          "feature": "age_group_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0076,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0076
+        },
+        {
+          "feature": "income_category_1.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0068,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0068
+        },
+        {
+          "feature": "employment_status_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0065,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0065
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "feature_value": 0.0,
+          "shap_value": -0.006,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.006
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "feature_value": 0.0,
+          "shap_value": 0.0056,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0056
+        },
+        {
+          "feature": "education_level_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0027,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0027
+        },
+        {
+          "feature": "education_level_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0026,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0026
+        },
+        {
+          "feature": "employment_status_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "employment_status_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "education_level_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0021,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0021
+        },
+        {
+          "feature": "smoking_status_Some_Day_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0017,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "feature_value": 0.0,
+          "shap_value": -0.0015,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "feature_value": 0.0,
+          "shap_value": -0.0007,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "employment_status_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0006,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "asthma_history_Unknown",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_A_HighRisk_HeavySmoker",
+      "uncertainty": {
+        "sample_index": 0,
+        "predicted_probability": 0.9352,
+        "ensemble_std_dev": 0.0246,
+        "prediction_interval_95": [
+          0.887,
+          0.9835
+        ],
+        "tree_prob_range": [
+          0.887,
+          0.9835
+        ],
+        "missing_features_count": 0,
+        "imputation_index": 0.0,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "high",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    },
+    {
+      "sample_index": 1,
+      "baseline_log_odds": 0.0948,
+      "baseline_probability": 0.5237,
+      "predicted_probability": 0.9896,
+      "margin_output": 5.655,
+      "top_contributions": [
+        {
+          "feature": "years_smoked",
+          "feature_value": 2.741,
+          "shap_value": 0.9987,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.9987
+        },
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 0.0,
+          "shap_value": 0.8427,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.8427
+        },
+        {
+          "feature": "pack_years",
+          "feature_value": 2.657,
+          "shap_value": 0.5724,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.5724
+        },
+        {
+          "feature": "employment_status_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.458,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.458
+        },
+        {
+          "feature": "physical_illness_days",
+          "feature_value": 2.994,
+          "shap_value": 0.4542,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4542
+        },
+        {
+          "feature": "general_health_4.0",
+          "feature_value": 1.0,
+          "shap_value": 0.449,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.449
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 1.0,
+          "shap_value": 0.4373,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4373
+        },
+        {
+          "feature": "age_group_10.0",
+          "feature_value": 1.0,
+          "shap_value": 0.362,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.362
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.248,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.248
+        },
+        {
+          "feature": "income_category_1.0",
+          "feature_value": 1.0,
+          "shap_value": 0.2212,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.2212
+        },
+        {
+          "feature": "mental_illness_days",
+          "feature_value": 3.08,
+          "shap_value": 0.2122,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.2122
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1601,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1601
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "years_smoked",
+          "feature_value": 2.741,
+          "shap_value": 0.9987,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.9987
+        },
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 0.0,
+          "shap_value": 0.8427,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.8427
+        },
+        {
+          "feature": "pack_years",
+          "feature_value": 2.657,
+          "shap_value": 0.5724,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.5724
+        },
+        {
+          "feature": "employment_status_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.458,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.458
+        },
+        {
+          "feature": "physical_illness_days",
+          "feature_value": 2.994,
+          "shap_value": 0.4542,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4542
+        },
+        {
+          "feature": "general_health_4.0",
+          "feature_value": 1.0,
+          "shap_value": 0.449,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.449
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 1.0,
+          "shap_value": 0.4373,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4373
+        },
+        {
+          "feature": "age_group_10.0",
+          "feature_value": 1.0,
+          "shap_value": 0.362,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.362
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.248,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.248
+        },
+        {
+          "feature": "income_category_1.0",
+          "feature_value": 1.0,
+          "shap_value": 0.2212,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.2212
+        },
+        {
+          "feature": "mental_illness_days",
+          "feature_value": 3.08,
+          "shap_value": 0.2122,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.2122
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1601,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1601
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "education_level_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.116,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.116
+        },
+        {
+          "feature": "age_group_12.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0801,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0801
+        },
+        {
+          "feature": "smoking_status_Former_Smoker",
+          "feature_value": 1.0,
+          "shap_value": -0.0789,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0789
+        },
+        {
+          "feature": "age_group_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0737,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0737
+        },
+        {
+          "feature": "age_group_11.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0667,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0667
+        },
+        {
+          "feature": "sex_Female",
+          "feature_value": 0.0,
+          "shap_value": -0.0604,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0604
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "feature_value": 1.0,
+          "shap_value": 0.0551,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0551
+        },
+        {
+          "feature": "bmi",
+          "feature_value": 0.756,
+          "shap_value": 0.0459,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0459
+        },
+        {
+          "feature": "employment_status_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0352,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0352
+        },
+        {
+          "feature": "employment_status_7.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0345,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0345
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "feature_value": 0.0,
+          "shap_value": 0.0333,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0333
+        },
+        {
+          "feature": "smoking_status_Refused",
+          "feature_value": 0.0,
+          "shap_value": -0.0317,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0317
+        },
+        {
+          "feature": "age_group_13.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0315,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0315
+        },
+        {
+          "feature": "age_group_4.0",
+          "feature_value": 0.0,
+          "shap_value": 0.03,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.03
+        },
+        {
+          "feature": "age_group_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0287,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0287
+        },
+        {
+          "feature": "income_category_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0282,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0282
+        },
+        {
+          "feature": "general_health_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0273,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0273
+        },
+        {
+          "feature": "general_health_5.0",
+          "feature_value": 0.0,
+          "shap_value": -0.023,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.023
+        },
+        {
+          "feature": "age_group_9.0",
+          "feature_value": 0.0,
+          "shap_value": -0.022,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.022
+        },
+        {
+          "feature": "income_category_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0215,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0215
+        },
+        {
+          "feature": "income_category_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0209
+        },
+        {
+          "feature": "education_level_4.0",
+          "feature_value": 1.0,
+          "shap_value": 0.0205,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0205
+        },
+        {
+          "feature": "income_category_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0177,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0177
+        },
+        {
+          "feature": "age_group_8.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0158,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0158
+        },
+        {
+          "feature": "age_group_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.015,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.015
+        },
+        {
+          "feature": "age_group_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.013,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.013
+        },
+        {
+          "feature": "smoking_status_Daily_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0124,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0124
+        },
+        {
+          "feature": "employment_status_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0115,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0115
+        },
+        {
+          "feature": "sex_Male",
+          "feature_value": 1.0,
+          "shap_value": -0.0114,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0114
+        },
+        {
+          "feature": "age_group_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0113,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0113
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "feature_value": 0.0,
+          "shap_value": -0.0105,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0105
+        },
+        {
+          "feature": "income_category_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0095,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0095
+        },
+        {
+          "feature": "income_category_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0092,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0092
+        },
+        {
+          "feature": "age_group_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0076,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0076
+        },
+        {
+          "feature": "employment_status_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0065,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0065
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "feature_value": 0.0,
+          "shap_value": -0.006,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.006
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "feature_value": 0.0,
+          "shap_value": 0.0056,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0056
+        },
+        {
+          "feature": "education_level_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0027,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0027
+        },
+        {
+          "feature": "education_level_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0026,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0026
+        },
+        {
+          "feature": "employment_status_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "employment_status_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "education_level_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0021,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0021
+        },
+        {
+          "feature": "smoking_status_Some_Day_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0017,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "feature_value": 0.0,
+          "shap_value": -0.0015,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "feature_value": 0.0,
+          "shap_value": -0.0007,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "employment_status_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0006,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "asthma_history_Unknown",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_B_ModerateRisk_FormerSmoker",
+      "uncertainty": {
+        "sample_index": 1,
+        "predicted_probability": 0.9896,
+        "ensemble_std_dev": 0.0101,
+        "prediction_interval_95": [
+          0.9697,
+          1.0
+        ],
+        "tree_prob_range": [
+          0.9697,
+          1.0
+        ],
+        "missing_features_count": 0,
+        "imputation_index": 0.0,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "high",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    },
+    {
+      "sample_index": 2,
+      "baseline_log_odds": 0.0948,
+      "baseline_probability": 0.5237,
+      "predicted_probability": 0.0523,
+      "margin_output": -1.7973,
+      "top_contributions": [
+        {
+          "feature": "age_group_3.0",
+          "feature_value": 1.0,
+          "shap_value": -0.5444,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.5444
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 1.0,
+          "shap_value": -0.325,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.325
+        },
+        {
+          "feature": "income_category_7.0",
+          "feature_value": 1.0,
+          "shap_value": -0.277,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.277
+        },
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 1.0,
+          "shap_value": -0.1977,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1977
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "feature_value": 1.0,
+          "shap_value": 0.1819,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1819
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 1.0,
+          "shap_value": -0.1653,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1653
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "feature_value": 0.0,
+          "shap_value": -0.1285,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1285
+        },
+        {
+          "feature": "years_smoked",
+          "feature_value": -0.553,
+          "shap_value": -0.1209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1209
+        },
+        {
+          "feature": "education_level_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.116,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.116
+        },
+        {
+          "feature": "employment_status_5.0",
+          "feature_value": 1.0,
+          "shap_value": -0.1156,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1156
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 0.0,
+          "shap_value": -0.1026,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1026
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "age_group_3.0",
+          "feature_value": 1.0,
+          "shap_value": -0.5444,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.5444
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 1.0,
+          "shap_value": -0.325,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.325
+        },
+        {
+          "feature": "income_category_7.0",
+          "feature_value": 1.0,
+          "shap_value": -0.277,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.277
+        },
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 1.0,
+          "shap_value": -0.1977,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1977
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "feature_value": 1.0,
+          "shap_value": 0.1819,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1819
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 1.0,
+          "shap_value": -0.1653,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1653
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "feature_value": 0.0,
+          "shap_value": -0.1285,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1285
+        },
+        {
+          "feature": "years_smoked",
+          "feature_value": -0.553,
+          "shap_value": -0.1209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1209
+        },
+        {
+          "feature": "education_level_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.116,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.116
+        },
+        {
+          "feature": "employment_status_5.0",
+          "feature_value": 1.0,
+          "shap_value": -0.1156,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1156
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 0.0,
+          "shap_value": -0.1026,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1026
+        },
+        {
+          "feature": "age_group_12.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0801,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0801
+        },
+        {
+          "feature": "age_group_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0737,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0737
+        },
+        {
+          "feature": "general_health_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0671,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0671
+        },
+        {
+          "feature": "age_group_11.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0667,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0667
+        },
+        {
+          "feature": "pack_years",
+          "feature_value": -0.42,
+          "shap_value": -0.0649,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0649
+        },
+        {
+          "feature": "age_group_10.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0639,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0639
+        },
+        {
+          "feature": "physical_illness_days",
+          "feature_value": -0.494,
+          "shap_value": -0.0615,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0615
+        },
+        {
+          "feature": "sex_Female",
+          "feature_value": 1.0,
+          "shap_value": 0.0557,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0557
+        },
+        {
+          "feature": "mental_illness_days",
+          "feature_value": -0.517,
+          "shap_value": -0.0426,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0426
+        },
+        {
+          "feature": "employment_status_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0352,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0352
+        },
+        {
+          "feature": "employment_status_7.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0345,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0345
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "feature_value": 0.0,
+          "shap_value": 0.0333,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0333
+        },
+        {
+          "feature": "smoking_status_Refused",
+          "feature_value": 0.0,
+          "shap_value": -0.0317,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0317
+        },
+        {
+          "feature": "age_group_13.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0315,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0315
+        },
+        {
+          "feature": "age_group_4.0",
+          "feature_value": 0.0,
+          "shap_value": 0.03,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.03
+        },
+        {
+          "feature": "income_category_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0282,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0282
+        },
+        {
+          "feature": "general_health_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0273,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0273
+        },
+        {
+          "feature": "general_health_5.0",
+          "feature_value": 0.0,
+          "shap_value": -0.023,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.023
+        },
+        {
+          "feature": "smoking_status_Former_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.0223,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0223
+        },
+        {
+          "feature": "age_group_9.0",
+          "feature_value": 0.0,
+          "shap_value": -0.022,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.022
+        },
+        {
+          "feature": "income_category_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0215,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0215
+        },
+        {
+          "feature": "income_category_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0209
+        },
+        {
+          "feature": "education_level_4.0",
+          "feature_value": 1.0,
+          "shap_value": 0.0205,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0205
+        },
+        {
+          "feature": "age_group_8.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0158,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0158
+        },
+        {
+          "feature": "age_group_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.015,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.015
+        },
+        {
+          "feature": "employment_status_8.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0142,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0142
+        },
+        {
+          "feature": "age_group_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.013,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.013
+        },
+        {
+          "feature": "smoking_status_Daily_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0124,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0124
+        },
+        {
+          "feature": "employment_status_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0115,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0115
+        },
+        {
+          "feature": "age_group_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0113,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0113
+        },
+        {
+          "feature": "sex_Male",
+          "feature_value": 0.0,
+          "shap_value": 0.0106,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0106
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "feature_value": 0.0,
+          "shap_value": -0.0105,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0105
+        },
+        {
+          "feature": "bmi",
+          "feature_value": -0.158,
+          "shap_value": -0.0101,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0101
+        },
+        {
+          "feature": "income_category_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0095,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0095
+        },
+        {
+          "feature": "income_category_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0092,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0092
+        },
+        {
+          "feature": "age_group_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0076,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0076
+        },
+        {
+          "feature": "income_category_1.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0068,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0068
+        },
+        {
+          "feature": "employment_status_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0065,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0065
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "feature_value": 0.0,
+          "shap_value": -0.006,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.006
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "feature_value": 0.0,
+          "shap_value": 0.0056,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0056
+        },
+        {
+          "feature": "education_level_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0027,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0027
+        },
+        {
+          "feature": "education_level_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0026,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0026
+        },
+        {
+          "feature": "employment_status_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "education_level_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0021,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0021
+        },
+        {
+          "feature": "smoking_status_Some_Day_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0017,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "feature_value": 0.0,
+          "shap_value": -0.0015,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "feature_value": 0.0,
+          "shap_value": -0.0007,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "employment_status_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0006,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "education_level_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "asthma_history_Unknown",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_C_LowRisk_NeverSmoker",
+      "uncertainty": {
+        "sample_index": 2,
+        "predicted_probability": 0.0523,
+        "ensemble_std_dev": 0.0223,
+        "prediction_interval_95": [
+          0.0087,
+          0.0959
+        ],
+        "tree_prob_range": [
+          0.0087,
+          0.0959
+        ],
+        "missing_features_count": 1,
+        "imputation_index": 0.0714,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "high",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    },
+    {
+      "sample_index": 3,
+      "baseline_log_odds": 0.0948,
+      "baseline_probability": 0.5237,
+      "predicted_probability": 0.8823,
+      "margin_output": 3.1139,
+      "top_contributions": [
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 0.0,
+          "shap_value": 0.8427,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.8427
+        },
+        {
+          "feature": "general_health_5.0",
+          "feature_value": 1.0,
+          "shap_value": 0.7451,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.7451
+        },
+        {
+          "feature": "employment_status_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.458,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.458
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 1.0,
+          "shap_value": 0.4373,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4373
+        },
+        {
+          "feature": "physical_illness_days",
+          "feature_value": 1.831,
+          "shap_value": 0.2823,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.2823
+        },
+        {
+          "feature": "age_group_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.1821,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1821
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 1.0,
+          "shap_value": -0.1653,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1653
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1601,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1601
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "income_category_3.0",
+          "feature_value": 1.0,
+          "shap_value": 0.1532,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1532
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "feature_value": 0.0,
+          "shap_value": -0.1285,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1285
+        },
+        {
+          "feature": "years_smoked",
+          "feature_value": -0.553,
+          "shap_value": -0.1209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1209
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "asthma_history_No",
+          "feature_value": 0.0,
+          "shap_value": 0.8427,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.8427
+        },
+        {
+          "feature": "general_health_5.0",
+          "feature_value": 1.0,
+          "shap_value": 0.7451,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.7451
+        },
+        {
+          "feature": "employment_status_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.458,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.458
+        },
+        {
+          "feature": "asthma_history_Yes",
+          "feature_value": 1.0,
+          "shap_value": 0.4373,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.4373
+        },
+        {
+          "feature": "physical_illness_days",
+          "feature_value": 1.831,
+          "shap_value": 0.2823,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.2823
+        },
+        {
+          "feature": "age_group_8.0",
+          "feature_value": 1.0,
+          "shap_value": 0.1821,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1821
+        },
+        {
+          "feature": "smoking_status_Never_Smoker",
+          "feature_value": 1.0,
+          "shap_value": -0.1653,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1653
+        },
+        {
+          "feature": "general_health_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1601,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1601
+        },
+        {
+          "feature": "general_health_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.1587,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1587
+        },
+        {
+          "feature": "income_category_3.0",
+          "feature_value": 1.0,
+          "shap_value": 0.1532,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.1532
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "feature_value": 0.0,
+          "shap_value": -0.1285,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1285
+        },
+        {
+          "feature": "years_smoked",
+          "feature_value": -0.553,
+          "shap_value": -0.1209,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.1209
+        },
+        {
+          "feature": "education_level_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.116,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.116
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "feature_value": 1.0,
+          "shap_value": 0.0942,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0942
+        },
+        {
+          "feature": "age_group_12.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0801,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0801
+        },
+        {
+          "feature": "age_group_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0737,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0737
+        },
+        {
+          "feature": "general_health_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0671,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0671
+        },
+        {
+          "feature": "age_group_11.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0667,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0667
+        },
+        {
+          "feature": "pack_years",
+          "feature_value": -0.42,
+          "shap_value": -0.0649,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0649
+        },
+        {
+          "feature": "age_group_10.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0639,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0639
+        },
+        {
+          "feature": "sex_Female",
+          "feature_value": 1.0,
+          "shap_value": 0.0557,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0557
+        },
+        {
+          "feature": "employment_status_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0352,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0352
+        },
+        {
+          "feature": "employment_status_7.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0345,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0345
+        },
+        {
+          "feature": "bmi",
+          "feature_value": -0.538,
+          "shap_value": -0.0334,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0334
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "feature_value": 0.0,
+          "shap_value": 0.0333,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0333
+        },
+        {
+          "feature": "smoking_status_Refused",
+          "feature_value": 0.0,
+          "shap_value": -0.0317,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0317
+        },
+        {
+          "feature": "age_group_13.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0315,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0315
+        },
+        {
+          "feature": "age_group_4.0",
+          "feature_value": 0.0,
+          "shap_value": 0.03,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.03
+        },
+        {
+          "feature": "age_group_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0287,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0287
+        },
+        {
+          "feature": "income_category_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0282,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0282
+        },
+        {
+          "feature": "general_health_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0273,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0273
+        },
+        {
+          "feature": "smoking_status_Former_Smoker",
+          "feature_value": 0.0,
+          "shap_value": 0.0223,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0223
+        },
+        {
+          "feature": "age_group_9.0",
+          "feature_value": 0.0,
+          "shap_value": -0.022,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.022
+        },
+        {
+          "feature": "income_category_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0215,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0215
+        },
+        {
+          "feature": "income_category_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0177,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0177
+        },
+        {
+          "feature": "age_group_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.015,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.015
+        },
+        {
+          "feature": "age_group_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.013,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.013
+        },
+        {
+          "feature": "smoking_status_Daily_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0124,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0124
+        },
+        {
+          "feature": "employment_status_2.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0115,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0115
+        },
+        {
+          "feature": "age_group_7.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0113,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0113
+        },
+        {
+          "feature": "sex_Male",
+          "feature_value": 0.0,
+          "shap_value": 0.0106,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0106
+        },
+        {
+          "feature": "income_category_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0095,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0095
+        },
+        {
+          "feature": "income_category_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0092,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0092
+        },
+        {
+          "feature": "education_level_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0084,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0084
+        },
+        {
+          "feature": "age_group_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0076,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0076
+        },
+        {
+          "feature": "income_category_1.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0068,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0068
+        },
+        {
+          "feature": "employment_status_4.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0065,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0065
+        },
+        {
+          "feature": "education_level_5.0",
+          "feature_value": 1.0,
+          "shap_value": -0.0064,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0064
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "feature_value": 0.0,
+          "shap_value": -0.006,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.006
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "feature_value": 0.0,
+          "shap_value": 0.0056,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0056
+        },
+        {
+          "feature": "education_level_2.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0027,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0027
+        },
+        {
+          "feature": "employment_status_5.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "employment_status_6.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0024,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "education_level_3.0",
+          "feature_value": 0.0,
+          "shap_value": -0.0021,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0021
+        },
+        {
+          "feature": "smoking_status_Some_Day_Smoker",
+          "feature_value": 0.0,
+          "shap_value": -0.0017,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "feature_value": 0.0,
+          "shap_value": -0.0015,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "feature_value": 0.0,
+          "shap_value": -0.0007,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "employment_status_3.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0006,
+          "direction": "increases_risk",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "mental_illness_days",
+          "feature_value": 0.083,
+          "shap_value": -0.0002,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "asthma_history_Unknown",
+          "feature_value": 0.0,
+          "shap_value": 0.0,
+          "direction": "decreases_risk",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_D_AsthmaComorbidity_Smoker",
+      "uncertainty": {
+        "sample_index": 3,
+        "predicted_probability": 0.8823,
+        "ensemble_std_dev": 0.0322,
+        "prediction_interval_95": [
+          0.8191,
+          0.9455
+        ],
+        "tree_prob_range": [
+          0.8191,
+          0.9455
+        ],
+        "missing_features_count": 0,
+        "imputation_index": 0.0,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "high",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    }
+  ],
+  "stability_audit": {
+    "repeatability_max_discrepancy": 0.0,
+    "perturbation_noise_level": 0.05,
+    "mean_probability_shift": 0.0019,
+    "max_probability_shift": 0.0059,
+    "stability_verdict": "highly_stable",
+    "methodological_note": "Explanation attributions demonstrate high mathematical determinism and robust stability against minor input measurement jitter."
+  },
+  "feature_metadata": {
+    "pack_years": {
+      "label_en": "Pack-Years of Smoking",
+      "label_bn": "\u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u09aa\u09cd\u09af\u09be\u0995-\u09ac\u099b\u09b0",
+      "description_en": "Lifetime cumulative tobacco exposure (packs smoked per day * years smoked).",
+      "description_bn": "\u0986\u099c\u09c0\u09ac\u09a8 \u09b8\u099e\u09cd\u099a\u09bf\u09a4 \u09a4\u09be\u09ae\u09be\u0995\u09c7\u09b0 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 (\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 \u09aa\u09cd\u09af\u09be\u0995\u09c7\u09b0 \u09b8\u0982\u0996\u09cd\u09af\u09be * \u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u09ae\u09cb\u099f \u09ac\u099b\u09b0)\u0964",
+      "domain": "Tobacco Exposure"
+    },
+    "years_smoked": {
+      "label_en": "Total Duration of Smoking (Years)",
+      "label_bn": "\u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u09ae\u09cb\u099f \u09b8\u09ae\u09af\u09bc\u0995\u09be\u09b2 (\u09ac\u099b\u09b0)",
+      "description_en": "Total number of years the individual has smoked regularly.",
+      "description_bn": "\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf \u0995\u09a4 \u09ac\u099b\u09b0 \u09a8\u09bf\u09af\u09bc\u09ae\u09bf\u09a4 \u09a7\u09c2\u09ae\u09aa\u09be\u09a8 \u0995\u09b0\u09c7\u099b\u09c7\u09a8\u0964",
+      "domain": "Tobacco Exposure"
+    },
+    "bmi": {
+      "label_en": "Body Mass Index (BMI)",
+      "label_bn": "\u09ac\u09a1\u09bf \u09ae\u09be\u09b8 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 (\u09ac\u09bf\u098f\u09ae\u0986\u0987)",
+      "description_en": "Calculated as weight in kg divided by height in meters squared.",
+      "description_bn": "\u0993\u099c\u09a8 (\u0995\u09c7\u099c\u09bf) \u0995\u09c7 \u0989\u099a\u09cd\u099a\u09a4\u09be\u09b0 \u09ac\u09b0\u09cd\u0997 (\u09ae\u09bf\u099f\u09be\u09b0) \u09a6\u09cd\u09ac\u09be\u09b0\u09be \u09ad\u09be\u0997 \u0995\u09b0\u09c7 \u09aa\u09cd\u09b0\u09be\u09aa\u09cd\u09a4 \u09ae\u09be\u09a8\u0964",
+      "domain": "Anthropometric"
+    },
+    "physical_illness_days": {
+      "label_en": "Physical Unhealthy Days (past 30d)",
+      "label_bn": "\u09b6\u09be\u09b0\u09c0\u09b0\u09bf\u0995 \u0985\u09b8\u09c1\u09b8\u09cd\u09a5\u09a4\u09be\u09b0 \u09a6\u09bf\u09a8 (\u0997\u09a4 \u09e9\u09e6 \u09a6\u09bf\u09a8\u09c7)",
+      "description_en": "Number of days physical illness or injury prevented normal activities.",
+      "description_bn": "\u0997\u09a4 \u09e9\u09e6 \u09a6\u09bf\u09a8\u09c7 \u09b6\u09be\u09b0\u09c0\u09b0\u09bf\u0995 \u0985\u09b8\u09c1\u09b8\u09cd\u09a5\u09a4\u09be\u09b0 \u0995\u09be\u09b0\u09a3\u09c7 \u09b8\u09cd\u09ac\u09be\u09ad\u09be\u09ac\u09bf\u0995 \u0995\u09be\u09b0\u09cd\u09af\u0995\u09b2\u09be\u09aa\u09c7 \u09ac\u09cd\u09af\u09be\u0998\u09be\u09a4 \u0998\u099f\u09be\u09b0 \u09b8\u0982\u0996\u09cd\u09af\u09be\u0964",
+      "domain": "Morbidity Burden"
+    },
+    "mental_illness_days": {
+      "label_en": "Mental Unhealthy Days (past 30d)",
+      "label_bn": "\u09ae\u09be\u09a8\u09b8\u09bf\u0995 \u0985\u09b8\u09c1\u09b8\u09cd\u09a5\u09a4\u09be\u09b0 \u09a6\u09bf\u09a8 (\u0997\u09a4 \u09e9\u09e6 \u09a6\u09bf\u09a8\u09c7)",
+      "description_en": "Number of days stress, depression, or emotional issues impacted function.",
+      "description_bn": "\u0997\u09a4 \u09e9\u09e6 \u09a6\u09bf\u09a8\u09c7 \u09ae\u09be\u09a8\u09b8\u09bf\u0995 \u0985\u09ac\u09b8\u09be\u09a6 \u09ac\u09be \u099a\u09be\u09aa\u09c7\u09b0 \u0995\u09be\u09b0\u09a3\u09c7 \u09b8\u09cd\u09ac\u09be\u09ad\u09be\u09ac\u09bf\u0995 \u0995\u09be\u09b0\u09cd\u09af\u0995\u09b2\u09be\u09aa\u09c7 \u09ac\u09cd\u09af\u09be\u0998\u09be\u09a4\u0964",
+      "domain": "Morbidity Burden"
+    },
+    "age_group": {
+      "label_en": "Age Bracket",
+      "label_bn": "\u09ac\u09df\u09b8\u09c7\u09b0 \u09b8\u09cd\u09a4\u09b0",
+      "description_en": "Five-year age demographic stratification.",
+      "description_bn": "\u09aa\u09be\u0981\u099a \u09ac\u099b\u09b0\u09c7\u09b0 \u09ac\u09af\u09bc\u09b8 \u09ad\u09bf\u09a4\u09cd\u09a4\u09bf\u0995 \u09b8\u09cd\u09a4\u09b0\u09ac\u09bf\u09a8\u09cd\u09af\u09be\u09b8\u0964",
+      "domain": "Demographics"
+    },
+    "sex": {
+      "label_en": "Biological Sex",
+      "label_bn": "\u099c\u09c8\u09ac\u09bf\u0995 \u09b2\u09bf\u0999\u09cd\u0997",
+      "description_en": "Biological sex recorded at survey baseline.",
+      "description_bn": "\u099c\u09b0\u09bf\u09aa\u09c7\u09b0 \u09b6\u09c1\u09b0\u09c1\u09a4\u09c7 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u0995\u09c3\u09a4 \u099c\u09c8\u09ac\u09bf\u0995 \u09b2\u09bf\u0999\u09cd\u0997\u0964",
+      "domain": "Demographics"
+    },
+    "smoking_status": {
+      "label_en": "Current Smoking Status",
+      "label_bn": "\u09ac\u09b0\u09cd\u09a4\u09ae\u09be\u09a8 \u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u0985\u09ac\u09b8\u09cd\u09a5\u09be",
+      "description_en": "Daily, non-daily, former, or never smoker.",
+      "description_bn": "\u09a6\u09c8\u09a8\u09bf\u0995, \u0985\u09a8\u09bf\u09af\u09bc\u09ae\u09bf\u09a4, \u09aa\u09cd\u09b0\u09be\u0995\u09cd\u09a4\u09a8 \u09ac\u09be \u0995\u0996\u09a8\u09cb \u09a8\u09be \u09a7\u09c2\u09ae\u09aa\u09be\u09af\u09bc\u09c0\u0964",
+      "domain": "Tobacco Exposure"
+    },
+    "asthma_history": {
+      "label_en": "Diagnosed Asthma History",
+      "label_bn": "\u0985\u09cd\u09af\u09be\u099c\u09ae\u09be\u09b0 \u0987\u09a4\u09bf\u09b9\u09be\u09b8",
+      "description_en": "Prior physician diagnosis of chronic bronchial asthma.",
+      "description_bn": "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u0995 \u0995\u09b0\u09cd\u09a4\u09c3\u0995 \u09ac\u09cd\u09b0\u0999\u09cd\u0995\u09bf\u09af\u09bc\u09be\u09b2 \u0985\u09cd\u09af\u09be\u099c\u09ae\u09be \u09a8\u09bf\u09b0\u09cd\u09a3\u09af\u09bc\u09c7\u09b0 \u09aa\u09c2\u09b0\u09cd\u09ac \u0987\u09a4\u09bf\u09b9\u09be\u09b8\u0964",
+      "domain": "Respiratory History"
+    },
+    "general_health": {
+      "label_en": "Self-Rated General Health",
+      "label_bn": "\u09b8\u09be\u09a7\u09be\u09b0\u09a3 \u09b8\u09cd\u09ac\u09be\u09b8\u09cd\u09a5\u09cd\u09af\u0997\u09a4 \u0985\u09ac\u09b8\u09cd\u09a5\u09be",
+      "description_en": "Perceived health ranging from Excellent (1) to Poor (5).",
+      "description_bn": "\u09b0\u09cb\u0997\u09c0\u09b0 \u09a8\u09bf\u099c\u09b8\u09cd\u09ac \u09ae\u09c2\u09b2\u09cd\u09af\u09be\u09af\u09bc\u09a8 (\u099a\u09ae\u09ce\u0995\u09be\u09b0 \u09e7 \u09a5\u09c7\u0995\u09c7 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 \u09eb \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4)\u0964",
+      "domain": "General Health"
+    }
+  },
+  "model_limitations": [
+    "Trained on US cross-sectional survey data (BRFSS 2022); cannot establish longitudinal incidence.",
+    "Lacks bidi smoking and traditional biomass (chula) smoke exposure metrics crucial in Bangladesh.",
+    "Sensitivity suppression observed in Asian populations (36.3%) under uncalibrated 0.50 threshold."
+  ]
+}

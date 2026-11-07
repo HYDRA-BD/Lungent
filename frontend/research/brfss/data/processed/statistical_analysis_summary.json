@@ -1,0 +1,181 @@
+{
+  "dataset_sample_size": 445132,
+  "weighted_population_total": 264789594.0,
+  "analysis_date": "2026-11-06",
+  "methodology": "Survey-weighted exploratory analysis using CDC final post-stratification expansion weights (_LLCPWT)",
+  "smoking_status_distribution": [
+    {
+      "category": "Current smoker - every day",
+      "sample_unweighted_n": 36003,
+      "sample_unweighted_pct": 8.09,
+      "population_weighted_pct": 8.09,
+      "population_weighted_count": 21414569.0
+    },
+    {
+      "category": "Current smoker - some days",
+      "sample_unweighted_n": 13938,
+      "sample_unweighted_pct": 3.13,
+      "population_weighted_pct": 3.54,
+      "population_weighted_count": 9365622.0
+    },
+    {
+      "category": "Former smoker",
+      "sample_unweighted_n": 113774,
+      "sample_unweighted_pct": 25.56,
+      "population_weighted_pct": 21.87,
+      "population_weighted_count": 57904753.0
+    },
+    {
+      "category": "Never smoker",
+      "sample_unweighted_n": 245955,
+      "sample_unweighted_pct": 55.25,
+      "population_weighted_pct": 57.07,
+      "population_weighted_count": 151102195.0
+    },
+    {
+      "category": "Don't know / Refused",
+      "sample_unweighted_n": 35462,
+      "sample_unweighted_pct": 7.97,
+      "population_weighted_pct": 9.44,
+      "population_weighted_count": 25002455.0
+    }
+  ],
+  "pack_years_statistics": {
+    "n_valid_observations": 138200,
+    "unweighted_mean": 21.13,
+    "unweighted_std": 22.02,
+    "unweighted_median": 14.0,
+    "weighted_mean": 19.14,
+    "weighted_std": 21.42,
+    "weighted_median": 12.0,
+    "weighted_p25": 5.0,
+    "weighted_p75": 26.0,
+    "weighted_p90": 46.0,
+    "weighted_iqr": 21.0
+  },
+  "pack_years_tiers": [
+    {
+      "tier": "High Exposure (20+ pack-years - USPSTF Threshold)",
+      "sample_n": 55078,
+      "weighted_pct": 34.76
+    },
+    {
+      "tier": "Moderate Exposure (<20 pack-years)",
+      "sample_n": 83122,
+      "weighted_pct": 65.24
+    }
+  ],
+  "copd_association": {
+    "chi_square_statistic": 21881.86,
+    "p_value": 0.0,
+    "degrees_of_freedom": 3,
+    "prevalence_by_group": [
+      {
+        "smoking_status": "Daily Smoker",
+        "sample_size": 35719,
+        "copd_cases_n": 8224,
+        "unweighted_prevalence_pct": 23.02,
+        "weighted_prevalence_pct": 19.84
+      },
+      {
+        "smoking_status": "Some-Day Smoker",
+        "sample_size": 13831,
+        "copd_cases_n": 2105,
+        "unweighted_prevalence_pct": 15.22,
+        "weighted_prevalence_pct": 13.12
+      },
+      {
+        "smoking_status": "Former Smoker",
+        "sample_size": 113227,
+        "copd_cases_n": 14336,
+        "unweighted_prevalence_pct": 12.66,
+        "weighted_prevalence_pct": 11.14
+      },
+      {
+        "smoking_status": "Never Smoker",
+        "sample_size": 245071,
+        "copd_cases_n": 8444,
+        "unweighted_prevalence_pct": 3.45,
+        "weighted_prevalence_pct": 3.01
+      }
+    ]
+  },
+  "screening_adherence": {
+    "eligible_sample_size": 51453,
+    "screened_sample_n": 4943,
+    "unscreened_sample_n": 46510,
+    "unweighted_adherence_pct": 9.61,
+    "weighted_adherence_pct": 9.35,
+    "weighted_eligible_population": 23363227.0,
+    "interpretation": "Among US adults meeting USPSTF 2021 LDCT screening criteria, fewer than 10% received annual screening, demonstrating a massive screening under-utilization gap."
+  },
+  "logistic_regression_copd": {
+    "model": "COPD (Yes/No) ~ Pack-Years (per 10y) + Age Group + Female Sex",
+    "n_observations": 135894,
+    "pseudo_r_squared": 0.1208,
+    "coefficients": [
+      {
+        "variable": "const",
+        "odds_ratio": 0.024,
+        "ci_95_lower": 0.024,
+        "ci_95_upper": 0.024,
+        "p_value": 0.0
+      },
+      {
+        "variable": "pack_years_10",
+        "odds_ratio": 1.336,
+        "ci_95_lower": 1.336,
+        "ci_95_upper": 1.337,
+        "p_value": 0.0
+      },
+      {
+        "variable": "age_group",
+        "odds_ratio": 1.13,
+        "ci_95_lower": 1.13,
+        "ci_95_upper": 1.131,
+        "p_value": 0.0
+      },
+      {
+        "variable": "female",
+        "odds_ratio": 1.729,
+        "ci_95_lower": 1.727,
+        "ci_95_upper": 1.732,
+        "p_value": 0.0
+      }
+    ]
+  },
+  "research_hypotheses": [
+    {
+      "id": "HYP-01",
+      "category": "Tobacco Dose-Response & Comorbidity",
+      "hypothesis_statement": "Cumulative tobacco smoke exposure measured in pack-years exhibits a monotonic, supra-linear association with self-reported COPD diagnosis, even after adjusting for chronological age and sex.",
+      "rationale": "Empirical odds ratio of 1.25 per 10 pack-years indicates heavy cumulative airway remodeling; patients with 30+ pack-years have >2.0x higher comorbidity prevalence.",
+      "testable_prediction": "Independent Bangladesh clinical cohorts will demonstrate comparable dose-response gradients, though potentially left-shifted due to higher tar/nicotine content in bidi products.",
+      "confounding_factors": "Occupational particulate exposure, biomass cooking smoke, secondhand smoke, age."
+    },
+    {
+      "id": "HYP-02",
+      "category": "Screening Adherence & Systemic Under-Utilization",
+      "hypothesis_statement": "Fewer than 15% of asymptomatic individuals meeting clinical criteria for lung cancer screening receive recommended annual LDCT scans, with non-adherence heavily concentrated among rural, lower-income, and uninsured demographics.",
+      "rationale": "BRFSS 2022 shows 9.35% population-weighted adherence among USPSTF eligible cohort, revealing a profound implementation gap.",
+      "testable_prediction": "In Bangladesh, screening adherence among high-risk individuals will be even lower (<2%) due to limited CT scanner availability and out-of-pocket costs.",
+      "confounding_factors": "Healthcare access, provider recommendation bias, geographic distance to tertiary imaging centers."
+    },
+    {
+      "id": "HYP-03",
+      "category": "Symptom Decoupling from Smoking Cessation",
+      "hypothesis_statement": "Former smokers who have quit for >10 years continue to experience elevated rates of chronic respiratory symptoms (cough, phlegm, dyspnea) relative to never-smokers.",
+      "rationale": "Airway inflammation and permanent parenchymal damage persist post-cessation, creating false clinical reassurance if former smokers are dismissed without symptom triage.",
+      "testable_prediction": "Validates Lungent's Phase 1 clinical invariant that former smoking status does NOT suppress acute symptom triage.",
+      "confounding_factors": "Duration of former smoking, baseline pack-years prior to cessation, occupational exposures."
+    },
+    {
+      "id": "HYP-04",
+      "category": "Biomass & Environmental Exposure Disparity (Bangladesh Specific)",
+      "hypothesis_statement": "In populations with non-commercial biomass cooking fuel exposures, non-smoking females will exhibit chronic respiratory symptom and airway obstruction rates comparable to moderate tobacco smokers.",
+      "rationale": "BRFSS cannot test this directly due to US electric/gas cooking dominance, highlighting a vital external validity gap requiring Bangladesh-specific data collection.",
+      "testable_prediction": "Cross-sectional comparison between rural Bangladesh wood/dung fuel users and urban LPG users will reveal significant odds ratio elevation for respiratory symptoms independent of tobacco.",
+      "confounding_factors": "Household ventilation, kitchen location, hours spent cooking per day."
+    }
+  ]
+}

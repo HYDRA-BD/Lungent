@@ -1,0 +1,94 @@
+{
+  "experiment_id": "EXP-02",
+  "task_name": "USPSTF Lung Cancer Screening Non-Adherence Propensity",
+  "clinical_objective": "Predict likelihood that a USPSTF-eligible patient will fail to obtain annual LDCT screening to inform proactive healthcare outreach and barrier remediation.",
+  "dataset": "CDC BRFSS 2022",
+  "cohort_size_total": 51453,
+  "cohort_size_train": 41162,
+  "cohort_size_test": 10291,
+  "non_adherence_prevalence": 0.9039,
+  "best_model_name": "Random_Forest",
+  "test_metrics": {
+    "roc_auc": 0.909,
+    "pr_auc": 0.9903,
+    "sensitivity": 0.7642,
+    "specificity": 0.9909,
+    "precision": 0.9987,
+    "f1": 0.8659,
+    "accuracy": 0.786,
+    "brier_score": 0.1327,
+    "true_positives": 7109,
+    "false_positives": 9,
+    "true_negatives": 980,
+    "false_negatives": 2193,
+    "model": "Random_Forest",
+    "cv_roc_auc_mean": 0.9095,
+    "cv_roc_auc_std": 0.0034,
+    "train_time_sec": 3.32
+  },
+  "top_features": [
+    {
+      "feature": "smoking_group_3.0",
+      "importance": 0.3577
+    },
+    {
+      "feature": "pack_years",
+      "importance": 0.1708
+    },
+    {
+      "feature": "years_smoked",
+      "importance": 0.146
+    },
+    {
+      "feature": "years_quit",
+      "importance": 0.1227
+    },
+    {
+      "feature": "smoking_group_1.0",
+      "importance": 0.0816
+    },
+    {
+      "feature": "smoking_group_2.0",
+      "importance": 0.0616
+    },
+    {
+      "feature": "annual_routine_checkup_Past_Year",
+      "importance": 0.0098
+    },
+    {
+      "feature": "age_group_7.0",
+      "importance": 0.0065
+    },
+    {
+      "feature": "bmi",
+      "importance": 0.0057
+    },
+    {
+      "feature": "has_personal_doctor_No",
+      "importance": 0.0031
+    },
+    {
+      "feature": "annual_routine_checkup_5+_Years",
+      "importance": 0.0026
+    },
+    {
+      "feature": "education_level_6.0",
+      "importance": 0.0019
+    },
+    {
+      "feature": "general_health_2.0",
+      "importance": 0.0017
+    },
+    {
+      "feature": "annual_routine_checkup_Past_2_Years",
+      "importance": 0.0017
+    },
+    {
+      "feature": "employment_status_7.0",
+      "importance": 0.0016
+    }
+  ],
+  "artifact_path": "/Users/kazi/Projects/Lungent/research/experiments/artifacts/exp02_best_screening_model.joblib",
+  "governance_status": "EXPERIMENTAL_RESEARCH_ONLY",
+  "prohibited_use": "PROHIBITED FROM CLINICAL SCREENING DETERMINATION OR PRODUCTION CLINICAL DECISION-SUPPORT WORKFLOWS."
+}

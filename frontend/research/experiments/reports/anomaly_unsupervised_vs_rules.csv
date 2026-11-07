@@ -1,0 +1,5 @@
+method,true_positives,false_positives,false_negatives,true_negatives,sensitivity,specificity,precision,f1_score,total_flagged
+Deterministic Clinical Rules,50,0,0,2000,1.0,1.0,1.0,1.0,50
+Isolation Forest,44,8,6,1992,0.88,0.996,0.8462,0.8627,52
+Robust Covariance (Elliptic Envelope),50,2,0,1998,1.0,0.999,0.9615,0.9804,52
+Local Outlier Factor (LOF),15,37,35,1963,0.3,0.9815,0.2885,0.2941,52

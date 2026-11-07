@@ -1,0 +1,5 @@
+# Lungent Platform Robots Configuration
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/

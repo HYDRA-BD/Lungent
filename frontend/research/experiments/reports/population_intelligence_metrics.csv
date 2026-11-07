@@ -1,0 +1,9 @@
+factor_code,factor_name,numerator_count,total_sample,prevalence_pct,ci_95_lower,ci_95_upper
+RF_CIGARETTE_SMOKING,Current Cigarette Smoking,1920,5000,38.4,37.06,39.76
+RF_BIDI_SMOKING,Hand-Rolled Bidi Smoking,1140,5000,22.8,21.66,23.98
+RF_SMOKELESS_TOBACCO,Smokeless Tobacco (Zarda/Gul),1475,5000,29.5,28.25,30.78
+RF_BIOMASS_CHULA_COOKING,Household Biomass Smoke,2710,5000,54.2,52.82,55.58
+RF_OCCUPATIONAL_DUST,Occupational Respirable Dust,730,5000,14.6,13.65,15.61
+RF_SECONDHAND_SMOKE,Secondhand Smoke Exposure,2155,5000,43.1,41.73,44.48
+RF_PRIOR_TB,Prior Tuberculosis History,590,5000,11.8,10.93,12.72
+RF_CHRONIC_COPD,Diagnosed COPD,810,5000,16.2,15.2,17.25

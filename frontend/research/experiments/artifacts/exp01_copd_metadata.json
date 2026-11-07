@@ -1,0 +1,204 @@
+{
+  "experiment_id": "EXP-01",
+  "experiment_title": "Chronic Obstructive Pulmonary Disease (COPD) Phenotype Prediction",
+  "clinical_objective": "Predict diagnosed COPD to quantify lung cancer comorbidity risk multipliers in primary care screening contexts.",
+  "research_question": "Can self-reported demographics, lifetime tobacco exposure, and clinical risk characteristics reliably predict diagnosed COPD (CHCCOPD3)?",
+  "target_variable": "CHCCOPD3 (1=Yes, 0=No)",
+  "total_cohort_size": 442913,
+  "experimental_sample_size": 120000,
+  "features": {
+    "numerical": [
+      "pack_years",
+      "years_smoked",
+      "bmi",
+      "physical_illness_days",
+      "mental_illness_days"
+    ],
+    "categorical": [
+      "age_group",
+      "sex",
+      "race_ethnicity",
+      "education_level",
+      "income_category",
+      "employment_status",
+      "smoking_status",
+      "asthma_history",
+      "general_health"
+    ]
+  },
+  "models_evaluated": {
+    "Logistic_Regression_Baseline": {
+      "algorithm": "LogisticRegression",
+      "cv_5fold_roc_auc_mean": 0.8695208181104711,
+      "cv_5fold_roc_auc_std": 0.003979575667307064,
+      "cv_5fold_pr_auc_mean": 0.44523519760071933,
+      "cv_5fold_pr_auc_std": 0.007687333869597623,
+      "test_holdout_metrics": {
+        "roc_auc": 0.8614,
+        "pr_auc": 0.4324,
+        "accuracy": 0.7995,
+        "sensitivity_recall": 0.7712,
+        "specificity": 0.802,
+        "precision": 0.2543,
+        "f1_score": 0.3824,
+        "brier_score": 0.144,
+        "confusion_matrix": {
+          "true_negatives": 17698,
+          "false_positives": 4370,
+          "false_negatives": 442,
+          "true_positives": 1490
+        }
+      },
+      "training_time_seconds": 11.14
+    },
+    "Decision_Tree": {
+      "algorithm": "DecisionTreeClassifier",
+      "cv_5fold_roc_auc_mean": 0.8452432718902994,
+      "cv_5fold_roc_auc_std": 0.00235445735425004,
+      "cv_5fold_pr_auc_mean": 0.38662004157765656,
+      "cv_5fold_pr_auc_std": 0.0059737418815744205,
+      "test_holdout_metrics": {
+        "roc_auc": 0.8326,
+        "pr_auc": 0.3658,
+        "accuracy": 0.77,
+        "sensitivity_recall": 0.7681,
+        "specificity": 0.7702,
+        "precision": 0.2264,
+        "f1_score": 0.3497,
+        "brier_score": 0.1536,
+        "confusion_matrix": {
+          "true_negatives": 16996,
+          "false_positives": 5072,
+          "false_negatives": 448,
+          "true_positives": 1484
+        }
+      },
+      "training_time_seconds": 8.08
+    },
+    "Random_Forest": {
+      "algorithm": "RandomForestClassifier",
+      "cv_5fold_roc_auc_mean": 0.8687212690245915,
+      "cv_5fold_roc_auc_std": 0.0035005604906580843,
+      "cv_5fold_pr_auc_mean": 0.44637684833722285,
+      "cv_5fold_pr_auc_std": 0.0066408083536648715,
+      "test_holdout_metrics": {
+        "roc_auc": 0.8593,
+        "pr_auc": 0.4301,
+        "accuracy": 0.8198,
+        "sensitivity_recall": 0.7396,
+        "specificity": 0.8268,
+        "precision": 0.2721,
+        "f1_score": 0.3979,
+        "brier_score": 0.1321,
+        "confusion_matrix": {
+          "true_negatives": 18246,
+          "false_positives": 3822,
+          "false_negatives": 503,
+          "true_positives": 1429
+        }
+      },
+      "training_time_seconds": 23.0
+    },
+    "HistGradientBoosting_Tuned": {
+      "algorithm": "HistGradientBoostingClassifier",
+      "cv_5fold_roc_auc_mean": 0.8710993784812047,
+      "cv_5fold_roc_auc_std": 0.002987712317988255,
+      "cv_5fold_pr_auc_mean": 0.4547875354922928,
+      "cv_5fold_pr_auc_std": 0.008788837033678287,
+      "test_holdout_metrics": {
+        "roc_auc": 0.8611,
+        "pr_auc": 0.4375,
+        "accuracy": 0.7972,
+        "sensitivity_recall": 0.7629,
+        "specificity": 0.8002,
+        "precision": 0.2506,
+        "f1_score": 0.3772,
+        "brier_score": 0.14,
+        "confusion_matrix": {
+          "true_negatives": 17659,
+          "false_positives": 4409,
+          "false_negatives": 458,
+          "true_positives": 1474
+        }
+      },
+      "training_time_seconds": 52.22
+    }
+  },
+  "selected_best_candidate": "Logistic_Regression_Baseline",
+  "fairness_audit": [
+    {
+      "subgroup_dimension": "Biological_Sex",
+      "subgroup": "Male",
+      "n_samples": 11290,
+      "prevalence_pct": 7.29,
+      "roc_auc": 0.8616,
+      "sensitivity_recall": 0.7582,
+      "specificity": 0.8229,
+      "f1_score": 0.3781
+    },
+    {
+      "subgroup_dimension": "Biological_Sex",
+      "subgroup": "Female",
+      "n_samples": 12710,
+      "prevalence_pct": 8.73,
+      "roc_auc": 0.8603,
+      "sensitivity_recall": 0.7809,
+      "specificity": 0.7831,
+      "f1_score": 0.3857
+    },
+    {
+      "subgroup_dimension": "Race_Ethnicity",
+      "subgroup": "White",
+      "n_samples": 17336,
+      "prevalence_pct": 8.7,
+      "roc_auc": 0.869,
+      "sensitivity_recall": 0.7971,
+      "specificity": 0.7914,
+      "f1_score": 0.3999
+    },
+    {
+      "subgroup_dimension": "Race_Ethnicity",
+      "subgroup": "Black",
+      "n_samples": 1860,
+      "prevalence_pct": 8.17,
+      "roc_auc": 0.8099,
+      "sensitivity_recall": 0.7105,
+      "specificity": 0.7758,
+      "f1_score": 0.3359
+    },
+    {
+      "subgroup_dimension": "Race_Ethnicity",
+      "subgroup": "Hispanic",
+      "n_samples": 2342,
+      "prevalence_pct": 4.57,
+      "roc_auc": 0.7986,
+      "sensitivity_recall": 0.4953,
+      "specificity": 0.8729,
+      "f1_score": 0.2387
+    },
+    {
+      "subgroup_dimension": "Race_Ethnicity",
+      "subgroup": "Asian",
+      "n_samples": 755,
+      "prevalence_pct": 1.85,
+      "roc_auc": 0.798,
+      "sensitivity_recall": 0.3571,
+      "specificity": 0.9663,
+      "f1_score": 0.2273
+    },
+    {
+      "subgroup_dimension": "Race_Ethnicity",
+      "subgroup": "American_Indian_Alaska_Native",
+      "n_samples": 342,
+      "prevalence_pct": 13.74,
+      "roc_auc": 0.8542,
+      "sensitivity_recall": 0.8723,
+      "specificity": 0.6915,
+      "f1_score": 0.4581
+    }
+  ],
+  "random_seed": 42,
+  "execution_date": "2026-11-06",
+  "governance_status": "EXPERIMENTAL_RESEARCH_ONLY",
+  "prohibited_use": "PROHIBITED FROM CLINICAL SCREENING DETERMINATION OR PRODUCTION CLINICAL DECISION-SUPPORT WORKFLOWS."
+}

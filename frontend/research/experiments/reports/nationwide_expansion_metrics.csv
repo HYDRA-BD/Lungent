@@ -1,0 +1,12 @@
+metric_category,metric_name,value
+Onboarding,simulated_facilities,250.0
+Onboarding,mean_readiness_score,81.94
+Onboarding,activation_rate_pct,80.0
+Routing,total_referral_requests,1000.0
+Routing,mean_latency_us,0.14
+Routing,consent_accuracy_pct,100.0
+Monitoring,probe_throughput_sec,988817.8
+Monitoring,mean_latency_ms,27.14
+Zero-PHI,sensitivity_pct,100.0
+Zero-PHI,leakage_rate_pct,0.0
+Rollout,milestone_completion_pct,62.5

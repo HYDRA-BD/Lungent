@@ -1,0 +1,10 @@
+{
+  "model_id": "direct-lung-cancer-diagnosis",
+  "model_name": "Direct Supervised Lung Cancer Diagnosis Target",
+  "model_version": "0.0.0-prohibited",
+  "governance_status": "PERMANENTLY_REJECTED",
+  "xai_eligibility": "NOT_APPLICABLE_PROHIBITED_TARGET",
+  "rejection_rationale": "Direct supervised prediction of lung cancer diagnosis was formally rejected in Phase 2.1, Phase 2.2, and Phase 2.3 due to the absence of a core incidence label in BRFSS and extreme survivorship bias in the optional cancer module (<0.10%).",
+  "scientific_integrity_rule": "Explainability cannot be computed on a non-existent or methodologically fraudulent model target. Attempting to generate feature attributions for an invalid target would mislead researchers and violate clinical AI safety invariants.",
+  "required_clinical_pathway": "Clinical diagnosis of thoracic malignancy requires tissue biopsy histopathology, immunohistochemistry, and radiological TNM staging."
+}

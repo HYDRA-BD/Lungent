@@ -1,0 +1,22 @@
+{
+  "dataset_name": "Behavioral Risk Factor Surveillance System (BRFSS) 2022",
+  "survey_year": 2022,
+  "format": "SAS Transport Format (.XPT Version 5)",
+  "file_size_mb": 1106.32,
+  "total_observations": 445132,
+  "total_variables": 328,
+  "geographic_coverage": "50 US States, District of Columbia, Guam, Puerto Rico, US Virgin Islands",
+  "target_population": "Non-institutionalized US civilian adults aged 18 years and older",
+  "sampling_methodology": "Stratified, disproportionate stratified sampling (DSS) for landline; random digit dialing (RDD) for cellular",
+  "survey_design_variables": {
+    "primary_sampling_unit": "_PSU",
+    "stratification_variable": "_STSTR",
+    "final_weight_variable": "_LLCPWT"
+  },
+  "sample_strata_count": 2263,
+  "sample_psu_count": 26152,
+  "weighted_population_represented": 264789594.0,
+  "official_source": "Centers for Disease Control and Prevention (CDC), NCCDPHP",
+  "publication_date": "October 2023",
+  "citation": "Centers for Disease Control and Prevention (CDC). Behavioral Risk Factor Surveillance System Survey Data. Atlanta, Georgia: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention, 2022."
+}

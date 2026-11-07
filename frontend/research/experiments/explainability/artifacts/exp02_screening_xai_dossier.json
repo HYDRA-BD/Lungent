@@ -1,0 +1,2198 @@
+{
+  "model_id": "exp02-screening-non-adherence",
+  "model_name": "USPSTF Screening Non-Adherence Propensity (Random Forest)",
+  "model_version": "1.0.0-exp",
+  "governance_status": "REJECTED_FOR_BANGLADESH_CLINICAL_USE",
+  "non_causal_disclaimer": "Feature attributions describe associations with reported LDCT screening utilization in the US. They DO NOT prove that changing personal doctor access or insurance status causally alters screening uptake in different international healthcare environments.",
+  "baseline_probability": 0.7344,
+  "global_feature_importance_top10": [
+    {
+      "feature": "smoking_group_3.0",
+      "gini_importance": 0.3577
+    },
+    {
+      "feature": "pack_years",
+      "gini_importance": 0.1708
+    },
+    {
+      "feature": "years_smoked",
+      "gini_importance": 0.146
+    },
+    {
+      "feature": "years_quit",
+      "gini_importance": 0.1227
+    },
+    {
+      "feature": "smoking_group_1.0",
+      "gini_importance": 0.0816
+    },
+    {
+      "feature": "smoking_group_2.0",
+      "gini_importance": 0.0616
+    },
+    {
+      "feature": "annual_routine_checkup_Past_Year",
+      "gini_importance": 0.0098
+    },
+    {
+      "feature": "age_group_7.0",
+      "gini_importance": 0.0065
+    },
+    {
+      "feature": "bmi",
+      "gini_importance": 0.0057
+    },
+    {
+      "feature": "has_personal_doctor_No",
+      "gini_importance": 0.0031
+    }
+  ],
+  "global_shap_importance_top10": [
+    {
+      "feature": "smoking_group_3.0",
+      "mean_abs_shap": 0.1833
+    },
+    {
+      "feature": "smoking_group_1.0",
+      "mean_abs_shap": 0.053
+    },
+    {
+      "feature": "smoking_group_2.0",
+      "mean_abs_shap": 0.0451
+    },
+    {
+      "feature": "annual_routine_checkup_Past_Year",
+      "mean_abs_shap": 0.0332
+    },
+    {
+      "feature": "years_smoked",
+      "mean_abs_shap": 0.0315
+    },
+    {
+      "feature": "pack_years",
+      "mean_abs_shap": 0.0244
+    },
+    {
+      "feature": "years_quit",
+      "mean_abs_shap": 0.0186
+    },
+    {
+      "feature": "annual_routine_checkup_5+_Years",
+      "mean_abs_shap": 0.0154
+    },
+    {
+      "feature": "has_personal_doctor_No",
+      "mean_abs_shap": 0.0135
+    },
+    {
+      "feature": "has_health_insurance_Uninsured",
+      "mean_abs_shap": 0.0081
+    }
+  ],
+  "local_explanations": [
+    {
+      "sample_index": 0,
+      "baseline_probability": 0.7344,
+      "predicted_probability": 0.9538,
+      "top_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": 0.1461,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.1461
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": 0.0514,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0514
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": 0.0386,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0386
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": -0.0228,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0228
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": 0.0212,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0212
+        },
+        {
+          "feature": "bmi",
+          "shap_value": -0.0073,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0073
+        },
+        {
+          "feature": "has_personal_doctor_No",
+          "shap_value": 0.0067,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0067
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": -0.0051,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0051
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0028,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0028
+        },
+        {
+          "feature": "general_health_5.0",
+          "shap_value": -0.0026,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0026
+        },
+        {
+          "feature": "age_group_10.0",
+          "shap_value": -0.0025,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0025
+        },
+        {
+          "feature": "education_level_2.0",
+          "shap_value": -0.0021,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0021
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": 0.1461,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.1461
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": 0.0514,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0514
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": 0.0386,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0386
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": -0.0228,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0228
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": 0.0212,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0212
+        },
+        {
+          "feature": "bmi",
+          "shap_value": -0.0073,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0073
+        },
+        {
+          "feature": "has_personal_doctor_No",
+          "shap_value": 0.0067,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0067
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": -0.0051,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0051
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0028,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0028
+        },
+        {
+          "feature": "general_health_5.0",
+          "shap_value": -0.0026,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0026
+        },
+        {
+          "feature": "age_group_10.0",
+          "shap_value": -0.0025,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0025
+        },
+        {
+          "feature": "education_level_2.0",
+          "shap_value": -0.0021,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0021
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": 0.0019,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0019
+        },
+        {
+          "feature": "income_category_2.0",
+          "shap_value": -0.0016,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0016
+        },
+        {
+          "feature": "employment_status_7.0",
+          "shap_value": -0.0014,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0014
+        },
+        {
+          "feature": "employment_status_8.0",
+          "shap_value": 0.0014,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0014
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Yes_Cost_Barrier",
+          "shap_value": 0.0012,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0012
+        },
+        {
+          "feature": "income_category_5.0",
+          "shap_value": 0.0009,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0009
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": 0.0008,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "employment_status_1.0",
+          "shap_value": 0.0008,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_No_Cost_Barrier",
+          "shap_value": -0.0008,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "annual_routine_checkup_5+_Years",
+          "shap_value": -0.0007,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "has_health_insurance_Insured",
+          "shap_value": -0.0007,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "age_group_11.0",
+          "shap_value": 0.0006,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "age_group_8.0",
+          "shap_value": -0.0006,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "has_health_insurance_Uninsured",
+          "shap_value": -0.0006,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "education_level_6.0",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "annual_routine_checkup_Past_5_Years",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "age_group_9.0",
+          "shap_value": 0.0004,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "sex_Male",
+          "shap_value": 0.0004,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "education_level_5.0",
+          "shap_value": -0.0004,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "has_personal_doctor_Yes_Only_One",
+          "shap_value": 0.0004,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "sex_Female",
+          "shap_value": 0.0003,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "education_level_4.0",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "annual_routine_checkup_Past_2_Years",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "general_health_2.0",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_1.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_6.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "general_health_1.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "age_group_12.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "age_group_13.0",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "education_level_3.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "income_category_7.0",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_5.0",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "has_health_insurance_Unknown",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "general_health_4.0",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "age_group_14.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_3.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_4.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_2.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_3.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_4.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_6.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "has_personal_doctor_Unknown",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Unknown",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "annual_routine_checkup_Never",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "annual_routine_checkup_Unknown",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "general_health_3.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_A_FinancialAndDoctorBarrier_NonAdherent",
+      "uncertainty": {
+        "sample_index": 0,
+        "predicted_probability": 0.9538,
+        "ensemble_std_dev": 0.1573,
+        "prediction_interval_95": [
+          0.3927,
+          1.0
+        ],
+        "tree_prob_range": [
+          0.1886,
+          1.0
+        ],
+        "missing_features_count": 0,
+        "imputation_index": 0.0,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "moderate",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    },
+    {
+      "sample_index": 1,
+      "baseline_probability": 0.7344,
+      "predicted_probability": 0.194,
+      "top_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": -0.2696,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.2696
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": -0.1299,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.1299
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": -0.0478,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0478
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": -0.0371,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0371
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": -0.0304,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0304
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": 0.0206,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0206
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": -0.0132,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0132
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0096,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0096
+        },
+        {
+          "feature": "general_health_2.0",
+          "shap_value": 0.006,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.006
+        },
+        {
+          "feature": "age_group_11.0",
+          "shap_value": -0.0053,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0053
+        },
+        {
+          "feature": "bmi",
+          "shap_value": -0.0042,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0042
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": 0.0025,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0025
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": -0.2696,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.2696
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": -0.1299,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.1299
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": -0.0478,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0478
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": -0.0371,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0371
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": -0.0304,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0304
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": 0.0206,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0206
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": -0.0132,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0132
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0096,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0096
+        },
+        {
+          "feature": "general_health_2.0",
+          "shap_value": 0.006,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.006
+        },
+        {
+          "feature": "age_group_11.0",
+          "shap_value": -0.0053,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0053
+        },
+        {
+          "feature": "bmi",
+          "shap_value": -0.0042,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0042
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": 0.0025,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0025
+        },
+        {
+          "feature": "age_group_8.0",
+          "shap_value": -0.0024,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "shap_value": -0.0024,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0024
+        },
+        {
+          "feature": "annual_routine_checkup_Past_5_Years",
+          "shap_value": -0.0022,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0022
+        },
+        {
+          "feature": "has_personal_doctor_No",
+          "shap_value": -0.0017,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "annual_routine_checkup_5+_Years",
+          "shap_value": -0.0017,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "employment_status_7.0",
+          "shap_value": -0.0015,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "has_health_insurance_Insured",
+          "shap_value": -0.0015,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_No_Cost_Barrier",
+          "shap_value": -0.0013,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0013
+        },
+        {
+          "feature": "has_health_insurance_Uninsured",
+          "shap_value": -0.0013,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0013
+        },
+        {
+          "feature": "annual_routine_checkup_Past_2_Years",
+          "shap_value": -0.0011,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0011
+        },
+        {
+          "feature": "age_group_13.0",
+          "shap_value": -0.0009,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0009
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Yes_Cost_Barrier",
+          "shap_value": -0.0009,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0009
+        },
+        {
+          "feature": "age_group_10.0",
+          "shap_value": 0.0008,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "education_level_3.0",
+          "shap_value": -0.0008,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "income_category_6.0",
+          "shap_value": -0.0008,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "age_group_12.0",
+          "shap_value": -0.0007,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "education_level_6.0",
+          "shap_value": -0.0007,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "income_category_3.0",
+          "shap_value": -0.0007,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "general_health_5.0",
+          "shap_value": 0.0007,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "has_personal_doctor_Yes_Only_One",
+          "shap_value": 0.0006,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "age_group_9.0",
+          "shap_value": 0.0004,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "shap_value": -0.0004,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "employment_status_1.0",
+          "shap_value": -0.0004,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "age_group_14.0",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "sex_Male",
+          "shap_value": 0.0003,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "education_level_4.0",
+          "shap_value": 0.0003,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_5.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "employment_status_2.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "general_health_1.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "general_health_3.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "general_health_4.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "sex_Female",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "education_level_2.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "income_category_1.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "income_category_2.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_3.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_4.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_5.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_8.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "annual_routine_checkup_Unknown",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "has_health_insurance_Unknown",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_5.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_4.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_7.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_6.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "has_personal_doctor_Unknown",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Unknown",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "annual_routine_checkup_Never",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_B_InsuredRegularCare_Adherent",
+      "uncertainty": {
+        "sample_index": 1,
+        "predicted_probability": 0.194,
+        "ensemble_std_dev": 0.053,
+        "prediction_interval_95": [
+          0.1104,
+          0.3201
+        ],
+        "tree_prob_range": [
+          0.0548,
+          0.4
+        ],
+        "missing_features_count": 0,
+        "imputation_index": 0.0,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "moderate",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    },
+    {
+      "sample_index": 2,
+      "baseline_probability": 0.7344,
+      "predicted_probability": 0.6773,
+      "top_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": -0.1805,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.1805
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": 0.1099,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.1099
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": -0.0926,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0926
+        },
+        {
+          "feature": "annual_routine_checkup_5+_Years",
+          "shap_value": 0.0589,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0589
+        },
+        {
+          "feature": "has_personal_doctor_No",
+          "shap_value": 0.0454,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0454
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": -0.0349,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0349
+        },
+        {
+          "feature": "has_health_insurance_Uninsured",
+          "shap_value": 0.0301,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0301
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": 0.0098,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0098
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": 0.0092,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0092
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": -0.0091,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0091
+        },
+        {
+          "feature": "has_health_insurance_Insured",
+          "shap_value": 0.0085,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0085
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": -0.0075,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0075
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": -0.1805,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.1805
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": 0.1099,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.1099
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": -0.0926,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0926
+        },
+        {
+          "feature": "annual_routine_checkup_5+_Years",
+          "shap_value": 0.0589,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0589
+        },
+        {
+          "feature": "has_personal_doctor_No",
+          "shap_value": 0.0454,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0454
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": -0.0349,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0349
+        },
+        {
+          "feature": "has_health_insurance_Uninsured",
+          "shap_value": 0.0301,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0301
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": 0.0098,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0098
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": 0.0092,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0092
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": -0.0091,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0091
+        },
+        {
+          "feature": "has_health_insurance_Insured",
+          "shap_value": 0.0085,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0085
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": -0.0075,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0075
+        },
+        {
+          "feature": "bmi",
+          "shap_value": -0.003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.003
+        },
+        {
+          "feature": "age_group_11.0",
+          "shap_value": 0.003,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.003
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0028,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0028
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "shap_value": 0.0026,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0026
+        },
+        {
+          "feature": "education_level_4.0",
+          "shap_value": 0.0023,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0023
+        },
+        {
+          "feature": "employment_status_7.0",
+          "shap_value": 0.0018,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0018
+        },
+        {
+          "feature": "general_health_3.0",
+          "shap_value": -0.0018,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0018
+        },
+        {
+          "feature": "sex_Male",
+          "shap_value": -0.0017,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0017
+        },
+        {
+          "feature": "income_category_3.0",
+          "shap_value": 0.0015,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0015
+        },
+        {
+          "feature": "age_group_9.0",
+          "shap_value": -0.0013,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0013
+        },
+        {
+          "feature": "employment_status_1.0",
+          "shap_value": -0.0013,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0013
+        },
+        {
+          "feature": "annual_routine_checkup_Past_5_Years",
+          "shap_value": -0.0012,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0012
+        },
+        {
+          "feature": "age_group_14.0",
+          "shap_value": -0.0011,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0011
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_No_Cost_Barrier",
+          "shap_value": -0.0011,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0011
+        },
+        {
+          "feature": "general_health_2.0",
+          "shap_value": -0.0011,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0011
+        },
+        {
+          "feature": "age_group_10.0",
+          "shap_value": 0.0009,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0009
+        },
+        {
+          "feature": "income_category_5.0",
+          "shap_value": -0.0009,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0009
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Yes_Cost_Barrier",
+          "shap_value": -0.0009,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0009
+        },
+        {
+          "feature": "education_level_5.0",
+          "shap_value": 0.0008,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "age_group_8.0",
+          "shap_value": -0.0007,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0007
+        },
+        {
+          "feature": "employment_status_8.0",
+          "shap_value": 0.0006,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "has_personal_doctor_Yes_Only_One",
+          "shap_value": 0.0005,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "annual_routine_checkup_Past_2_Years",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "general_health_5.0",
+          "shap_value": 0.0005,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "general_health_4.0",
+          "shap_value": 0.0004,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "sex_Female",
+          "shap_value": 0.0003,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "age_group_12.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "education_level_6.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_1.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_2.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_4.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "income_category_6.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "has_health_insurance_Unknown",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "age_group_13.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_3.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "employment_status_4.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "annual_routine_checkup_Unknown",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "general_health_1.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_2.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_3.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_7.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_2.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_5.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_6.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "has_personal_doctor_Unknown",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Unknown",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "annual_routine_checkup_Never",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_C_Uninsured_NonAdherent",
+      "uncertainty": {
+        "sample_index": 2,
+        "predicted_probability": 0.6773,
+        "ensemble_std_dev": 0.2357,
+        "prediction_interval_95": [
+          0.2039,
+          1.0
+        ],
+        "tree_prob_range": [
+          0.1622,
+          1.0
+        ],
+        "missing_features_count": 1,
+        "imputation_index": 0.0625,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "moderate",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    },
+    {
+      "sample_index": 3,
+      "baseline_probability": 0.7344,
+      "predicted_probability": 0.9979,
+      "top_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": 0.1369,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.1369
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": 0.0473,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0473
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": 0.0275,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0275
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": 0.0212,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0212
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": 0.0206,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0206
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": 0.0196,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0196
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": -0.0047,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0047
+        },
+        {
+          "feature": "age_group_10.0",
+          "shap_value": -0.0023,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0023
+        },
+        {
+          "feature": "has_health_insurance_Insured",
+          "shap_value": 0.0023,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0023
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0019,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0019
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": -0.0018,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0018
+        },
+        {
+          "feature": "bmi",
+          "shap_value": 0.0011,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0011
+        }
+      ],
+      "all_contributions": [
+        {
+          "feature": "smoking_group_3.0",
+          "shap_value": 0.1369,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.1369
+        },
+        {
+          "feature": "smoking_group_1.0",
+          "shap_value": 0.0473,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0473
+        },
+        {
+          "feature": "years_quit",
+          "shap_value": 0.0275,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0275
+        },
+        {
+          "feature": "pack_years",
+          "shap_value": 0.0212,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0212
+        },
+        {
+          "feature": "years_smoked",
+          "shap_value": 0.0206,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0206
+        },
+        {
+          "feature": "smoking_group_2.0",
+          "shap_value": 0.0196,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0196
+        },
+        {
+          "feature": "annual_routine_checkup_Past_Year",
+          "shap_value": -0.0047,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0047
+        },
+        {
+          "feature": "age_group_10.0",
+          "shap_value": -0.0023,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0023
+        },
+        {
+          "feature": "has_health_insurance_Insured",
+          "shap_value": 0.0023,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0023
+        },
+        {
+          "feature": "age_group_7.0",
+          "shap_value": -0.0019,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0019
+        },
+        {
+          "feature": "has_personal_doctor_Yes_More_Than_One",
+          "shap_value": -0.0018,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0018
+        },
+        {
+          "feature": "bmi",
+          "shap_value": 0.0011,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0011
+        },
+        {
+          "feature": "sex_Male",
+          "shap_value": 0.0008,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "employment_status_8.0",
+          "shap_value": 0.0008,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0008
+        },
+        {
+          "feature": "general_health_2.0",
+          "shap_value": -0.0006,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0006
+        },
+        {
+          "feature": "annual_routine_checkup_5+_Years",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "annual_routine_checkup_Past_5_Years",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "has_health_insurance_Uninsured",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "has_health_insurance_Unknown",
+          "shap_value": -0.0005,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0005
+        },
+        {
+          "feature": "employment_status_7.0",
+          "shap_value": 0.0004,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0004
+        },
+        {
+          "feature": "age_group_11.0",
+          "shap_value": 0.0003,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "education_level_4.0",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "has_personal_doctor_No",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_No_Cost_Barrier",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Yes_Cost_Barrier",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "annual_routine_checkup_Past_2_Years",
+          "shap_value": -0.0003,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0003
+        },
+        {
+          "feature": "age_group_12.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "age_group_8.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "age_group_9.0",
+          "shap_value": 0.0002,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "sex_Female",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "race_ethnicity_White",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "general_health_5.0",
+          "shap_value": -0.0002,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0002
+        },
+        {
+          "feature": "race_ethnicity_Black",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Hispanic",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "race_ethnicity_Unknown",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "education_level_2.0",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "education_level_5.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "education_level_6.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "income_category_2.0",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "income_category_4.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "has_personal_doctor_Yes_Only_One",
+          "shap_value": 0.0001,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "general_health_3.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "general_health_4.0",
+          "shap_value": -0.0001,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0001
+        },
+        {
+          "feature": "age_group_13.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "age_group_14.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_American_Indian_Alaska_Native",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Asian",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Multiracial",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "race_ethnicity_Pacific_Islander",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_1.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "education_level_3.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_1.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_3.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_5.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_6.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "income_category_7.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_1.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_2.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_3.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_4.0",
+          "shap_value": -0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_5.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "employment_status_6.0",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "has_personal_doctor_Unknown",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "cost_prevented_doctor_visit_Unknown",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "annual_routine_checkup_Never",
+          "shap_value": 0.0,
+          "direction": "decreases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "annual_routine_checkup_Unknown",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        },
+        {
+          "feature": "general_health_1.0",
+          "shap_value": 0.0,
+          "direction": "increases_non_adherence",
+          "abs_magnitude": 0.0
+        }
+      ],
+      "profile_label": "Profile_D_FormerSmoker_DelayedCare_NonAdherent",
+      "uncertainty": {
+        "sample_index": 3,
+        "predicted_probability": 0.9979,
+        "ensemble_std_dev": 0.0117,
+        "prediction_interval_95": [
+          0.9763,
+          1.0
+        ],
+        "tree_prob_range": [
+          0.913,
+          1.0
+        ],
+        "missing_features_count": 1,
+        "imputation_index": 0.0625,
+        "out_of_distribution_flag": false,
+        "out_of_distribution_reasons": [],
+        "confidence_tier": "high",
+        "unmeasured_context_warning": "Model does not account for bidi tobacco sticks, traditional chula biomass cooking smoke, or ambient PM2.5 in Bangladesh."
+      }
+    }
+  ],
+  "stability_audit": {
+    "repeatability_max_discrepancy": 0.0,
+    "perturbation_noise_level": 0.05,
+    "mean_probability_shift": 0.0209,
+    "max_probability_shift": 0.0762,
+    "stability_verdict": "highly_stable",
+    "methodological_note": "Explanation attributions demonstrate high mathematical determinism and robust stability against minor input measurement jitter."
+  },
+  "feature_metadata": {
+    "pack_years": {
+      "label_en": "Pack-Years of Smoking",
+      "label_bn": "\u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u09aa\u09cd\u09af\u09be\u0995-\u09ac\u099b\u09b0",
+      "description_en": "Lifetime cumulative tobacco exposure (packs smoked per day * years smoked).",
+      "description_bn": "\u0986\u099c\u09c0\u09ac\u09a8 \u09b8\u099e\u09cd\u099a\u09bf\u09a4 \u09a4\u09be\u09ae\u09be\u0995\u09c7\u09b0 \u09ac\u09cd\u09af\u09ac\u09b9\u09be\u09b0 (\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 \u09aa\u09cd\u09af\u09be\u0995\u09c7\u09b0 \u09b8\u0982\u0996\u09cd\u09af\u09be * \u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u09ae\u09cb\u099f \u09ac\u099b\u09b0)\u0964",
+      "domain": "Tobacco Exposure"
+    },
+    "years_smoked": {
+      "label_en": "Total Duration of Smoking (Years)",
+      "label_bn": "\u09a7\u09c2\u09ae\u09aa\u09be\u09a8\u09c7\u09b0 \u09ae\u09cb\u099f \u09b8\u09ae\u09af\u09bc\u0995\u09be\u09b2 (\u09ac\u099b\u09b0)",
+      "description_en": "Total number of years the individual has smoked regularly.",
+      "description_bn": "\u09ac\u09cd\u09af\u0995\u09cd\u09a4\u09bf \u0995\u09a4 \u09ac\u099b\u09b0 \u09a8\u09bf\u09af\u09bc\u09ae\u09bf\u09a4 \u09a7\u09c2\u09ae\u09aa\u09be\u09a8 \u0995\u09b0\u09c7\u099b\u09c7\u09a8\u0964",
+      "domain": "Tobacco Exposure"
+    },
+    "years_quit": {
+      "label_en": "Years Since Smoking Cessation",
+      "label_bn": "\u09a7\u09c2\u09ae\u09aa\u09be\u09a8 \u09ac\u09b0\u09cd\u099c\u09a8\u09c7\u09b0 \u09aa\u09b0 \u0985\u09a4\u09bf\u0995\u09cd\u09b0\u09be\u09a8\u09cd\u09a4 \u09ac\u099b\u09b0",
+      "description_en": "Time elapsed since complete tobacco cessation.",
+      "description_bn": "\u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3\u09b0\u09c2\u09aa\u09c7 \u09a7\u09c2\u09ae\u09aa\u09be\u09a8 \u09ac\u09b0\u09cd\u099c\u09a8\u09c7\u09b0 \u09aa\u09b0 \u0985\u09a4\u09bf\u0995\u09cd\u09b0\u09be\u09a8\u09cd\u09a4 \u09b8\u09ae\u09af\u09bc\u0995\u09be\u09b2\u0964",
+      "domain": "Tobacco Exposure"
+    },
+    "bmi": {
+      "label_en": "Body Mass Index (BMI)",
+      "label_bn": "\u09ac\u09a1\u09bf \u09ae\u09be\u09b8 \u0987\u09a8\u09a1\u09c7\u0995\u09cd\u09b8 (\u09ac\u09bf\u098f\u09ae\u0986\u0987)",
+      "description_en": "Calculated as weight in kg divided by height in meters squared.",
+      "description_bn": "\u0993\u099c\u09a8 (\u0995\u09c7\u099c\u09bf) \u0995\u09c7 \u0989\u099a\u09cd\u099a\u09a4\u09be\u09b0 \u09ac\u09b0\u09cd\u0997 (\u09ae\u09bf\u099f\u09be\u09b0) \u09a6\u09cd\u09ac\u09be\u09b0\u09be \u09ad\u09be\u0997 \u0995\u09b0\u09c7 \u09aa\u09cd\u09b0\u09be\u09aa\u09cd\u09a4 \u09ae\u09be\u09a8\u0964",
+      "domain": "Anthropometric"
+    },
+    "age_group": {
+      "label_en": "Age Bracket",
+      "label_bn": "\u09ac\u09df\u09b8\u09c7\u09b0 \u09b8\u09cd\u09a4\u09b0",
+      "description_en": "Five-year age demographic stratification.",
+      "description_bn": "\u09aa\u09be\u0981\u099a \u09ac\u099b\u09b0\u09c7\u09b0 \u09ac\u09af\u09bc\u09b8 \u09ad\u09bf\u09a4\u09cd\u09a4\u09bf\u0995 \u09b8\u09cd\u09a4\u09b0\u09ac\u09bf\u09a8\u09cd\u09af\u09be\u09b8\u0964",
+      "domain": "Demographics"
+    },
+    "sex": {
+      "label_en": "Biological Sex",
+      "label_bn": "\u099c\u09c8\u09ac\u09bf\u0995 \u09b2\u09bf\u0999\u09cd\u0997",
+      "description_en": "Biological sex recorded at survey baseline.",
+      "description_bn": "\u099c\u09b0\u09bf\u09aa\u09c7\u09b0 \u09b6\u09c1\u09b0\u09c1\u09a4\u09c7 \u09b0\u09c7\u0995\u09b0\u09cd\u09a1\u0995\u09c3\u09a4 \u099c\u09c8\u09ac\u09bf\u0995 \u09b2\u09bf\u0999\u09cd\u0997\u0964",
+      "domain": "Demographics"
+    },
+    "general_health": {
+      "label_en": "Self-Rated General Health",
+      "label_bn": "\u09b8\u09be\u09a7\u09be\u09b0\u09a3 \u09b8\u09cd\u09ac\u09be\u09b8\u09cd\u09a5\u09cd\u09af\u0997\u09a4 \u0985\u09ac\u09b8\u09cd\u09a5\u09be",
+      "description_en": "Perceived health ranging from Excellent (1) to Poor (5).",
+      "description_bn": "\u09b0\u09cb\u0997\u09c0\u09b0 \u09a8\u09bf\u099c\u09b8\u09cd\u09ac \u09ae\u09c2\u09b2\u09cd\u09af\u09be\u09af\u09bc\u09a8 (\u099a\u09ae\u09ce\u0995\u09be\u09b0 \u09e7 \u09a5\u09c7\u0995\u09c7 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 \u09eb \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4)\u0964",
+      "domain": "General Health"
+    },
+    "has_personal_doctor": {
+      "label_en": "Dedicated Healthcare Provider Access",
+      "label_bn": "\u09a8\u09bf\u09b0\u09cd\u09a6\u09bf\u09b7\u09cd\u099f \u099a\u09bf\u0995\u09bf\u09ce\u09b8\u0995\u09c7\u09b0 \u09aa\u09cd\u09b0\u09be\u09aa\u09cd\u09af\u09a4\u09be",
+      "description_en": "Presence of an ongoing trusted primary care physician.",
+      "description_bn": "\u09a8\u09bf\u09af\u09bc\u09ae\u09bf\u09a4 \u09aa\u09b0\u09be\u09ae\u09b0\u09cd\u09b6 \u09a8\u09c7\u0993\u09af\u09bc\u09be\u09b0 \u09ae\u09a4\u09cb \u09a8\u09bf\u09b0\u09cd\u09a6\u09bf\u09b7\u09cd\u099f \u099a\u09bf\u0995\u09bf\u09ce\u09b8\u0995 \u09a5\u09be\u0995\u09be\u0964",
+      "domain": "Healthcare Access"
+    },
+    "cost_prevented_doctor_visit": {
+      "label_en": "Healthcare Financial Barrier",
+      "label_bn": "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be \u09ac\u09cd\u09af\u09af\u09bc\u09c7\u09b0 \u09aa\u09cd\u09b0\u09a4\u09bf\u09ac\u09a8\u09cd\u09a7\u0995\u09a4\u09be",
+      "description_en": "Inability to consult a doctor in past 12 months due to financial constraints.",
+      "description_bn": "\u0997\u09a4 \u09e7\u09e8 \u09ae\u09be\u09b8\u09c7 \u0986\u09b0\u09cd\u09a5\u09bf\u0995 \u09b8\u0982\u0995\u099f\u09c7\u09b0 \u0995\u09be\u09b0\u09a3\u09c7 \u099a\u09bf\u0995\u09bf\u09ce\u09b8\u0995\u09c7\u09b0 \u0995\u09be\u099b\u09c7 \u09af\u09c7\u09a4\u09c7 \u09a8\u09be \u09aa\u09be\u09b0\u09be\u0964",
+      "domain": "Healthcare Access"
+    },
+    "annual_routine_checkup": {
+      "label_en": "Routine Medical Checkup Recency",
+      "label_bn": "\u09a8\u09bf\u09af\u09bc\u09ae\u09bf\u09a4 \u09b8\u09cd\u09ac\u09be\u09b8\u09cd\u09a5\u09cd\u09af \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be\u09b0 \u09b8\u09ae\u09af\u09bc\u0995\u09be\u09b2",
+      "description_en": "Time elapsed since last routine preventive clinical examination.",
+      "description_bn": "\u09b8\u09b0\u09cd\u09ac\u09b6\u09c7\u09b7 \u09aa\u09cd\u09b0\u09a4\u09bf\u09b0\u09cb\u09a7\u09ae\u09c2\u09b2\u0995 \u09b8\u09cd\u09ac\u09be\u09b8\u09cd\u09a5\u09cd\u09af \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be\u09b0 \u09aa\u09b0 \u0985\u09a4\u09bf\u0995\u09cd\u09b0\u09be\u09a8\u09cd\u09a4 \u09b8\u09ae\u09af\u09bc\u0964",
+      "domain": "Healthcare Utilization"
+    },
+    "has_health_insurance": {
+      "label_en": "Health Insurance Coverage",
+      "label_bn": "\u09b8\u09cd\u09ac\u09be\u09b8\u09cd\u09a5\u09cd\u09af \u09ac\u09c0\u09ae\u09be \u0995\u09ad\u09be\u09b0\u09c7\u099c",
+      "description_en": "Insurance coverage mitigating direct out-of-pocket costs.",
+      "description_bn": "\u099a\u09bf\u0995\u09bf\u09ce\u09b8\u09be \u09ac\u09cd\u09af\u09af\u09bc \u09b9\u09cd\u09b0\u09be\u09b8\u09c7 \u09b8\u09cd\u09ac\u09be\u09b8\u09cd\u09a5\u09cd\u09af \u09ac\u09c0\u09ae\u09be \u09b8\u09c1\u09ac\u09bf\u09a7\u09be\u0964",
+      "domain": "Healthcare Access"
+    }
+  },
+  "model_limitations": [
+    "Fundamentally inapplicable to Bangladesh healthcare system due to absence of national LDCT screening program.",
+    "Heavy class imbalance (90.4% non-adherent) compresses baseline expectations.",
+    "Healthcare access variables reflect US insurance and primary care reimbursement frameworks."
+  ]
+}

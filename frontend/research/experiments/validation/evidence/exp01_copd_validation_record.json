@@ -1,0 +1,352 @@
+{
+  "id": "ai-val-exp01-copd",
+  "model_id": "exp01-copd-phenotype",
+  "model_name": "COPD Phenotype Predictor (Logistic Regression Baseline)",
+  "model_version": "1.0.0-exp",
+  "lifecycle_tier": "experimental",
+  "original_experiment_ref": "EXP-01",
+  "development_dataset_ref": "CDC BRFSS 2022 (Sample N=120,000; 96k Train / 24k Test)",
+  "validation_dataset_profile": {
+    "id": "ds-brfss2022-unexposed-cohort",
+    "name": "BRFSS 2022 Unexposed Analytical Stratum",
+    "source": "Centers for Disease Control and Prevention (CDC)",
+    "jurisdiction": "United States",
+    "collection_methodology": "Complex multi-stage stratified random-digit dialing telephone survey",
+    "sample_size": 60000,
+    "outcome_variable": "CHCCOPD3 (Diagnosed COPD)",
+    "population_characteristics": "US civilian non-institutionalized adults aged >= 18",
+    "is_independent": true,
+    "is_bangladesh_specific": false,
+    "is_authorized": true,
+    "limitations": [
+      "Self-reported diagnosis without spirometry confirmation",
+      "Cross-sectional survey design (precludes longitudinal incidence analysis)",
+      "US sociodemographic and healthcare context (not transferable to Bangladesh)"
+    ]
+  },
+  "validation_protocol": "PROT-VAL-EXP01-2026.1: Full discrimination, decile calibration slope/intercept, Brier score, and decision curve net benefit evaluation across unexposed survey records.",
+  "validation_date": "2026-11-06T10:00:00.000Z",
+  "validation_status": "insufficient_evidence",
+  "discrimination_metrics": {
+    "sample_size": 60000,
+    "prevalence": 0.0805,
+    "threshold": 0.5,
+    "roc_auc": 0.868,
+    "pr_auc": 0.4426,
+    "sensitivity": 0.7818,
+    "specificity": 0.7981,
+    "ppv": 0.2532,
+    "npv": 0.9766,
+    "accuracy": 0.7968,
+    "f1": 0.3825,
+    "brier_score": 0.1455,
+    "confusion_matrix": {
+      "true_positives": 3776,
+      "false_positives": 11137,
+      "true_negatives": 44033,
+      "false_negatives": 1054
+    },
+    "confidence_intervals_95": {
+      "sensitivity": [
+        0.7699,
+        0.7932
+      ],
+      "specificity": [
+        0.7948,
+        0.8015
+      ],
+      "ppv": [
+        0.2463,
+        0.2602
+      ],
+      "npv": [
+        0.9752,
+        0.978
+      ]
+    }
+  },
+  "calibration_metrics": {
+    "calibration_slope": 0.9673,
+    "calibration_intercept": -2.4297,
+    "brier_score": 0.1455,
+    "deciles": [
+      {
+        "decile": 1,
+        "mean_predicted_prob": 0.0621,
+        "observed_frequency": 0.0054,
+        "count": 13592
+      },
+      {
+        "decile": 2,
+        "mean_predicted_prob": 0.1459,
+        "observed_frequency": 0.0145,
+        "count": 12520
+      },
+      {
+        "decile": 3,
+        "mean_predicted_prob": 0.2469,
+        "observed_frequency": 0.0271,
+        "count": 8347
+      },
+      {
+        "decile": 4,
+        "mean_predicted_prob": 0.3482,
+        "observed_frequency": 0.0432,
+        "count": 6023
+      },
+      {
+        "decile": 5,
+        "mean_predicted_prob": 0.4486,
+        "observed_frequency": 0.0682,
+        "count": 4605
+      },
+      {
+        "decile": 6,
+        "mean_predicted_prob": 0.5482,
+        "observed_frequency": 0.1073,
+        "count": 3727
+      },
+      {
+        "decile": 7,
+        "mean_predicted_prob": 0.6496,
+        "observed_frequency": 0.1354,
+        "count": 3206
+      },
+      {
+        "decile": 8,
+        "mean_predicted_prob": 0.7494,
+        "observed_frequency": 0.2203,
+        "count": 2837
+      },
+      {
+        "decile": 9,
+        "mean_predicted_prob": 0.8501,
+        "observed_frequency": 0.3481,
+        "count": 2798
+      },
+      {
+        "decile": 10,
+        "mean_predicted_prob": 0.9447,
+        "observed_frequency": 0.5727,
+        "count": 2345
+      }
+    ],
+    "overconfidence_assessment": "none",
+    "underconfidence_assessment": "none",
+    "recalibration_recommended": true,
+    "recalibration_rationale": "Observed calibration slope 0.967 and intercept -2.430. Recalibration recommended before target population deployment."
+  },
+  "clinical_utility_metrics": {
+    "intended_use": "Epidemiological pre-screening risk stratification to identify elevated comorbidity multipliers for lung cancer assessment in primary care.",
+    "target_population": "Adults aged >= 40 with significant smoking history or chronic respiratory symptoms.",
+    "net_benefit_at_thresholds": [
+      {
+        "threshold_probability": 0.01,
+        "model_net_benefit": 0.0712,
+        "treat_all_net_benefit": 0.0712,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.02,
+        "model_net_benefit": 0.0618,
+        "treat_all_net_benefit": 0.0617,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.05,
+        "model_net_benefit": 0.0357,
+        "treat_all_net_benefit": 0.0321,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.1,
+        "model_net_benefit": 0.0022,
+        "treat_all_net_benefit": -0.0217,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.15,
+        "model_net_benefit": -0.0241,
+        "treat_all_net_benefit": -0.0818,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.2,
+        "model_net_benefit": -0.0459,
+        "treat_all_net_benefit": -0.1494,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.25,
+        "model_net_benefit": -0.0636,
+        "treat_all_net_benefit": -0.226,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.3,
+        "model_net_benefit": -0.0789,
+        "treat_all_net_benefit": -0.3136,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.4,
+        "model_net_benefit": -0.1033,
+        "treat_all_net_benefit": -0.5325,
+        "treat_none_net_benefit": 0.0
+      },
+      {
+        "threshold_probability": 0.5,
+        "model_net_benefit": -0.1227,
+        "treat_all_net_benefit": -0.839,
+        "treat_none_net_benefit": 0.0
+      }
+    ],
+    "false_positive_clinical_cost": "Unnecessary spirometry referral or pulmonary consultation, incurring avoidable patient anxiety and out-of-pocket consultation fees.",
+    "false_negative_clinical_risk": "Delayed recognition of severe obstructive lung disease comorbidity, potentially misestimating lifetime lung cancer risk trajectory.",
+    "bangladesh_workflow_applicability": "Limited applicability in current form. Bangladesh primary care centers lack routine post-bronchodilator spirometry equipment, and bidi/biomass smoke risk factors are unmeasured.",
+    "practical_feasibility_score": "moderate"
+  },
+  "subgroup_fairness": {
+    "dimension": "race_ethnicity",
+    "subgroups": [
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "White",
+        "sample_size": 43054,
+        "prevalence": 0.0874,
+        "roc_auc": 0.8708,
+        "sensitivity": 0.8002,
+        "specificity": 0.7867,
+        "ppv": 0.2643,
+        "npv": 0.9762,
+        "disparity_flag": false,
+        "disparity_note": null
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "Hispanic",
+        "sample_size": 5792,
+        "prevalence": 0.0433,
+        "roc_auc": 0.8527,
+        "sensitivity": 0.6375,
+        "specificity": 0.878,
+        "ppv": 0.1914,
+        "npv": 0.9816,
+        "disparity_flag": false,
+        "disparity_note": null
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "Black",
+        "sample_size": 4879,
+        "prevalence": 0.0775,
+        "roc_auc": 0.825,
+        "sensitivity": 0.7063,
+        "specificity": 0.7707,
+        "ppv": 0.2055,
+        "npv": 0.969,
+        "disparity_flag": false,
+        "disparity_note": null
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "Unknown",
+        "sample_size": 1945,
+        "prevalence": 0.0761,
+        "roc_auc": 0.8631,
+        "sensitivity": 0.777,
+        "specificity": 0.7841,
+        "ppv": 0.2286,
+        "npv": 0.9771,
+        "disparity_flag": false,
+        "disparity_note": null
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "American_Indian_Alaska_Native",
+        "sample_size": 913,
+        "prevalence": 0.0975,
+        "roc_auc": 0.8736,
+        "sensitivity": 0.8652,
+        "specificity": 0.7124,
+        "ppv": 0.2452,
+        "npv": 0.98,
+        "disparity_flag": false,
+        "disparity_note": null
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "Multiracial",
+        "sample_size": 1342,
+        "prevalence": 0.1073,
+        "roc_auc": 0.8578,
+        "sensitivity": 0.8194,
+        "specificity": 0.7479,
+        "ppv": 0.281,
+        "npv": 0.9718,
+        "disparity_flag": false,
+        "disparity_note": null
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "Asian",
+        "sample_size": 1745,
+        "prevalence": 0.0241,
+        "roc_auc": 0.8633,
+        "sensitivity": 0.4524,
+        "specificity": 0.9648,
+        "ppv": 0.2405,
+        "npv": 0.9862,
+        "disparity_flag": true,
+        "disparity_note": "Sensitivity suppression at uniform 0.50 threshold"
+      },
+      {
+        "dimension": "race_ethnicity",
+        "group_name": "Pacific_Islander",
+        "sample_size": 330,
+        "prevalence": 0.0455,
+        "roc_auc": 0.8066,
+        "sensitivity": 0.6,
+        "specificity": 0.8032,
+        "ppv": 0.1268,
+        "npv": 0.9768,
+        "disparity_flag": false,
+        "disparity_note": null
+      }
+    ],
+    "overall_fairness_verdict": "conditional_disparities_noted"
+  },
+  "bangladesh_generalizability": {
+    "evaluated": true,
+    "dataset_available": false,
+    "evidence_gap_summary": "No individual-level population dataset currently exists in Bangladesh combining continuous pack-years, bidi smoking frequency, indoor biomass combustion, and spirometry-validated COPD outcomes.",
+    "distribution_shift_identified": true,
+    "missing_variables": [
+      "Bidi tobacco stick consumption vs filtered commercial cigarettes",
+      "Traditional chula biomass fuel indoor exposure (hours/day and years)",
+      "Ambient PM2.5 seasonal exposure concentration",
+      "Post-bronchodilator spirometric FEV1/FVC ratio (< 0.70)"
+    ],
+    "prospective_requirements": "Requires a prospective multi-center cohort study conducted in partnership with the National Institute of Diseases of the Chest and Hospital (NIDCH), Dhaka, before any clinical consideration."
+  },
+  "cab_review_decision": {
+    "decision": "requires_additional_evidence",
+    "reviewed_at": "2026-11-06T10:00:00.000Z",
+    "reviewed_by_member_id": "cab-mem-001",
+    "reviewed_by_member_name": "Prof. Dr. Farhana Ahmed (CAB Chair)",
+    "conditions_or_restrictions": [
+      "Strictly prohibited from operational clinical triage or automated patient diagnostic workflows.",
+      "May only be utilized within the offline research sandbox for epidemiological research and comparative methodology studies.",
+      "Must undergo prospective clinical validation with spirometric endpoints on a validated Bangladeshi patient cohort prior to any reconsideration."
+    ],
+    "clinical_rationale": "While discrimination is statistically sound on US survey data (ROC-AUC 0.86), the absence of spirometric ground truth, unmeasured bidi/biomass exposures, and significant subgroup sensitivity disparities in Asian populations make clinical operational deployment in Bangladesh unsafe.",
+    "next_reassessment_date": "2027-05-01"
+  },
+  "operational_activation": {
+    "is_activated": false,
+    "activated_at": null,
+    "activated_by": null,
+    "activation_blocked_reason": "Direct clinical operational activation prohibited. Requires prospective Bangladesh validation and explicit CAB operational signoff."
+  },
+  "safety_invariants_enforced": true
+}

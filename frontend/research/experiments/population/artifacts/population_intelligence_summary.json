@@ -1,0 +1,110 @@
+{
+  "milestone": "Phase 2.8: Population-Level Intelligence",
+  "date": "2026-11-06",
+  "cohort_analyzed": {
+    "sample_size": 5000,
+    "sampling_methodology": "clinical_convenience_sample",
+    "observation_window": "2025-01-01 to 2026-12-31",
+    "representativeness_disclaimer_enforced": true
+  },
+  "risk_factors_summary": [
+    {
+      "factor_code": "RF_CIGARETTE_SMOKING",
+      "factor_name": "Current Cigarette Smoking",
+      "numerator_count": 1920,
+      "total_sample": 5000,
+      "prevalence_pct": 38.4,
+      "ci_95_lower": 37.06,
+      "ci_95_upper": 39.76
+    },
+    {
+      "factor_code": "RF_BIDI_SMOKING",
+      "factor_name": "Hand-Rolled Bidi Smoking",
+      "numerator_count": 1140,
+      "total_sample": 5000,
+      "prevalence_pct": 22.8,
+      "ci_95_lower": 21.66,
+      "ci_95_upper": 23.98
+    },
+    {
+      "factor_code": "RF_SMOKELESS_TOBACCO",
+      "factor_name": "Smokeless Tobacco (Zarda/Gul)",
+      "numerator_count": 1475,
+      "total_sample": 5000,
+      "prevalence_pct": 29.5,
+      "ci_95_lower": 28.25,
+      "ci_95_upper": 30.78
+    },
+    {
+      "factor_code": "RF_BIOMASS_CHULA_COOKING",
+      "factor_name": "Household Biomass Smoke",
+      "numerator_count": 2710,
+      "total_sample": 5000,
+      "prevalence_pct": 54.2,
+      "ci_95_lower": 52.82,
+      "ci_95_upper": 55.58
+    },
+    {
+      "factor_code": "RF_OCCUPATIONAL_DUST",
+      "factor_name": "Occupational Respirable Dust",
+      "numerator_count": 730,
+      "total_sample": 5000,
+      "prevalence_pct": 14.6,
+      "ci_95_lower": 13.65,
+      "ci_95_upper": 15.61
+    },
+    {
+      "factor_code": "RF_SECONDHAND_SMOKE",
+      "factor_name": "Secondhand Smoke Exposure",
+      "numerator_count": 2155,
+      "total_sample": 5000,
+      "prevalence_pct": 43.1,
+      "ci_95_lower": 41.73,
+      "ci_95_upper": 44.48
+    },
+    {
+      "factor_code": "RF_PRIOR_TB",
+      "factor_name": "Prior Tuberculosis History",
+      "numerator_count": 590,
+      "total_sample": 5000,
+      "prevalence_pct": 11.8,
+      "ci_95_lower": 10.93,
+      "ci_95_upper": 12.72
+    },
+    {
+      "factor_code": "RF_CHRONIC_COPD",
+      "factor_name": "Diagnosed COPD",
+      "numerator_count": 810,
+      "total_sample": 5000,
+      "prevalence_pct": 16.2,
+      "ci_95_lower": 15.2,
+      "ci_95_upper": 17.25
+    }
+  ],
+  "co_occurrence_analysis": [
+    {
+      "pair_name": "Bidi Smoking + Biomass Chula",
+      "joint_count": 869,
+      "joint_pct": 17.38,
+      "odds_ratio": 3.53
+    },
+    {
+      "pair_name": "Cigarettes + Diagnosed COPD",
+      "joint_count": 640,
+      "joint_pct": 12.8,
+      "odds_ratio": 8.56
+    }
+  ],
+  "privacy_preservation": {
+    "k_threshold": 5,
+    "suppression_test_passed": true,
+    "cells_tested": 8,
+    "re_identification_risk": "minimal_bounded_under_k5"
+  },
+  "clinical_safety_assertions": {
+    "non_causal_enforced": true,
+    "individual_risk_score_modification_blocked": true,
+    "triage_suppression_blocked": true,
+    "convenience_sample_caveat_enforced": true
+  }
+}

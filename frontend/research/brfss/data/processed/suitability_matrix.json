@@ -1,0 +1,37 @@
+[
+  {
+    "research_objective": "Tobacco & Smoking Exposure Modeling",
+    "required_information": "Cumulative pack-years, smoking frequency, duration, cessation interval",
+    "available_variables": "_SMOKER3 (100%), _PACKYRS (32.1%), _YRSSMOK (32.1%), _PACKDAY (32.1%), _YRSQUIT (22.8%), SMOKE100 (100%)",
+    "suitability": "HIGH",
+    "limitations": "Pack-years is only computed for individuals routed through the Lung Cancer Screening section (Section 13) or smoking module; never-smokers have structural skip (NaN); self-reported recall bias."
+  },
+  {
+    "research_objective": "USPSTF 2021 Lung Cancer Screening Adherence",
+    "required_information": "Annual LDCT chest scan receipt in high-risk smoking eligibility cohort (50-80yo, 20+ pack-years, current or quit <=15y)",
+    "available_variables": "_LCSREC (Computed recommendation status, N=51,453), LCSSCNCR (CT scan receipt for lung cancer, N=165,575)",
+    "suitability": "VERY HIGH",
+    "limitations": "Cross-sectional self-reported survey. Cannot verify clinical imaging reports or radiology findings. Only available in participating core/module states."
+  },
+  {
+    "research_objective": "Chronic Respiratory Comorbidity Associations",
+    "required_information": "COPD, Emphysema, Chronic Bronchitis, Asthma diagnosis, chronic cough/phlegm symptoms",
+    "available_variables": "CHCCOPD3 (100%), ASTHMA3 (100%), COPDCOGH (N=35,466), COPDFLEM (N=35,466), COPDBRTH (N=35,466)",
+    "suitability": "HIGH",
+    "limitations": "CHCCOPD3 combines COPD, emphysema, and chronic bronchitis into a single question; cannot disaggregate specific pathology; symptoms module is state-optional."
+  },
+  {
+    "research_objective": "Direct Supervised Lung Cancer Diagnosis / Prediction",
+    "required_information": "Verified histological/clinical lung cancer diagnosis label for general population",
+    "available_variables": "CNCRTYP2 (Code 14 = Lung, N=451 survivors out of 22,544 in Module 9; 94.9% missing)",
+    "suitability": "UNSUITABLE",
+    "limitations": "CRITICAL METHODOLOGICAL BARRIER: BRFSS core does NOT distinguish lung cancer from other cancers. The Cancer Survivorship module is optional, administered only to survivors (heavy survivor bias), yielding only 451 lung cancer cases (0.1% of dataset). Severe survivorship bias excludes aggressive/fatal cases. Cannot be used as a predictive target."
+  },
+  {
+    "research_objective": "Direct Generalization to Bangladesh Population",
+    "required_information": "Epidemiological exposures representative of Bangladesh (bidi tobacco, indoor biomass smoke, local genetic/demographic profile)",
+    "available_variables": "None (US population survey only)",
+    "suitability": "UNSUITABLE WITHOUT ADAPTATION",
+    "limitations": "EXTERNAL VALIDITY BARRIER: BRFSS samples US adults. Excludes bidi tobacco, chula biomass fuel cooking, ambient South Asian PM2.5 levels, and local healthcare economics. Statistical weights cannot be transferred to Bangladesh."
+  }
+]

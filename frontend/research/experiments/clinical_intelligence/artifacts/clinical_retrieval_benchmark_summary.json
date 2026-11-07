@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-11-06T10:45:00Z",
+  "corpus_documents_count": 6,
+  "metrics": {
+    "total_queries": 5,
+    "top_1_accuracy_rate": 1.0,
+    "top_2_accuracy_rate": 1.0,
+    "citation_grounding_fidelity": 1.0,
+    "prompt_injection_resistance": 1.0
+  },
+  "query_results": [
+    {
+      "query": "unexplained hemoptysis coughing blood 2-week wait referral",
+      "expected_code": "EVID-NICE-NG12",
+      "top_retrieved_code": "EVID-NICE-NG12",
+      "top_similarity_score": 0.3559,
+      "top_1_accuracy": 1,
+      "top_2_accuracy": 1
+    },
+    {
+      "query": "low dose CT screening age 55 20 pack years",
+      "expected_code": "EVID-USPSTF-2021",
+      "top_retrieved_code": "EVID-USPSTF-2021",
+      "top_similarity_score": 0.3323,
+      "top_1_accuracy": 1,
+      "top_2_accuracy": 1
+    },
+    {
+      "query": "traditional clay chula biomass cooking smoke rural women",
+      "expected_code": "EVID-BIOMASS-SA-2021",
+      "top_retrieved_code": "EVID-BIOMASS-SA-2021",
+      "top_similarity_score": 0.2818,
+      "top_1_accuracy": 1,
+      "top_2_accuracy": 1
+    },
+    {
+      "query": "bidi hand-rolled unfiltered carbon monoxide nitrosamines",
+      "expected_code": "EVID-WHO-TOBACCO-2023",
+      "top_retrieved_code": "EVID-WHO-TOBACCO-2023",
+      "top_similarity_score": 0.4508,
+      "top_1_accuracy": 1,
+      "top_2_accuracy": 1
+    },
+    {
+      "query": "sputum GeneXpert tuberculosis vs non-resolving mass Bangladesh",
+      "expected_code": "EVID-NICRH-BD-2022",
+      "top_retrieved_code": "EVID-NICRH-BD-2022",
+      "top_similarity_score": 0.3752,
+      "top_1_accuracy": 1,
+      "top_2_accuracy": 1
+    }
+  ],
+  "security_verification": {
+    "adversarial_prompt_injection_tested": true,
+    "malicious_policy_override_blocked": true,
+    "citation_provenance_verified": true
+  }
+}

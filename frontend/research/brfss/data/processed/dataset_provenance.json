@@ -1,0 +1,13 @@
+{
+  "dataset_name": "Behavioral Risk Factor Surveillance System (BRFSS) 2022",
+  "official_source": "Centers for Disease Control and Prevention (CDC)",
+  "survey_year": 2022,
+  "archive_file": "LLCP2022XPT.zip",
+  "archive_sha256": "b6319c949b7289f8020fc903c3c2d38fe7e0b28ad703dcd81547f5cd0c0dcfeb",
+  "archive_size_bytes": 84614105,
+  "extracted_file": "LLCP2022.XPT",
+  "extracted_sha256": "a65fc471134c04c136294055a9b0d2b1ecd1dec54b7675d1b8408a784e6e8ba4",
+  "extracted_size_bytes": 1160060640,
+  "format": "SAS Transport Format (V5 .XPT)",
+  "download_url": "https://www.cdc.gov/brfss/annual_data/2022/files/LLCP2022XPT.zip"
+}

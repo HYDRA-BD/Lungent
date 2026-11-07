@@ -1,0 +1,8 @@
+subgroup_dimension,subgroup,n_samples,prevalence_pct,roc_auc,sensitivity_recall,specificity,f1_score
+Biological_Sex,Male,11290,7.29,0.8616,0.7582,0.8229,0.3781
+Biological_Sex,Female,12710,8.73,0.8603,0.7809,0.7831,0.3857
+Race_Ethnicity,White,17336,8.7,0.869,0.7971,0.7914,0.3999
+Race_Ethnicity,Black,1860,8.17,0.8099,0.7105,0.7758,0.3359
+Race_Ethnicity,Hispanic,2342,4.57,0.7986,0.4953,0.8729,0.2387
+Race_Ethnicity,Asian,755,1.85,0.798,0.3571,0.9663,0.2273
+Race_Ethnicity,American_Indian_Alaska_Native,342,13.74,0.8542,0.8723,0.6915,0.4581
