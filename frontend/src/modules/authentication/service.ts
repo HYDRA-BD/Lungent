@@ -1,5 +1,6 @@
 'use server'
 
+import { cookies } from 'next/headers'
 import { createClient as createServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
@@ -189,6 +190,8 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
   // If Supabase environment is not configured, supply immediate mock authenticated session
   if (!isSupabaseConfigured()) {
     const mockUser = createFallbackUser('demo-patient-1', email)
+    const cookieStore = await cookies()
+    cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
     return {
       success: true,
       data: {
@@ -281,6 +284,11 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
  * Terminates user session securely.
  */
 export async function logout(): Promise<AuthResult<void>> {
+  try {
+    const cookieStore = await cookies()
+    cookieStore.delete('lungent_auth_demo')
+  } catch {}
+
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 

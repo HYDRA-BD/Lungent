@@ -18,7 +18,10 @@ import { useLanguage } from '@/i18n'
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirectTo')
+  const redirectTo =
+    searchParams.get('redirect') ||
+    searchParams.get('redirectTo') ||
+    searchParams.get('next')
   const verified = searchParams.get('verified')
 
   const { dict } = useLanguage()
@@ -65,14 +68,14 @@ function LoginForm() {
         return
       }
 
-      setSuccessMessage('Authentication verified! Redirecting to Patient Portal...')
-      const target = redirectTo || result.data.defaultWorkspace || '/portal/patient'
+      const target = redirectTo || '/'
+      setSuccessMessage('Authentication verified! Redirecting...')
 
       // Brief delay to display smooth success feedback
       setTimeout(() => {
         router.push(target)
         router.refresh()
-      }, 700)
+      }, 600)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected authentication error occurred.'
       setServerError(msg)

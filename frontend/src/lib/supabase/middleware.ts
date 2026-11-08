@@ -3,6 +3,9 @@ import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from '@/types/database'
 
 const PROTECTED_PREFIXES = [
+  '/ai-assessment',
+  '/assessment',
+  '/predict',
   '/patient',
   '/healthcare-worker',
   '/clinical',
@@ -25,11 +28,37 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     request,
   })
 
+  const { pathname } = request.nextUrl
+  const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+  const isAuthPage = AUTH_PAGES.some((path) => pathname === path)
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  // If Supabase environment variables are not yet configured (e.g. during build), continue
+  const hasDemoAuth = request.cookies.get('lungent_auth_demo')?.value === 'true'
+
+  // If Supabase credentials are missing (e.g. local preview or dev)
   if (!supabaseUrl || !supabaseAnonKey) {
+    if (isProtected && !hasDemoAuth) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/login'
+      redirectUrl.searchParams.set('redirect', pathname)
+      redirectUrl.searchParams.set('redirectTo', pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
+    if (isAuthPage && hasDemoAuth) {
+      const target =
+        request.nextUrl.searchParams.get('redirect') ||
+        request.nextUrl.searchParams.get('redirectTo') ||
+        request.nextUrl.searchParams.get('next') ||
+        '/ai-assessment'
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = target
+      redirectUrl.searchParams.delete('redirect')
+      redirectUrl.searchParams.delete('redirectTo')
+      redirectUrl.searchParams.delete('next')
+      return NextResponse.redirect(redirectUrl)
+    }
     return supabaseResponse
   }
 
@@ -55,24 +84,29 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   )
 
   const { data: { user } } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
+  const isAuthenticated = Boolean(user || hasDemoAuth)
 
-  // Guard protected workspace routes
-  const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
-  if (isProtected && !user) {
+  // Guard protected routes (including /ai-assessment)
+  if (isProtected && !isAuthenticated) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/login'
+    redirectUrl.searchParams.set('redirect', pathname)
     redirectUrl.searchParams.set('redirectTo', pathname)
     return NextResponse.redirect(redirectUrl)
   }
 
   // Redirect authenticated users away from login/register
-  const isAuthPage = AUTH_PAGES.some((path) => pathname === path)
-  if (isAuthPage && user) {
-    const redirectTo = request.nextUrl.searchParams.get('redirectTo') || '/patient'
+  if (isAuthPage && isAuthenticated) {
+    const target =
+      request.nextUrl.searchParams.get('redirect') ||
+      request.nextUrl.searchParams.get('redirectTo') ||
+      request.nextUrl.searchParams.get('next') ||
+      '/ai-assessment'
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = redirectTo
+    redirectUrl.pathname = target
+    redirectUrl.searchParams.delete('redirect')
     redirectUrl.searchParams.delete('redirectTo')
+    redirectUrl.searchParams.delete('next')
     return NextResponse.redirect(redirectUrl)
   }
 

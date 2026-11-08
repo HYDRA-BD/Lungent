@@ -258,7 +258,7 @@ export function Header() {
           </Link>
 
           <Link
-            href="/register"
+            href="/ai-assessment"
             className={buttonVariants({ variant: 'default', size: 'default', className: 'text-[15px] font-bold shadow-sm hover:scale-105 active:scale-98 transition-all duration-200 hover:shadow-md hover:shadow-primary/25' })}
           >
             <span>Get Started</span>
@@ -399,7 +399,7 @@ export function Header() {
               </Link>
 
               <Link
-                href="/register"
+                href="/ai-assessment"
                 onClick={() => setMobileMenuOpen(false)}
                 className={buttonVariants({ variant: 'default', size: 'lg', className: 'w-full justify-center text-base font-bold shadow-md rounded-xl' })}
               >
