@@ -9,12 +9,12 @@
 
 **Bridging the gap between advanced AI research and accessible healthcare.**
 
-[![AI Builders Congress](https://img.shields.io/badge/AI%20Builders%20Congress-2026-0EA5E9?style=for-the-badge&logo=ai&logoColor=white)](https://lungcancernetaicongrerss.vercel.app/)
+[![AI Builders Congress](https://img.shields.io/badge/AI%20Builders%20Congress-2026-0EA5E9?style=for-the-badge&logo=ai&logoColor=white)](https://cloudcampbd.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-15+-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel&logoColor=white)](https://lungcancernetaicongrerss.vercel.app/)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel&logoColor=white)](https://lungentaibc.vercel.app/)
 
 <br/>
 
@@ -189,13 +189,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🔗 Live Deployments
 
-- **Web Application:** [https://lungcancernetaicongrerss.vercel.app/](https://lungcancernetaicongrerss.vercel.app/)
-- **Documentation & Whitepaper:** [https://lungcancernetaicongrerss.vercel.app/docs](https://lungcancernetaicongrerss.vercel.app/docs)
+- **Web Application:** [https://lungentaibc.vercel.app/](https://lungentaibc.vercel.app/)
+- **Documentation & Whitepaper:** [https://lungentaibc.vercel.app/docs](https://lungentaibc.vercel.app/docs)
 - **Cloud Backend API Docs:** [https://lungcancer-net.onrender.com/docs](https://lungcancer-net.onrender.com/docs)
+- **AI Builders Congress:** [https://cloudcampbd.com/](https://cloudcampbd.com/)
 
 ---
 
 ## 📄 License & Attribution
 
-Developed for **AI Builders Congress 2026** (Idea to Unicorn).  
+Developed for [**AI Builders Congress 2026**](https://cloudcampbd.com/) (Idea to Unicorn).  
 Built with ❤️ for accessible, equitable healthcare.
