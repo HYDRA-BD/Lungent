@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { motion, useScroll, useTransform } from 'motion/react'
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react'
 import {
   Activity,
   HeartPulse,
@@ -28,10 +28,36 @@ import { cn } from '@/lib/utils'
 import { Hero3DPeople } from '@/components/hero/hero-3d-people'
 import { Hero3DLungs } from '@/components/hero/hero-3d-lungs'
 import { ModelPerformanceSection } from '@/components/home/model-performance-section'
+import { IntroPresentation } from '@/components/home/IntroPresentation'
+import { useIdleTimer } from '@/hooks/use-idle-timer'
 import { useLanguage } from '@/i18n'
 
 export function HomeClient() {
   const { dict } = useLanguage()
+
+  // Cinematic Intro Presentation & Idle Replay
+  const [showIntro, setShowIntro] = useState(true)
+
+  // Replay intro presentation if the user is completely idle for 120 seconds (2 minutes)
+  useIdleTimer({
+    timeoutMs: 120000,
+    enabled: !showIntro,
+    onIdle: () => {
+      setShowIntro(true)
+    },
+  })
+
+  // Prevent background scrolling while intro is active
+  useEffect(() => {
+    if (showIntro) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [showIntro])
 
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -92,6 +118,13 @@ export function HomeClient() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-background selection:bg-primary/20">
+      {/* Cinematic Presentation Intro Overlay with AnimatePresence */}
+      <AnimatePresence>
+        {showIntro && (
+          <IntroPresentation onDismiss={() => setShowIntro(false)} />
+        )}
+      </AnimatePresence>
+
       {/* Ambient Respiration & Floating Glow (Pulmonary AI Aesthetic) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[680px] pointer-events-none overflow-hidden -z-10">
         <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-teal-400/15 dark:bg-teal-500/10 blur-3xl animate-lung-breathe" />
