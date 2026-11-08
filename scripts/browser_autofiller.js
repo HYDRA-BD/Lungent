@@ -26,8 +26,8 @@
     docsUrl: "https://lungentaibc.vercel.app/docs",
     apiUrl: "https://lungcancer-net.onrender.com/docs",
     youtubeUrl: "https://youtu.be/placeholder", // Replace with your YouTube video link
-    credentialsEmail: "smjarifhaidera@gmail.com",
-    credentialsPassword: "qwertyuiop",
+    credentialsEmail: "",
+    credentialsPassword: "",
     credentialsRole: "Clinician",
     mcpServerName: "Lungent-MCP-Server",
     mcpTransport: "stdio / Streamable HTTP",

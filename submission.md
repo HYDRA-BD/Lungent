@@ -141,8 +141,8 @@ Description: Clinical decision support Model Context Protocol (MCP) server enabl
 ### Test Credentials for Judges
 ```text
 Role: Clinician (Full Access: Risk intake, SHAP waterfall, RAG search, cryptographic PDF reports)
-Email: smjarifhaidera@gmail.com
-Password: qwertyuiop
+Email: [CONFIGURED_IN_ENV: TEST_CLINICIAN_EMAIL]
+Password: [CONFIGURED_IN_ENV: TEST_CLINICIAN_PASSWORD]
 
 Public Demo (No login required):
 - Direct AI Risk Assessment: https://lungentaibc.vercel.app/ai-assessment

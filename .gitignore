@@ -45,17 +45,20 @@ backend/artifacts/.jwt_secret
 
 # Environment Variables
 .env
+.env.*
 .env*.local
 .env.development
 .env.test
 .env.production
 frontend/.env
+frontend/.env.*
 frontend/.env*.local
-frontend/.env.development
-frontend/.env.test
-frontend/.env.production
+backend/.env
+backend/.env.*
+backend/.env*.local
 !.env.example
 !frontend/.env.example
+!backend/.env.example
 
 # Testing & Coverage
 coverage/

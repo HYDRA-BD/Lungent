@@ -32,7 +32,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { useLanguage } from '@/i18n'
 
-const TARGET_EMAIL = 'smjarifhaidera@gmail.com'
+const TARGET_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'support@lungent.org'
 
 const contactSchema = z.object({
   fullName: z

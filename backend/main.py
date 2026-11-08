@@ -91,14 +91,14 @@ async def lifespan(app: FastAPI):
 
     init_db()
 
-    # Seed default user (survives Render redeploys)
+    # Seed default user if configured in environment variables
     try:
-        if not get_user_by_email("smjarifhaidera@gmail.com"):
-            create_user(
-                "S.M. Jarif Haider Amio", "smjarifhaidera@gmail.com",
-                "qwertyuiop", "clinician",
-            )
-            logger.info("Seeded default user: smjarifhaidera@gmail.com")
+        admin_email = os.environ.get("ADMIN_SEED_EMAIL")
+        admin_pass = os.environ.get("ADMIN_SEED_PASSWORD")
+        if admin_email and admin_pass and not get_user_by_email(admin_email):
+            admin_name = os.environ.get("ADMIN_SEED_NAME", "Default Clinician")
+            create_user(admin_name, admin_email, admin_pass, "clinician")
+            logger.info(f"Seeded default user from environment variables: {admin_email}")
     except Exception as e:
         logger.warning(f"User seed failed: {e}")
 

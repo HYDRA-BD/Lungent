@@ -31,8 +31,8 @@ LUNGENT_KNOWLEDGE = {
     "docs_url": "https://lungentaibc.vercel.app/docs",
     "api_url": "https://lungcancer-net.onrender.com/docs",
     "youtube_url": "https://youtu.be/placeholder", # User replaces with actual YouTube link
-    "credentials_email": "smjarifhaidera@gmail.com",
-    "credentials_password": "qwertyuiop",
+    "credentials_email": os.environ.get("TEST_CLINICIAN_EMAIL", ""),
+    "credentials_password": os.environ.get("TEST_CLINICIAN_PASSWORD", ""),
     "credentials_role": "Clinician",
     "mcp_server_name": "Lungent-MCP-Server",
     "mcp_transport": "stdio / Streamable HTTP",
