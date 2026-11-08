@@ -198,17 +198,37 @@ export function getAllowedPortalLinks(role: AppRole | null | undefined): PortalL
 
 /**
  * Route protection validator for Middleware / Proxy.
+ * Enforces strict site lock: unauthenticated users cannot access any route except
+ * auth entrypoints and '/' (which serves the locked Cinematic Presentation).
  */
 export function evaluateRouteAccess(
   pathname: string,
   isAuthenticated: boolean,
   role: AppRole | null | undefined
 ): { allowed: boolean; redirectPath?: string } {
+  const isAuthOrSystemPath =
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname === '/forgot-password' ||
+    pathname === '/reset-password' ||
+    pathname === '/verify-email' ||
+    pathname === '/unauthorized' ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/api')
+
+  // Unauthenticated users are strictly guarded:
+  // - '/' is allowed to render the locked Cinematic Presentation (which routes to /login upon completion or skip)
+  // - Auth pages and system routes are allowed
+  // - All other routes are locked and redirect immediately to /login
+  if (!isAuthenticated) {
+    if (pathname === '/' || isAuthOrSystemPath) {
+      return { allowed: true }
+    }
+    return { allowed: false, redirectPath: '/login' }
+  }
+
   // 1. Documentation route: Protected, strictly restricted to Admin & AI Builders Congress
   if (pathname.startsWith('/docs')) {
-    if (!isAuthenticated) {
-      return { allowed: false, redirectPath: '/login' }
-    }
     if (!canAccessDocs(role)) {
       return { allowed: false, redirectPath: '/unauthorized' }
     }
@@ -217,9 +237,6 @@ export function evaluateRouteAccess(
 
   // 2. AI Assessment & prediction endpoints: Must be signed in (any valid role allowed)
   if (pathname.startsWith('/ai-assessment') || pathname.startsWith('/predict') || pathname.startsWith('/assessment')) {
-    if (!isAuthenticated) {
-      return { allowed: false, redirectPath: '/login' }
-    }
     return { allowed: true }
   }
 

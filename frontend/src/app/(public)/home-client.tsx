@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react'
 import {
   Activity,
@@ -31,17 +32,70 @@ import { ModelPerformanceSection } from '@/components/home/model-performance-sec
 import { IntroPresentation } from '@/components/home/IntroPresentation'
 import { useIdleTimer } from '@/hooks/use-idle-timer'
 import { useLanguage } from '@/i18n'
+import { createClient } from '@/lib/supabase/client'
 
 export function HomeClient() {
+  const router = useRouter()
   const { dict } = useLanguage()
 
-  // Cinematic Intro Presentation & Idle Replay
-  const [showIntro, setShowIntro] = useState(true)
+  // Authentication Guard State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const [showIntro, setShowIntro] = useState(false)
+
+  // Verify authentication session
+  useEffect(() => {
+    let mounted = true
+
+    function checkAuth() {
+      if (typeof document === 'undefined') return
+      const cookies = document.cookie.split(';').map((c) => c.trim())
+      const demoCookie = cookies.find((c) => c.startsWith('lungent_auth_demo='))?.split('=')[1]
+      const roleCookie = cookies.find((c) => c.startsWith('lungent_role='))?.split('=')[1]
+
+      if (demoCookie === 'true' || roleCookie) {
+        if (mounted) setIsAuthenticated(true)
+      } else {
+        if (mounted) setIsAuthenticated(false)
+      }
+    }
+
+    checkAuth()
+
+    const supabase = createClient()
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (mounted) {
+        if (session?.user) {
+          setIsAuthenticated(true)
+        } else if (
+          typeof document !== 'undefined' &&
+          document.cookie.indexOf('lungent_auth_demo=true') === -1 &&
+          document.cookie.indexOf('lungent_role=') === -1
+        ) {
+          setIsAuthenticated(false)
+        }
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) {
+        const hasCookies =
+          typeof document !== 'undefined' &&
+          (document.cookie.indexOf('lungent_auth_demo=true') !== -1 ||
+            document.cookie.indexOf('lungent_role=') !== -1)
+        setIsAuthenticated(!!session?.user || hasCookies)
+      }
+    })
+
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
+  }, [])
 
   // Replay intro presentation if the user is completely idle for 120 seconds (2 minutes)
   useIdleTimer({
     timeoutMs: 120000,
-    enabled: !showIntro,
+    enabled: !showIntro && isAuthenticated === true,
     onIdle: () => {
       setShowIntro(true)
     },
@@ -49,7 +103,7 @@ export function HomeClient() {
 
   // Prevent background scrolling while intro is active
   useEffect(() => {
-    if (showIntro) {
+    if (showIntro || isAuthenticated === false || isAuthenticated === null) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -57,7 +111,7 @@ export function HomeClient() {
     return () => {
       document.body.style.overflow = ''
     }
-  }, [showIntro])
+  }, [showIntro, isAuthenticated])
 
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -72,6 +126,18 @@ export function HomeClient() {
   // Right 3D Parallax: drifts down at a slightly different speed (organic depth) and fades out
   const rightY = useTransform(scrollYProgress, [0, 1], [0, 105])
   const rightOpacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.6, 0])
+
+  // If unauthenticated or verifying, intercept and render ONLY the locked Cinematic Presentation
+  if (isAuthenticated === false || isAuthenticated === null) {
+    return (
+      <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950">
+        <IntroPresentation
+          isAuthenticated={false}
+          onProceedToAuth={() => router.push('/login')}
+        />
+      </div>
+    )
+  }
 
   const workspaceCards = [
     {
@@ -121,7 +187,11 @@ export function HomeClient() {
       {/* Cinematic Presentation Intro Overlay with AnimatePresence */}
       <AnimatePresence>
         {showIntro && (
-          <IntroPresentation onDismiss={() => setShowIntro(false)} />
+          <IntroPresentation
+            isAuthenticated={true}
+            onDismiss={() => setShowIntro(false)}
+            onProceedToAuth={() => setShowIntro(false)}
+          />
         )}
       </AnimatePresence>
 
