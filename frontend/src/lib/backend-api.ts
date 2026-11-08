@@ -3,8 +3,8 @@
  * Connects dynamically to Render Cloud Backend or local development server.
  */
 
-// 60-second default timeout to accommodate Render free-tier cold starts
-export const DEFAULT_API_TIMEOUT_MS = 60000
+// 150-second default timeout to accommodate Render free-tier cold starts (up to 90s)
+export const DEFAULT_API_TIMEOUT_MS = 150000
 
 /**
  * Resolves the backend base URL dynamically from environment variables.
@@ -68,7 +68,7 @@ export async function fetchWithTimeout(
   } catch (err: unknown) {
     if (err instanceof DOMException && err.name === 'AbortError') {
       throw new Error(
-        `Backend request timed out after ${timeoutMs / 1000}s. If your backend is hosted on a free Render tier, it may be waking up from sleep. Please wait a moment and try again.`
+        `Backend request timed out after ${timeoutMs / 1000}s. The AI model is taking longer than usual to wake up. Please try again.`
       )
     }
 

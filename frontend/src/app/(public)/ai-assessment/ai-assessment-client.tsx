@@ -24,7 +24,7 @@ import {
   User,
   Wind,
 } from 'lucide-react'
-import { analyzePatient, downloadReport, type AnalyzeResponse, type PatientInput } from '@/lib/backend-api'
+import { analyzePatient, downloadReport, getBackendUrl, type AnalyzeResponse, type PatientInput } from '@/lib/backend-api'
 import { Header } from '@/components/layouts/header'
 import { Footer } from '@/components/layouts/footer'
 import { SectionContainer } from '@/components/layouts/section-container'
@@ -344,6 +344,10 @@ export function AIAssessmentClient() {
   async function handleSubmit() {
     setLoading(true)
     setError(null)
+
+    const targetUrl = getBackendUrl()
+    console.log('[Lungent Assessment] Target Backend API URL (process.env.NEXT_PUBLIC_API_URL):', targetUrl)
+
     const input: PatientInput = {
       age: form.age,
       sex: form.sex,
@@ -1011,6 +1015,11 @@ export function AIAssessmentClient() {
                   </>
                 )}
               </button>
+              {loading && (
+                <p className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed animate-pulse">
+                  <span className="font-semibold text-primary">Note:</span> The AI model is hosted on a free tier and may take up to 90 seconds to start up for the first time. Please be patient.
+                </p>
+              )}
             </motion.div>
 
             {/* RESULT SECTION (Appears below the button after running assessment) */}
