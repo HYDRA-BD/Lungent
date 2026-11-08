@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Lungent — Upgraded Multi-Tab Autofiller (Playwright)
+Lungent — Bulletproof Multi-Tab Autofiller (Playwright)
 Populates the multi-tab AI Builders Congress form by systematically switching
-between tabs (Overview, Story, Proof, AI-Native Build, Data Lifecycle,
-Prompt Library, etc.) and filling inputs, textareas, and ARIA checkboxes.
+between tabs, thoroughly clearing existing input values to prevent text duplication,
+and checking high-scoring AI/Data checkboxes.
 """
 
 import json
@@ -57,16 +57,6 @@ def autofill_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
         print("\n[*] Waiting 2 seconds for initial DOM stabilization...")
         page.wait_for_timeout(2000)
 
-        # Collect all unique tabs that have items to fill
-        all_tabs = set()
-        for key in ["text_inputs", "textareas", "checkboxes", "selects"]:
-            for item in fill_data.get(key, []):
-                tab = item.get("tab")
-                if tab:
-                    all_tabs.add(tab)
-
-        print(f"[*] Found {len(all_tabs)} tabs requiring automation: {list(all_tabs)}")
-
         def switch_to_tab(tab_name):
             if not tab_name:
                 return
@@ -74,12 +64,40 @@ def autofill_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 locator = page.locator(f'[role="tab"]:has-text("{tab_name}"), button:has-text("{tab_name}")').first
                 if locator.count() > 0:
                     locator.scroll_into_view_if_needed()
-                    locator.click()
+                    locator.click(force=True)
                     page.wait_for_timeout(1000)
             except Exception as e:
                 print(f"    [!] Error switching to tab {tab_name}: {e}")
 
         current_active_tab = None
+
+        # Helper to clear and set value using React-compatible events
+        def safe_clear_and_fill(locator, value):
+            locator.scroll_into_view_if_needed()
+            locator.click(force=True)
+            page.wait_for_timeout(100)
+            # Select all and backspace to prevent text concatenation
+            locator.press("Control+A")
+            locator.press("Backspace")
+            # Playwright fill handles input/change events
+            locator.fill(str(value))
+            # Also dispatch native input events in case of React Hook Form
+            try:
+                page.evaluate("""
+                ([el, val]) => {
+                    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set ||
+                                   Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')?.set;
+                    if (setter) {
+                        setter.call(el, val);
+                    } else {
+                        el.value = val;
+                    }
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                """, [locator.element_handle(), str(value)])
+            except Exception:
+                pass
 
         # 1. Fill Text Inputs
         print(f"\n[*] Processing {len(fill_data.get('text_inputs', []))} Text Inputs...")
@@ -95,9 +113,7 @@ def autofill_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
             try:
                 el = page.locator(selector).first
                 if el.count() > 0:
-                    el.scroll_into_view_if_needed()
-                    el.click()
-                    el.fill(str(val))
+                    safe_clear_and_fill(el, val)
                     print(f"  [✓] [{tab}] Filled: {label[:30]} -> {str(val)[:25]}...")
                     page.wait_for_timeout(250)
             except Exception as e:
@@ -117,9 +133,7 @@ def autofill_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
             try:
                 el = page.locator(selector).first
                 if el.count() > 0:
-                    el.scroll_into_view_if_needed()
-                    el.click()
-                    el.fill(str(val))
+                    safe_clear_and_fill(el, val)
                     print(f"  [✓] [{tab}] Filled Textarea: {label[:35]}")
                     page.wait_for_timeout(350)
             except Exception as e:
@@ -139,12 +153,12 @@ def autofill_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 el = page.locator(selector).first
                 if el.count() > 0:
                     el.scroll_into_view_if_needed()
-                    # Check if standard or custom ARIA
+                    # Check current state
                     role = el.get_attribute("role") or ""
                     data_state = el.get_attribute("data-state") or ""
                     aria_checked = el.get_attribute("aria-checked") or ""
 
-                    is_checked = (data_state == "checked") or (aria_checked == "true")
+                    is_checked = (data_state in ["checked", "on"]) or (aria_checked == "true")
                     if not is_checked:
                         try:
                             el.check(force=True)

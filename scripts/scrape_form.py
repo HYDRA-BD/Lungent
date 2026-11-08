@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Lungent — Upgraded Multi-Tab Form Scraper (Playwright)
-Iterates through all navigation tabs (Overview, Story, Proof, AI-Native Build,
-Data Lifecycle, Prompt Library, Team, Audit, Build Provenance) and extracts
-both native HTML inputs and dynamic React/Radix/Shadcn custom controls:
-- inputs, textareas
-- native and ARIA checkboxes (button[role="checkbox"], input[type="checkbox"])
-- native and ARIA dropdowns (select, button[role="combobox"])
-- native and ARIA radio buttons (button[role="radio"], input[type="radio"])
-- custom switch toggles (button[role="switch"])
+Lungent — Full Multi-Tab Form Scraper (Playwright)
+1. Launches persistent browser session and waits for user login.
+2. Clears previously typed inputs via page.evaluate() for a clean DOM schema.
+3. Iterates through all navigation tabs (Overview, Story, Proof, AI-Native Build,
+   Data Lifecycle, Prompt Library, Team, Audit, Build Provenance, Basics).
+4. Expands all closed accordions and nested collapsible cards.
+5. Scrapes all controls: native inputs, sr-only hidden checkboxes, ARIA/Radix
+   checkboxes (role="checkbox"), custom switches (role="switch"), radios,
+   native selects, and Radix comboboxes.
+6. Outputs the complete schema to form_schema.json.
 """
 
 import json
@@ -21,22 +22,24 @@ DEFAULT_SUBMISSION_URL = "https://cloudcampbd.com/submissions/8dee8cdb-0cda-49c6
 SESSION_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".browser_session")
 OUTPUT_SCHEMA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "form_schema.json")
 
-# Known tabs from CloudCamp submission form
-TARGET_TABS = [
+# Target tab keywords in navigation
+TAB_KEYWORDS = [
     "Overview",
     "Story",
     "Proof",
     "AI-Native Build",
+    "AI Detail",
     "Data Lifecycle",
     "Prompt Library",
     "Team",
     "Audit",
-    "Build Provenance"
+    "Build Provenance",
+    "Basics"
 ]
 
-def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
+def scrape_full_form(url=DEFAULT_SUBMISSION_URL):
     print("\n========================================================")
-    print("  Lungent Multi-Tab Form Scraper (Playwright)")
+    print("  Lungent Full Multi-Tab Form Scraper")
     print("========================================================")
     print(f"Target URL:  {url}")
     print(f"Session Dir: {SESSION_DIR}\n")
@@ -62,14 +65,29 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
         print("\n--------------------------------------------------------")
         print("ACTION REQUIRED IN BROWSER:")
         print("1. If prompted to Sign In, please complete login now.")
-        print("2. Ensure the submission page with its tabs is visible.")
+        print("2. Make sure you are viewing the submission form on screen.")
         print("--------------------------------------------------------")
-        input(">> When you see the form in the browser, press ENTER to start multi-tab scraping: ")
+        input(">> When you see the form in the browser, press ENTER in this terminal: ")
 
-        print("\n[*] Initializing DOM scanner...")
-        page.wait_for_timeout(2000)
+        print("\n[*] Initializing DOM scanner and clearing existing values...")
+        page.wait_for_timeout(1500)
 
-        # Extraction function executed inside the browser context for each tab
+        # TASK 1: Clear existing input values across the page for a clean schema
+        clear_inputs_js = """
+        () => {
+            document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="hidden"]), textarea').forEach(el => {
+                el.value = '';
+                el.defaultValue = '';
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            return true;
+        }
+        """
+        page.evaluate(clear_inputs_js)
+        print("    [✓] Existing text inputs and textareas cleared.")
+
+        # JavaScript extraction function executed in browser context for each tab
         extract_tab_dom_js = """
         (currentTabName) => {
             const data = {
@@ -86,7 +104,7 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
             }
 
             function findLabel(el) {
-                // 1. Direct label with 'for' attribute
+                // 1. Label with 'for' attribute
                 if (el.id) {
                     const l = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
                     if (l) return cleanText(l.innerText);
@@ -95,7 +113,7 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 const parentLabel = el.closest('label');
                 if (parentLabel) return cleanText(parentLabel.innerText);
 
-                // 3. Aria attributes
+                // 3. ARIA attributes
                 if (el.getAttribute('aria-label')) return cleanText(el.getAttribute('aria-label'));
                 if (el.getAttribute('aria-labelledby')) {
                     const ref = document.getElementById(el.getAttribute('aria-labelledby'));
@@ -105,12 +123,12 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 // 4. Sibling label or text container
                 const parent = el.parentElement;
                 if (parent) {
-                    const siblingLabel = parent.querySelector('label, span.text-sm, span.font-medium, p');
+                    const siblingLabel = parent.querySelector('label, span.text-sm, span.font-medium, span, p');
                     if (siblingLabel && siblingLabel !== el) return cleanText(siblingLabel.innerText);
                 }
 
-                // 5. Card / Form row heading
-                const row = el.closest('.space-y-2, .space-y-1, .form-group, .flex.items-center, .grid, fieldset');
+                // 5. Container row heading
+                const row = el.closest('.space-y-2, .space-y-1, .form-group, .flex, .grid, fieldset');
                 if (row) {
                     const heading = row.querySelector('label, legend, h4, h5, p.font-medium, span.font-medium');
                     if (heading && heading !== el) return cleanText(heading.innerText);
@@ -119,7 +137,7 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 return cleanText(el.placeholder || el.name || el.id || '');
             }
 
-            // A. Native Inputs
+            // A. Native Inputs (includes both visible and visually-hidden sr-only inputs)
             document.querySelectorAll('input').forEach((inp, idx) => {
                 const type = (inp.type || 'text').toLowerCase();
                 const label = findLabel(inp);
@@ -144,7 +162,7 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 }
             });
 
-            // B. ARIA / Radix / Shadcn Checkboxes (button[role="checkbox"], [role="switch"])
+            // B. ARIA / Radix / Shadcn Checkboxes & Switches (button[role="checkbox"], [role="switch"])
             document.querySelectorAll('[role="checkbox"], button[role="switch"], [role="switch"]').forEach((cb, idx) => {
                 const label = findLabel(cb);
                 const isChecked = cb.getAttribute('aria-checked') === 'true' || 
@@ -154,7 +172,7 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                     tab: currentTabName,
                     id: cb.id || '',
                     name: cb.getAttribute('name') || '',
-                    type: 'custom_checkbox',
+                    type: 'aria_checkbox',
                     ariaRole: cb.getAttribute('role') || 'checkbox',
                     dataState: cb.getAttribute('data-state') || '',
                     checked: isChecked,
@@ -201,7 +219,7 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
                 });
             });
 
-            // E. Radios (Radix/Shadcn)
+            // E. Radios
             document.querySelectorAll('[role="radio"]').forEach((r, idx) => {
                 const isChecked = r.getAttribute('aria-checked') === 'true' || r.getAttribute('data-state') === 'checked';
                 data.radios.push({
@@ -229,102 +247,125 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
             "radios": []
         }
 
-        # Step 1: Detect all tab buttons currently rendered
-        print("\n[*] Detecting navigation tabs on page...")
-        tab_buttons = page.locator('[role="tab"], button[data-state], nav button, [role="tablist"] button')
-        tab_count = tab_buttons.count()
-        print(f"    Found {tab_count} potential tab elements.")
+        # Step 1: Detect all tabs available in the DOM
+        find_tabs_js = """
+        () => {
+            const tabs = [];
+            // Strategy A: role="tab"
+            document.querySelectorAll('[role="tab"]').forEach(el => {
+                const t = (el.innerText || '').trim().split('\\n')[0].trim();
+                if (t && !tabs.includes(t)) tabs.push(t);
+            });
+            // Strategy B: nav buttons / tablist buttons
+            document.querySelectorAll('nav button, [role="tablist"] button, div[data-tabs] button').forEach(el => {
+                const t = (el.innerText || '').trim().split('\\n')[0].trim();
+                if (t && !tabs.includes(t) && t.length < 35) tabs.push(t);
+            });
+            // Strategy C: buttons matching known keywords
+            const keywords = ['Overview', 'Story', 'Proof', 'AI-Native', 'Data Lifecycle', 'Prompt', 'Team', 'Audit', 'Provenance', 'Basics', 'AI Detail'];
+            document.querySelectorAll('button, a, div[role="button"]').forEach(el => {
+                const t = (el.innerText || '').trim();
+                for (const kw of keywords) {
+                    if (t.includes(kw)) {
+                        const firstLine = t.split('\\n')[0].trim();
+                        if (firstLine && !tabs.includes(firstLine) && firstLine.length < 35) {
+                            tabs.push(firstLine);
+                        }
+                    }
+                }
+            });
+            return tabs;
+        }
+        """
+        detected = page.evaluate(find_tabs_js)
+        print(f"[*] Detected {len(detected)} navigation tabs in page: {detected}")
 
-        # Identify unique clickable tab texts
-        available_tabs = []
-        for i in range(tab_count):
-            try:
-                txt = tab_buttons.nth(i).inner_text().strip()
-                first_line = txt.split('\n')[0].strip()
-                if first_line and first_line not in available_tabs and len(first_line) < 40:
-                    available_tabs.append(first_line)
-            except Exception:
-                pass
+        # Merge detected with fallback keywords
+        tabs_to_cycle = []
+        for t in detected + TAB_KEYWORDS:
+            first = t.split('\n')[0].strip()
+            if first and first not in tabs_to_cycle and len(first) < 35:
+                tabs_to_cycle.append(first)
 
-        print(f"    Tabs detected: {available_tabs}")
-
-        # If detected list is empty or minimal, use TARGET_TABS fallback
-        tabs_to_visit = available_tabs if len(available_tabs) >= 3 else TARGET_TABS
-
-        # Step 2: Click through each tab and extract DOM
         seen_keys = set()
 
-        for tab_name in tabs_to_visit:
-            print(f"\n---> Switching to tab: [{tab_name}]...")
+        # Step 2: Loop through each tab, click it, expand accordions, and extract elements
+        for tab_name in tabs_to_cycle:
+            print(f"\n---> [Tab] Navigating to: '{tab_name}'...")
             try:
-                # Find tab by text or role
-                tab_locator = page.locator(f'[role="tab"]:has-text("{tab_name}"), button:has-text("{tab_name}")').first
-                if tab_locator.count() > 0:
-                    tab_locator.scroll_into_view_if_needed()
-                    tab_locator.click()
-                    page.wait_for_timeout(1200) # Wait for React tab panel to mount
+                # Find tab button using fuzzy text
+                tab_btn = page.locator(f'[role="tab"]:has-text("{tab_name}"), button:has-text("{tab_name}")').first
+                if tab_btn.count() > 0:
+                    tab_btn.scroll_into_view_if_needed()
+                    tab_btn.click(force=True)
+                    page.wait_for_timeout(1000) # Wait for React tab panel to mount
                 else:
-                    print(f"     [!] Could not locate clickable element for '{tab_name}'")
+                    print(f"     [!] Tab trigger for '{tab_name}' not directly clickable, skipping...")
+                    continue
             except Exception as e:
-                print(f"     [!] Click error on '{tab_name}': {e}")
+                print(f"     [!] Could not switch to '{tab_name}': {e}")
+                continue
 
-            # Expand any closed accordions in this tab
+            # Clear inputs in newly mounted tab as well
+            page.evaluate(clear_inputs_js)
+
+            # Expand all collapsed accordions/drawers inside this tab
             try:
-                closed_accordions = page.locator('button[data-state="closed"], [aria-expanded="false"]')
-                acc_count = closed_accordions.count()
-                if acc_count > 0:
-                    print(f"     Expanding {acc_count} collapsible sections in '{tab_name}'...")
-                    for a_idx in range(acc_count):
+                closed = page.locator('button[data-state="closed"], [aria-expanded="false"], summary')
+                count = closed.count()
+                if count > 0:
+                    print(f"     Expanding {count} collapsed sections in '{tab_name}'...")
+                    for idx in range(min(count, 15)):
                         try:
-                            closed_accordions.nth(a_idx).click()
-                            page.wait_for_timeout(300)
+                            closed.nth(idx).click(force=True)
+                            page.wait_for_timeout(200)
                         except Exception:
                             pass
             except Exception:
                 pass
 
-            # Extract data from this tab
+            # Extract data from currently visible tab DOM
             tab_data = page.evaluate(extract_tab_dom_js, tab_name)
             master_schema["tabs_scraped"].append(tab_name)
 
-            # Deduplicate and append inputs
+            # Append unique inputs
             for inp in tab_data.get("inputs", []):
                 key = (inp["tab"], inp["type"], inp["placeholder"], inp["label"], inp["selector"])
                 if key not in seen_keys:
                     seen_keys.add(key)
                     master_schema["inputs"].append(inp)
 
-            # Deduplicate and append textareas
+            # Append unique textareas
             for ta in tab_data.get("textareas", []):
                 key = (ta["tab"], ta["placeholder"], ta["label"], ta["selector"])
                 if key not in seen_keys:
                     seen_keys.add(key)
                     master_schema["textareas"].append(ta)
 
-            # Deduplicate and append checkboxes
+            # Append unique checkboxes
             for cb in tab_data.get("checkboxes", []):
                 key = (cb["tab"], cb.get("label", ""), cb["selector"])
                 if key not in seen_keys:
                     seen_keys.add(key)
                     master_schema["checkboxes"].append(cb)
 
-            # Deduplicate and append selects
+            # Append unique selects
             for sel in tab_data.get("selects", []):
                 key = (sel["tab"], sel.get("label", ""), sel["selector"])
                 if key not in seen_keys:
                     seen_keys.add(key)
                     master_schema["selects"].append(sel)
 
-            # Deduplicate and append radios
+            # Append unique radios
             for r in tab_data.get("radios", []):
                 key = (r["tab"], r.get("label", ""), r["selector"])
                 if key not in seen_keys:
                     seen_keys.add(key)
                     master_schema["radios"].append(r)
 
-            print(f"     Scraped from '{tab_name}': {len(tab_data.get('inputs', []))} inputs, {len(tab_data.get('textareas', []))} textareas, {len(tab_data.get('checkboxes', []))} checkboxes, {len(tab_data.get('selects', []))} selects")
+            print(f"     [+] Scraped from '{tab_name}': {len(tab_data.get('inputs', []))} inputs, {len(tab_data.get('textareas', []))} textareas, {len(tab_data.get('checkboxes', []))} checkboxes, {len(tab_data.get('selects', []))} selects")
 
-        # Step 3: Write complete master schema to disk
+        # Step 3: Write master schema file
         with open(OUTPUT_SCHEMA_FILE, "w", encoding="utf-8") as f:
             json.dump(master_schema, f, indent=2, ensure_ascii=False)
 
@@ -333,14 +374,14 @@ def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
         print("========================================================")
         print(f"Tabs Scraped:           {len(master_schema['tabs_scraped'])}")
         print(f"Total Text Inputs:      {len(master_schema['inputs'])}")
-        print(f"Total Textarea Fields:  {len(master_schema['textareas'])}")
+        print(f"Total Textareas:        {len(master_schema['textareas'])}")
         print(f"Total Checkboxes:       {len(master_schema['checkboxes'])}")
-        print(f"Total Radio Buttons:    {len(master_schema['radios'])}")
-        print(f"Total Select Dropdowns: {len(master_schema['selects'])}")
-        print(f"\n[✓] Master schema saved to: {OUTPUT_SCHEMA_FILE}\n")
+        print(f"Total Radios:           {len(master_schema['radios'])}")
+        print(f"Total Dropdowns:        {len(master_schema['selects'])}")
+        print(f"\n[✓] Master schema written to: {OUTPUT_SCHEMA_FILE}\n")
 
         context.close()
 
 if __name__ == "__main__":
     url_arg = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SUBMISSION_URL
-    scrape_multi_tab_form(url_arg)
+    scrape_full_form(url_arg)
