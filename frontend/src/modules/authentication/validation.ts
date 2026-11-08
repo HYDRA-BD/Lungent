@@ -2,8 +2,17 @@ import { z } from 'zod'
 
 export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#()_+=\-[\]{}|;:,.<>])[A-Za-z\d@$!%*?&^#()_+=\-[\]{}|;:,.<>]{8,72}$/
 
+export const ACTIVE_ACCESS_ROLES = [
+  'General User',
+  'AI Builders Congress',
+  'Admin',
+] as const
+
+export type ActiveAccessRole = (typeof ACTIVE_ACCESS_ROLES)[number]
+
 export const registerSchema = z
   .object({
+    role: z.enum(ACTIVE_ACCESS_ROLES),
     fullName: z
       .string()
       .trim()
@@ -28,14 +37,6 @@ export const registerSchema = z
       .max(72, 'Password cannot exceed 72 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     preferredLanguage: z.enum(['en', 'bn']),
-    role: z.enum([
-      'General User',
-      'Clinician',
-      'AI Builders Congress',
-      'Health Worker',
-      'Admin',
-      'Governance',
-    ]),
     acceptTerms: z.boolean().refine((val) => val === true, {
       message: 'You must accept the terms of service and privacy information',
     }),
@@ -46,6 +47,7 @@ export const registerSchema = z
   })
 
 export const loginSchema = z.object({
+  role: z.enum(ACTIVE_ACCESS_ROLES),
   email: z
     .string()
     .trim()

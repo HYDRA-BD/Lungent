@@ -32,6 +32,7 @@ describe('Authentication Zod Validation Schemas', () => {
       phoneNumber: '+8801712345678',
       password: 'SafePassword123!',
       confirmPassword: 'SafePassword123!',
+      role: 'General User' as const,
       preferredLanguage: 'bn' as const,
       acceptTerms: true,
     }
@@ -46,6 +47,18 @@ describe('Authentication Zod Validation Schemas', () => {
       void phoneNumber
       const result = registerSchema.safeParse(withoutPhone)
       expect(result.success).toBe(true)
+    })
+
+    it('accepts the 3 production access roles', () => {
+      expect(registerSchema.safeParse({ ...validRegistration, role: 'General User' }).success).toBe(true)
+      expect(registerSchema.safeParse({ ...validRegistration, role: 'AI Builders Congress' }).success).toBe(true)
+      expect(registerSchema.safeParse({ ...validRegistration, role: 'Admin' }).success).toBe(true)
+    })
+
+    it('rejects roles still in development (Clinician, Health Worker, Governance)', () => {
+      expect(registerSchema.safeParse({ ...validRegistration, role: 'Clinician' }).success).toBe(false)
+      expect(registerSchema.safeParse({ ...validRegistration, role: 'Health Worker' }).success).toBe(false)
+      expect(registerSchema.safeParse({ ...validRegistration, role: 'Governance' }).success).toBe(false)
     })
 
     it('rejects registration when password and confirmPassword mismatch', () => {
@@ -94,16 +107,31 @@ describe('Authentication Zod Validation Schemas', () => {
   })
 
   describe('User Login Schema (loginSchema)', () => {
-    it('accepts valid login credentials', () => {
+    it('accepts valid login credentials with role', () => {
       const result = loginSchema.safeParse({
+        role: 'General User',
         email: 'user@lungent.org',
         password: 'UserSecret123!',
       })
       expect(result.success).toBe(true)
     })
 
+    it('accepts the 3 production access roles', () => {
+      expect(loginSchema.safeParse({ role: 'General User', email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(true)
+      expect(loginSchema.safeParse({ role: 'AI Builders Congress', email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(true)
+      expect(loginSchema.safeParse({ role: 'Admin', email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(true)
+    })
+
+    it('rejects login when role is missing or invalid', () => {
+      expect(loginSchema.safeParse({ email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(false)
+      expect(loginSchema.safeParse({ role: 'Clinician', email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(false)
+      expect(loginSchema.safeParse({ role: 'Health Worker', email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(false)
+      expect(loginSchema.safeParse({ role: 'Governance', email: 'user@lungent.org', password: 'P@ssword1' }).success).toBe(false)
+    })
+
     it('rejects empty password', () => {
       const result = loginSchema.safeParse({
+        role: 'General User',
         email: 'user@lungent.org',
         password: '',
       })
@@ -112,6 +140,7 @@ describe('Authentication Zod Validation Schemas', () => {
 
     it('normalizes email to lowercase', () => {
       const result = loginSchema.safeParse({
+        role: 'General User',
         email: 'USER@LUNGENT.ORG',
         password: 'Password123!',
       })

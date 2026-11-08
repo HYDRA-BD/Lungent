@@ -11,10 +11,10 @@ import { FormField } from '@/components/forms/form-field'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { registerSchema, type RegisterInput } from '@/modules/authentication/validation'
+import { registerSchema, type RegisterInput, ACTIVE_ACCESS_ROLES } from '@/modules/authentication/validation'
 import { register } from '@/modules/authentication/service'
-import { APP_ROLES, type AppRole, ROLE_DESCRIPTIONS } from '@/lib/auth-roles'
-import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2, UserCheck, Stethoscope, Sparkles, Building2, Shield, Scale } from 'lucide-react'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
+import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2 } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 export default function RegisterPage() {
@@ -47,7 +47,6 @@ export default function RegisterPage() {
   })
 
   const acceptTermsValue = useWatch({ control, name: 'acceptTerms' })
-  const selectedRole = useWatch({ control, name: 'role' })
 
   const onSubmit = async (data: RegisterInput) => {
     setIsSubmitting(true)
@@ -63,35 +62,17 @@ export default function RegisterPage() {
         return
       }
 
-      setSuccessMessage(`Account registered successfully as ${data.role}! Redirecting...`)
+      // Invalidate any client-side session to guarantee strict manual sign-in
+      try {
+        const browserClient = createBrowserClient()
+        await browserClient.auth.signOut()
+      } catch {}
+
+      setSuccessMessage('Account created successfully. Redirecting to sign in...')
 
       setTimeout(() => {
-        if (result.data.requiresVerification) {
-          router.push(`/verify-email?email=${encodeURIComponent(data.email)}`)
-        } else {
-          switch (data.role) {
-            case 'General User':
-              router.push('/ai-assessment')
-              break
-            case 'Clinician':
-              router.push('/portal/clinician')
-              break
-            case 'Health Worker':
-              router.push('/portal/community')
-              break
-            case 'Governance':
-              router.push('/portal/admin')
-              break
-            case 'Admin':
-            case 'AI Builders Congress':
-              router.push('/portal/admin')
-              break
-            default:
-              router.push('/ai-assessment')
-          }
-          router.refresh()
-        }
-      }, 700)
+        router.push('/login?registered=true')
+      }, 500)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected registration error occurred.'
       setServerError(msg)
@@ -148,16 +129,11 @@ export default function RegisterPage() {
           )}
         </AnimatePresence>
 
-        {/* 1. Role Selection (Top of Form as required) */}
+        {/* Access Role Selection (Top of Form) */}
         <FormField
-          label="Select Account Role"
+          label="Access Role"
           required
           error={errors.role?.message}
-          helperText={
-            selectedRole && ROLE_DESCRIPTIONS[selectedRole]
-              ? `${selectedRole}: ${ROLE_DESCRIPTIONS[selectedRole].description}`
-              : 'Select your operational designation to configure role-based permissions.'
-          }
         >
           <div className="relative">
             <select
@@ -165,9 +141,9 @@ export default function RegisterPage() {
               className="w-full h-11 px-3.5 rounded-xl border border-input bg-background text-sm sm:text-base font-semibold text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary cursor-pointer shadow-2xs"
               {...formRegister('role')}
             >
-              {APP_ROLES.map((r) => (
+              {ACTIVE_ACCESS_ROLES.map((r) => (
                 <option key={r} value={r} className="py-1.5 text-foreground bg-background">
-                  {r} — {ROLE_DESCRIPTIONS[r].title}
+                  {r}
                 </option>
               ))}
             </select>

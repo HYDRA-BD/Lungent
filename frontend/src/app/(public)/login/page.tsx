@@ -10,10 +10,9 @@ import { AuthLayout } from '@/components/layouts/auth-layout'
 import { FormField } from '@/components/forms/form-field'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { loginSchema, type LoginInput } from '@/modules/authentication/validation'
-import { login, quickDemoLogin } from '@/modules/authentication/service'
-import { APP_ROLES, type AppRole } from '@/lib/auth-roles'
-import { LogIn, Mail, Lock, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Stethoscope, Building2, User, Scale } from 'lucide-react'
+import { loginSchema, type LoginInput, ACTIVE_ACCESS_ROLES } from '@/modules/authentication/validation'
+import { login } from '@/modules/authentication/service'
+import { LogIn, Mail, Lock, CheckCircle2, ArrowRight } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 function LoginForm() {
@@ -24,6 +23,7 @@ function LoginForm() {
     searchParams.get('redirectTo') ||
     searchParams.get('next')
   const verified = searchParams.get('verified')
+  const registered = searchParams.get('registered')
 
   const { dict } = useLanguage()
   const auth = dict.auth
@@ -35,38 +35,15 @@ function LoginForm() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
+      role: 'General User',
       email: '',
       password: '',
     },
   })
-
-  const fillDemoCredentials = () => {
-    setValue('email', 'patient@lungent.org', { shouldValidate: true })
-    setValue('password', 'Lungent2026!', { shouldValidate: true })
-    setServerError(null)
-  }
-
-  const handleRoleSimulation = async (role: AppRole) => {
-    setIsSubmitting(true)
-    setServerError(null)
-    try {
-      await quickDemoLogin(role)
-      setSuccessMessage(`Logged in as ${role}! Redirecting...`)
-      setTimeout(() => {
-        const target = redirectTo || (role === 'General User' ? '/ai-assessment' : role === 'Clinician' ? '/portal/clinician' : role === 'Health Worker' ? '/portal/community' : '/portal/admin')
-        router.push(target)
-        router.refresh()
-      }, 500)
-    } catch {
-      setServerError('Failed to switch role session')
-      setIsSubmitting(false)
-    }
-  }
 
   const onSubmit = async (data: LoginInput) => {
     setIsSubmitting(true)
@@ -86,7 +63,12 @@ function LoginForm() {
         return
       }
 
-      const target = redirectTo || '/'
+      const target =
+        redirectTo ||
+        (data.role === 'Admin' || data.role === 'AI Builders Congress'
+          ? '/portal/admin'
+          : '/ai-assessment')
+
       setSuccessMessage('Authentication verified! Redirecting...')
 
       // Brief delay to display smooth success feedback
@@ -107,55 +89,35 @@ function LoginForm() {
       subtitle="Sign in to access your clinical risk assessments and patient health record."
       badge="Secure Health Access"
       footer={
-        <div className="space-y-3">
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            {auth.dontHaveAccount}{' '}
-            <Link
-              href="/register"
-              className="font-bold text-primary hover:underline inline-flex items-center gap-1"
-            >
-              <span>{auth.registerHere}</span>
-              <ArrowRight className="size-3.5" />
-            </Link>
-          </p>
-
-          {/* Quick Demo & RBAC Role Simulation for Judges & Reviewers */}
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-              <span className="flex items-center gap-1 text-primary font-bold">
-                <Sparkles className="size-3.5" /> Fast RBAC Role Switcher
-              </span>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">Evaluation Mode</span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pt-1">
-              {APP_ROLES.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => handleRoleSimulation(r)}
-                  disabled={isSubmitting}
-                  className="px-2 py-1.5 text-xs font-medium rounded-lg border border-border/80 bg-muted/40 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-all text-left truncate cursor-pointer"
-                  title={`Sign in as ${r}`}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-            <div className="pt-1 text-center">
-              <button
-                type="button"
-                onClick={fillDemoCredentials}
-                className="text-[11px] text-muted-foreground hover:text-primary transition-colors hover:underline"
-              >
-                Or fill standard credentials (patient@lungent.org)
-              </button>
-            </div>
-          </div>
-        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          {auth.dontHaveAccount}{' '}
+          <Link
+            href="/register"
+            className="font-bold text-primary hover:underline inline-flex items-center gap-1"
+          >
+            <span>{auth.registerHere}</span>
+            <ArrowRight className="size-3.5" />
+          </Link>
+        </p>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <AnimatePresence mode="wait">
+          {registered && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <Alert variant="success" className="rounded-xl border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300">
+                <CheckCircle2 className="size-4 text-emerald-600" />
+                <AlertTitle className="text-emerald-800 dark:text-emerald-300 font-semibold">
+                  Account created successfully. Please sign in.
+                </AlertTitle>
+              </Alert>
+            </motion.div>
+          )}
+
           {verified && (
             <motion.div
               initial={{ opacity: 0, y: -6 }}
@@ -199,6 +161,27 @@ function LoginForm() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Access Role Selection (Top of Form) */}
+        <FormField
+          label="Access Role"
+          required
+          error={errors.role?.message}
+        >
+          <div className="relative">
+            <select
+              disabled={isSubmitting}
+              className="w-full h-11 px-3.5 rounded-xl border border-input bg-background text-sm sm:text-base font-semibold text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary cursor-pointer shadow-2xs"
+              {...register('role')}
+            >
+              {ACTIVE_ACCESS_ROLES.map((r) => (
+                <option key={r} value={r} className="py-1.5 text-foreground bg-background">
+                  {r}
+                </option>
+              ))}
+            </select>
+          </div>
+        </FormField>
 
         {/* Email Field */}
         <FormField

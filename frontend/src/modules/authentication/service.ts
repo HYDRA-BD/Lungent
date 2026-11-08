@@ -26,6 +26,22 @@ export type AuthResult<T = unknown> =
 
 const STATIC_FALLBACK_TIMESTAMP = '2026-01-01T00:00:00.000Z'
 
+const MEMORY_DEMO_ACCOUNTS: Record<string, { role: AppRole; password?: string; fullName?: string }> = {
+  'patient@lungent.org': { role: 'General User' },
+  'user@lungent.org': { role: 'General User' },
+  'congress@lungent.org': { role: 'AI Builders Congress' },
+  'builder@lungent.org': { role: 'AI Builders Congress' },
+  'admin@lungent.org': { role: 'Admin' },
+}
+
+async function getSafeCookieStore() {
+  try {
+    return await cookies()
+  } catch {
+    return null
+  }
+}
+
 function createFallbackUser(id: string, email: string, fullName?: string): UserWithRoles {
   return {
     id,
@@ -59,11 +75,38 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
 
   const { email, password, fullName, phoneNumber, preferredLanguage, role } = validation.data
 
-  // If Supabase environment is not configured, supply immediate mock registration
+  // If Supabase environment is not configured, supply mock registration with persistence
   if (!isSupabaseConfigured()) {
-    const cookieStore = await cookies()
-    cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
-    cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+    const cookieStore = await getSafeCookieStore()
+    let accounts: Record<string, { role: AppRole; password?: string; fullName?: string }> = {
+      ...MEMORY_DEMO_ACCOUNTS,
+    }
+    if (cookieStore) {
+      try {
+        const raw = cookieStore.get('lungent_demo_accounts')?.value
+        if (raw) accounts = { ...accounts, ...JSON.parse(raw) }
+      } catch {}
+    }
+
+    accounts[email.toLowerCase()] = {
+      role,
+      password,
+      fullName,
+    }
+    MEMORY_DEMO_ACCOUNTS[email.toLowerCase()] = accounts[email.toLowerCase()]
+
+    if (cookieStore) {
+      cookieStore.set('lungent_demo_accounts', JSON.stringify(accounts), {
+        path: '/',
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7,
+      })
+
+      // Crucial: Destroy session so user is forced to manually sign in
+      cookieStore.delete('lungent_auth_demo')
+      cookieStore.delete('lungent_role')
+    }
+
     return {
       success: true,
       data: {
@@ -71,7 +114,7 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
         requiresVerification: false,
         role,
       },
-      message: `Account registered successfully as ${role} (Demo Mode).`,
+      message: 'Account created successfully. Please sign in.',
     }
   }
 
@@ -145,7 +188,7 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
         if (!profileErr && newProfile) {
           await admin.from('user_roles').insert({
             user_id: newProfile.id,
-            role_id: 'patient',
+            role_id: role === 'Admin' ? 'administrator' : 'patient',
           })
         }
       }
@@ -155,13 +198,19 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
 
     await logAuditEvent({
       action: 'user.registered',
-      details: { email, preferredLanguage },
+      details: { email, preferredLanguage, role },
     })
 
-    const requiresVerification = !authUser.email_confirmed_at
+    // Task 1: Enforce manual sign-in - immediately call supabase.auth.signOut() to destroy session
+    await supabase.auth.signOut()
 
-    const cookieStore = await cookies()
-    cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+    const cookieStore = await getSafeCookieStore()
+    if (cookieStore) {
+      cookieStore.delete('lungent_auth_demo')
+      cookieStore.delete('lungent_role')
+    }
+
+    const requiresVerification = !authUser.email_confirmed_at
 
     return {
       success: true,
@@ -170,9 +219,7 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
         requiresVerification,
         role,
       },
-      message: requiresVerification
-        ? 'Account created successfully. Please check your email to verify your account.'
-        : 'Account created successfully.',
+      message: 'Account created successfully. Please sign in.',
     }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Registration service connection error'
@@ -191,27 +238,73 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
   if (!validation.success) {
     return {
       success: false,
-      error: validation.error.issues[0]?.message || 'Please enter a valid email address and password.',
+      error: validation.error.issues[0]?.message || 'Please enter a valid email address, password, and select an access role.',
     }
   }
 
-  const { email, password } = validation.data
+  const { email, password, role: selectedRole } = validation.data
 
-  // If Supabase environment is not configured, supply immediate mock authenticated session
+  // If Supabase environment is not configured, supply mock authentication with role verification
   if (!isSupabaseConfigured()) {
-    const mockUser = createFallbackUser('demo-patient-1', email)
-    const cookieStore = await cookies()
-    const existingRole = (cookieStore.get('lungent_role')?.value as AppRole) || 'General User'
-    cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
-    cookieStore.set('lungent_role', existingRole, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+    const cookieStore = await getSafeCookieStore()
+    let accounts: Record<string, { role: AppRole; password?: string; fullName?: string }> = {
+      ...MEMORY_DEMO_ACCOUNTS,
+    }
+
+    if (cookieStore) {
+      try {
+        const raw = cookieStore.get('lungent_demo_accounts')?.value
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          accounts = { ...accounts, ...parsed }
+        }
+      } catch {}
+    }
+
+    const normalizedEmail = email.toLowerCase()
+    const account = accounts[normalizedEmail]
+
+    let assignedRole: AppRole = 'General User'
+    if (account) {
+      assignedRole = account.role
+    } else {
+      if (normalizedEmail.includes('admin')) assignedRole = 'Admin'
+      else if (normalizedEmail.includes('congress') || normalizedEmail.includes('builder')) assignedRole = 'AI Builders Congress'
+      else assignedRole = 'General User'
+    }
+
+    // Role verification: Verify that the role the user selected matches the account role
+    if (assignedRole !== selectedRole) {
+      if (cookieStore) {
+        cookieStore.delete('lungent_auth_demo')
+        cookieStore.delete('lungent_role')
+      }
+      return {
+        success: false,
+        error: 'Selected role does not match account permissions.',
+        code: 'ROLE_MISMATCH',
+      }
+    }
+
+    const mockUser = createFallbackUser('demo-' + normalizedEmail, email, account?.fullName)
+    if (cookieStore) {
+      cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+      cookieStore.set('lungent_role', assignedRole, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+    }
+
+    let defaultWorkspace = '/ai-assessment'
+    if (assignedRole === 'Admin' || assignedRole === 'AI Builders Congress') {
+      defaultWorkspace = '/portal/admin'
+    }
+
     return {
       success: true,
       data: {
         user: mockUser,
-        defaultWorkspace: '/portal/patient',
-        role: existingRole,
+        defaultWorkspace,
+        role: assignedRole,
       },
-      message: 'Signed in successfully in demo mode.',
+      message: 'Login successful.',
     }
   }
 
@@ -231,10 +324,42 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
       }
     }
 
-    // Extract and persist the 6-role RBAC role in cookie for lightning-fast edge resolution
+    // Extract assigned role from account user_metadata
     const assignedRole = normalizeAppRole(authData.user.user_metadata?.role)
-    const cookieStore = await cookies()
-    cookieStore.set('lungent_role', assignedRole, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+
+    // Role verification: Verify that the role the user selected matches stored account role
+    if (assignedRole !== selectedRole) {
+      // Reject login, sign out, and clear cookies
+      await supabase.auth.signOut()
+      const cookieStore = await getSafeCookieStore()
+      if (cookieStore) {
+        cookieStore.delete('lungent_auth_demo')
+        cookieStore.delete('lungent_role')
+      }
+
+      await logAuditEvent({
+        action: 'user.login',
+        actorId: authData.user.id,
+        details: {
+          status: 'role_mismatch',
+          email,
+          attemptedRole: selectedRole,
+          actualRole: assignedRole,
+        },
+      })
+
+      return {
+        success: false,
+        error: 'Selected role does not match account permissions.',
+        code: 'ROLE_MISMATCH',
+      }
+    }
+
+    // Role verified! Persist the RBAC role in cookie for lightning-fast edge resolution
+    const cookieStore = await getSafeCookieStore()
+    if (cookieStore) {
+      cookieStore.set('lungent_role', assignedRole, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+    }
 
     // Fetch application profile & role assignments
     const profileWithRoles = (await getCurrentUserWithRoles()) || createFallbackUser(authData.user.id, email, authData.user.user_metadata?.full_name)
@@ -242,6 +367,9 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
     // Enforce account lifecycle state
     if (profileWithRoles.status === 'suspended') {
       await supabase.auth.signOut()
+      if (cookieStore) {
+        cookieStore.delete('lungent_role')
+      }
       await logAuditEvent({
         action: 'user.suspended',
         actorId: profileWithRoles.id,
@@ -257,6 +385,9 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
 
     if (profileWithRoles.status === 'deactivated') {
       await supabase.auth.signOut()
+      if (cookieStore) {
+        cookieStore.delete('lungent_role')
+      }
       return {
         success: false,
         error: 'This account has been deactivated. Please contact support.',
@@ -268,12 +399,14 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
       action: 'user.login',
       actorId: profileWithRoles.id,
       targetUserId: profileWithRoles.id,
-      details: { email },
+      details: { email, role: assignedRole },
     })
 
     // Determine default workspace landing path based on role hierarchy
-    let defaultWorkspace = '/portal/patient'
-    if (profileWithRoles.roles.includes('administrator')) {
+    let defaultWorkspace = '/ai-assessment'
+    if (assignedRole === 'Admin' || assignedRole === 'AI Builders Congress') {
+      defaultWorkspace = '/portal/admin'
+    } else if (profileWithRoles.roles.includes('administrator')) {
       defaultWorkspace = '/admin'
     } else if (profileWithRoles.roles.includes('clinician')) {
       defaultWorkspace = '/clinical'
@@ -286,6 +419,7 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
       data: {
         user: profileWithRoles,
         defaultWorkspace,
+        role: assignedRole,
       },
       message: 'Login successful.',
     }
@@ -302,11 +436,11 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
  * Terminates user session securely.
  */
 export async function logout(): Promise<AuthResult<void>> {
-  try {
-    const cookieStore = await cookies()
+  const cookieStore = await getSafeCookieStore()
+  if (cookieStore) {
     cookieStore.delete('lungent_auth_demo')
     cookieStore.delete('lungent_role')
-  } catch {}
+  }
 
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -327,9 +461,11 @@ export async function logout(): Promise<AuthResult<void>> {
  * Establishes an instant demo session with any of the 6 canonical RBAC roles.
  */
 export async function quickDemoLogin(role: AppRole): Promise<AuthResult<{ role: AppRole }>> {
-  const cookieStore = await cookies()
-  cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
-  cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+  const cookieStore = await getSafeCookieStore()
+  if (cookieStore) {
+    cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+    cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+  }
   return {
     success: true,
     data: { role },
@@ -341,9 +477,9 @@ export async function quickDemoLogin(role: AppRole): Promise<AuthResult<{ role: 
  * Retrieves the currently active application role.
  */
 export async function getCurrentAppRole(): Promise<AppRole | null> {
-  const cookieStore = await cookies()
-  const roleCookie = cookieStore.get('lungent_role')?.value
-  const hasDemo = cookieStore.get('lungent_auth_demo')?.value === 'true'
+  const cookieStore = await getSafeCookieStore()
+  const roleCookie = cookieStore?.get('lungent_role')?.value
+  const hasDemo = cookieStore?.get('lungent_auth_demo')?.value === 'true'
 
   if (roleCookie) {
     return normalizeAppRole(roleCookie)
