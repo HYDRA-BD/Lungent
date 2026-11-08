@@ -39,7 +39,7 @@ export function HowItWorksClient() {
       icon: Cpu,
       title: dict.howItWorks.step2Title,
       desc: dict.howItWorks.step2Desc,
-      details: 'Analyzing multivariate factors against validated models (USPSTF, PLCOm2012) adapted for regional exposures.',
+      details: 'Analyzing multivariate factors with models engineered to minimize false negatives, ensuring high-risk patients are never missed.',
     },
     {
       num: '03',
@@ -286,12 +286,16 @@ export function HowItWorksClient() {
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {dict.howItWorks.transparencyNoticeBody}
               </p>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed pt-1">
+                <strong className="text-foreground">Clinical Reality:</strong> While Low-Dose CT (LDCT) is the reliable gold standard for lung cancer detection, it carries radiation risks and is not available in every rural hospital. Lungent bridges this preliminary gap with high sensitivity triage.
+              </p>
               <div className="pt-2 flex flex-wrap gap-2 text-xs">
                 <Badge variant="outline" className="border-teal-500/40 text-teal-700 dark:text-teal-300 bg-teal-50/60 dark:bg-teal-950/40 font-semibold">Phase 1.1 Foundation Active</Badge>
                 <Badge variant="outline" className="border-teal-500/40 text-teal-700 dark:text-teal-300 bg-teal-50/60 dark:bg-teal-950/40 font-semibold">Phase 1.2 Design System Active</Badge>
                 <Badge variant="outline" className="border-teal-500/40 text-teal-700 dark:text-teal-300 bg-teal-50/60 dark:bg-teal-950/40 font-semibold">Phase 1.3 Auth & RBAC Active</Badge>
                 <Badge variant="outline" className="border-teal-500/40 text-teal-700 dark:text-teal-300 bg-teal-50/60 dark:bg-teal-950/40 font-semibold">Phase 1.4 Public Portal Active</Badge>
                 <Badge variant="outline" className="border-teal-500/40 text-teal-700 dark:text-teal-300 bg-teal-50/60 dark:bg-teal-950/40 font-semibold">Phase 1.5 AI Clinical Models Active</Badge>
+                <Badge variant="outline" className="border-amber-500/40 text-amber-700 dark:text-amber-300 bg-amber-50/60 dark:bg-amber-950/40 font-semibold">Phase 3: EHR & Imaging Fusion (Minimizing False Positives)</Badge>
               </div>
             </div>
           </motion.div>

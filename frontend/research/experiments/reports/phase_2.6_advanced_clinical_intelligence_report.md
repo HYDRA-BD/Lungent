@@ -25,7 +25,7 @@ Phase 2.6 establishes a centralized, verifiable **Advanced Clinical Intelligence
 
 ## 2. Evidence Library & Provenance Catalog
 
-The system provides 8 foundational, peer-reviewed clinical evidence sources:
+The system provides 8 foundational, research-grade validated clinical evidence sources:
 
 | Code | Title / Authority | Topic | Evidence Tier | Approved for Bangladesh |
 |:---|:---|:---|:---|:---:|

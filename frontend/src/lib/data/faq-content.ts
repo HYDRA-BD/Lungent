@@ -83,6 +83,36 @@ export const FAQS_DATA: FAQItem[] = [
     answerBn:
       'আন্তর্জাতিক মানদণ্ড অনুযায়ী সাধারণত ৩টি শর্ত পূরণকারী ব্যক্তিরা স্ক্রীনিংয়ের যোগ্য হন: (১) বয়স ৫০ থেকে ৮০ বছর, (২) অন্তত ২০ প্যাক-বছর ধূমপানের ইতিহাস রয়েছে, এবং (৩) বর্তমানে ধূমপায়ী অথবা গত ১৫ বছরের মধ্যে ধূমপান ছেড়েছেন। লানজেন্ট এই মানদণ্ডগুলো বিশ্লেষণ করে সুপারিশ প্রদান করে।',
   },
+  {
+    id: 'ldct-limitations-and-rural-access',
+    category: 'screening',
+    questionEn: 'Why can’t everyone immediately receive a Low-Dose CT (LDCT) scan?',
+    questionBn: 'কেন সবাই সরাসরি লো-ডোজ সিটি (LDCT) স্ক্যান করাতে পারে না?',
+    answerEn:
+      'While Low-Dose CT (LDCT) is the established gold standard for pulmonary nodule detection, it carries cumulative ionizing radiation risks and is not available in every rural or community hospital due to scanner scarcity and expense. Lungent provides an accessible, non-invasive preliminary risk stratification layer to identify individuals who genuinely require LDCT or specialist referral.',
+    answerBn:
+      'লো-ডোজ সিটি স্ক্যান ফুসফুস ক্যান্সারের নির্ভরযোগ্য মানদণ্ড হলেও এতে নির্দিষ্ট মাত্রায় রেডিয়েশনের ঝুঁকি থাকে এবং গ্রামীণ বা প্রত্যন্ত অঞ্চলের অধিকাংশ হাসপাতালে এই স্ক্যানার অপ্রতুল। লানজেন্ট একটি প্রাথমিক ডিজিটাল স্তরে ঝুঁকি নিরূপণ করে নিশ্চিত করে যাতে যাদের প্রকৃত প্রয়োজন শুধু তারাই এই স্ক্যানের পরামর্শ পান।',
+  },
+  {
+    id: 'minimizing-false-negatives',
+    category: 'clinical',
+    questionEn: 'How does Lungent prioritize patient safety regarding False Negatives?',
+    questionBn: 'ফলস নেগেটিভ (False Negative) ঝুঁকি এড়াতে লানজেন্ট কীভাবে কাজ করে?',
+    answerEn:
+      'In early cancer screening, a false negative (failing to identify an individual who actually has disease) has severe clinical consequences. Lungent is specifically calibrated and engineered to minimize false negatives, maintaining a high sensitivity (0.850) and 94.43% case capture so that high-risk individuals are never missed during initial triage.',
+    answerBn:
+      'প্রাথমিক ট্রায়াজে ফলস নেগেটিভের (রোগী থাকা সত্ত্বেও শনাক্ত না হওয়া) ঝুঁকি সবচেয়ে বিপজ্জনক। লানজেন্ট এমনভাবে ক্যালিব্রেট করা হয়েছে যাতে ফলস নেগেটিভ সর্বনিম্ন পর্যায়ে থাকে এবং উচ্চ ঝুঁকিপূর্ণ রোগীদের প্রাথমিক স্তরেই বিশেষজ্ঞের নজরে আনা যায়।',
+  },
+  {
+    id: 'phase-3-roadmap-false-positives',
+    category: 'clinical',
+    questionEn: 'How does Lungent plan to address False Positives in future phases?',
+    questionBn: 'ভবিষ্যতে ফলস পজিটিভ (False Positive) কমাতে লানজেন্টের পরিকল্পনা কী?',
+    answerEn:
+      'While Phase 1 & 2 prioritize community accessibility and false negative elimination, our Phase 3 Roadmap integrates future longitudinal Electronic Health Records (EHR) and deep-learning pulmonary imaging models. This multi-modal fusion is engineered to significantly minimize false positives, reduce unnecessary patient anxiety, and optimize diagnostic precision.',
+    answerBn:
+      'লানজেন্টের ফেজ ৩ রোডম্যাপে মাল্টি-মোডাল ইলেকট্রনিক হেলথ রেকর্ড (EHR) এবং ফুসফুস ইমেজিং এআই মডেল যুক্ত করা হবে। এর ফলে ফলস পজিটিভের হার ব্যাপকভাবে কমে আসবে এবং ডায়াগনস্টিক নির্ভুলতা নিশ্চিত হবে।',
+  },
 
   // Privacy, Consent & Data Security
   {

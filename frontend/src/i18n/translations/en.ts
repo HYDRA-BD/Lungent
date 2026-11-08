@@ -353,7 +353,7 @@ export const en = {
     heroTitleHighlight: 'Reveal insights.',
     heroTitleSuffix: 'Guide decisions.',
     heroDescription:
-      'A clinical decision-support and lung cancer risk assessment platform engineered for Bangladesh and international healthcare systems. Integrating empirical risk models, screening eligibility evaluation, and symptom triage.',
+      'A clinical decision-support and lung cancer risk assessment platform engineered for Bangladesh and international healthcare systems. Lungent is engineered to minimize false negatives, ensuring high-risk patients are never missed during preliminary triage.',
     heroCtaPrimary: 'Explore How It Works',
     heroCtaSecondary: 'Browse Health Library',
     capabilitiesTitle: 'Built for Multi-Disciplinary Pulmonary Care',

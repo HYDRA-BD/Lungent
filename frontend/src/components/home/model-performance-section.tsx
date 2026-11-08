@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils'
 
 export function ModelPerformanceSection() {
   return (
-    <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-background via-teal-500/[0.02] to-background">
+    <section className="relative pt-12 sm:pt-16 pb-8 sm:pb-10 overflow-hidden bg-gradient-to-b from-background via-teal-500/[0.02] to-background">
       {/* Pulmonary Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-teal-500/5 dark:bg-teal-400/5 blur-3xl rounded-full pointer-events-none -z-10" />
 
@@ -33,7 +33,7 @@ export function ModelPerformanceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="text-center max-w-3xl mx-auto space-y-4 mb-16"
+          className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-14"
         >
           {/* Strictly Research-Grade Validation Badge */}
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs sm:text-sm font-bold border border-teal-500/30 bg-teal-500/10 text-teal-700 dark:text-teal-300 shadow-xs">
@@ -93,7 +93,7 @@ export function ModelPerformanceSection() {
                     ROC-AUC Score
                   </span>
                   <div className="text-4xl sm:text-5xl font-black text-primary tracking-tight">
-                    0.89
+                    0.890
                   </div>
                   <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block pt-1">
                     Discrimination capacity across 5 stratified folds
@@ -106,7 +106,7 @@ export function ModelPerformanceSection() {
                     Ensemble Sensitivity
                   </span>
                   <div className="text-4xl sm:text-5xl font-black text-primary tracking-tight">
-                    92.5%
+                    92.50%
                   </div>
                   <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block pt-1">
                     True positive capture rate in primary cohort
@@ -171,7 +171,7 @@ export function ModelPerformanceSection() {
                     ROC-AUC Score
                   </span>
                   <div className="text-4xl sm:text-5xl font-black text-teal-600 dark:text-teal-400 tracking-tight">
-                    0.8503
+                    0.850
                   </div>
                   <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block pt-1">
                     Robust discrimination on entirely held-out external cohort
@@ -192,20 +192,8 @@ export function ModelPerformanceSection() {
                 </div>
               </div>
 
-              {/* Secondary Metrics Row: PR-AUC & Cohort Size */}
+              {/* Secondary Metrics Row: Cohort Size & Confirmed Cases (PR-AUC removed for simplicity) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                <div className="p-3.5 rounded-xl border border-border/80 dark:border-slate-800 bg-muted/20 flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold block">
-                      PR-AUC (Rare-Event Precision)
-                    </span>
-                    <span className="text-lg font-black text-foreground font-mono">0.008933</span>
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300">
-                    Rare-Event
-                  </span>
-                </div>
-
                 <div className="p-3.5 rounded-xl border border-border/80 dark:border-slate-800 bg-muted/20 flex items-center justify-between">
                   <div className="space-y-0.5">
                     <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold block">
@@ -213,8 +201,20 @@ export function ModelPerformanceSection() {
                     </span>
                     <span className="text-lg font-black text-foreground font-mono">433,323</span>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                    395 Confirmed Cases
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300">
+                    CDC LLCP
+                  </span>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-border/80 dark:border-slate-800 bg-muted/20 flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold block">
+                      Confirmed Cases Identified
+                    </span>
+                    <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">373 / 395</span>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                    94.43% Capture
                   </span>
                 </div>
               </div>
@@ -242,9 +242,9 @@ export function ModelPerformanceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5, delay: 0.25 }}
-          className="mt-12 rounded-3xl border border-border/80 dark:border-slate-800 bg-card/60 dark:bg-slate-900/60 p-7 sm:p-10 shadow-xs backdrop-blur-sm"
+          className="mt-10 rounded-3xl border border-border/80 dark:border-slate-800 bg-card/60 dark:bg-slate-900/60 p-6 sm:p-8 shadow-xs backdrop-blur-sm"
         >
-          <div className="flex items-center gap-2.5 mb-6">
+          <div className="flex items-center gap-2.5 mb-5">
             <div className="size-8 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
               <ShieldCheck className="size-4.5" />
             </div>
@@ -270,11 +270,11 @@ export function ModelPerformanceSection() {
             <div className="space-y-2 p-4 rounded-2xl bg-background/80 dark:bg-slate-950/50 border border-border/60">
               <div className="flex items-center gap-2 text-primary font-bold text-base">
                 <Target className="size-4.5 shrink-0" />
-                <span>PR-AUC Focus</span>
+                <span>Minimizing False Negatives</span>
               </div>
               <p className="text-xs sm:text-sm">
-                Because lung cancer is rare, we prioritize Precision-Recall AUC and sensitivity over simple
-                accuracy to ensure we don&apos;t miss high-risk patients.
+                Because lung cancer is rare and early detection is life-saving, we prioritize high-sensitivity
+                recall over simple accuracy to ensure we never miss high-risk patients.
               </p>
             </div>
 

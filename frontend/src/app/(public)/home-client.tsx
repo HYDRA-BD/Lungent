@@ -214,6 +214,9 @@ export function HomeClient() {
                 <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed max-w-4xl">
                   {dict.common.clinicalNoticeBody}
                 </p>
+                <div className="mt-2.5 pt-2 border-t border-primary/20 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                  <span className="font-semibold text-primary">Screening Reality:</span> While Low-Dose CT (LDCT) is the reliable gold standard for lung cancer detection, it carries radiation risks and is not available in every rural or underserved hospital. Lungent bridges this preliminary gap at community level.
+                </div>
               </div>
             </div>
 
@@ -309,25 +312,25 @@ export function HomeClient() {
         <ModelPerformanceSection />
 
         {/* 5. Ecosystem Architecture (Upcoming Mega Update · Coming Soon Roadmap) */}
-        <section className="py-20 border-t border-border/80 dark:border-slate-800/80 bg-muted/20 dark:bg-slate-950/40">
+        <section className="pt-10 sm:pt-12 pb-16 sm:pb-20 border-t border-border/80 dark:border-slate-800/80 bg-muted/20 dark:bg-slate-950/40">
           <SectionContainer size="lg">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.4 }}
-              className="text-center mb-14 space-y-3"
+              className="text-center mb-10 space-y-3"
             >
               <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs sm:text-sm font-bold border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 shadow-xs mb-1">
                 <Sparkles className="size-3.5 text-amber-600 dark:text-amber-400" />
-                <span>Upcoming Mega Update · Phase 2 Roadmap</span>
+                <span>Upcoming Mega Update · Phase 2 &amp; Phase 3 Roadmap</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
                 Ecosystem Architecture &amp; Unified Workspaces
               </h2>
-              <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                Future-proof multi-disciplinary care pathways currently in active roadmap development. Explore the interactive preview demos below.
+              <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                Future-proof multi-disciplinary care pathways currently in active roadmap development. <strong>Phase 3 Roadmap:</strong> Integrating future EHR and Imaging models to further <strong>minimize false positives</strong> and refine diagnostic accuracy.
               </p>
             </motion.div>
 

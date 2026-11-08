@@ -148,42 +148,9 @@ export default function RegisterPage() {
           )}
         </AnimatePresence>
 
-        {/* Full Name */}
+        {/* 1. Role Selection (Top of Form as required) */}
         <FormField
-          label="Full Name"
-          required
-          error={errors.fullName?.message}
-        >
-          <Input
-            placeholder="e.g. Sarah Jenkins"
-            autoComplete="name"
-            disabled={isSubmitting}
-            leftIcon={<User className="size-4 text-slate-400" />}
-            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
-            {...formRegister('fullName')}
-          />
-        </FormField>
-
-        {/* Email Address */}
-        <FormField
-          label="Email Address"
-          required
-          error={errors.email?.message}
-        >
-          <Input
-            type="email"
-            placeholder="patient@example.com"
-            autoComplete="email"
-            disabled={isSubmitting}
-            leftIcon={<Mail className="size-4 text-slate-400" />}
-            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
-            {...formRegister('email')}
-          />
-        </FormField>
-
-        {/* Role Selection (6 Canonical RBAC Roles) */}
-        <FormField
-          label="Account Role & Designation"
+          label="Select Account Role"
           required
           error={errors.role?.message}
           helperText={
@@ -205,6 +172,39 @@ export default function RegisterPage() {
               ))}
             </select>
           </div>
+        </FormField>
+
+        {/* 2. Full Name */}
+        <FormField
+          label="Full Name"
+          required
+          error={errors.fullName?.message}
+        >
+          <Input
+            placeholder="e.g. Dr. Sarah Jenkins"
+            autoComplete="name"
+            disabled={isSubmitting}
+            leftIcon={<User className="size-4 text-slate-400" />}
+            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
+            {...formRegister('fullName')}
+          />
+        </FormField>
+
+        {/* 3. Email Address */}
+        <FormField
+          label="Email Address"
+          required
+          error={errors.email?.message}
+        >
+          <Input
+            type="email"
+            placeholder="name@example.com"
+            autoComplete="email"
+            disabled={isSubmitting}
+            leftIcon={<Mail className="size-4 text-slate-400" />}
+            className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
+            {...formRegister('email')}
+          />
         </FormField>
 
         {/* Password & Confirm Password */}
@@ -280,7 +280,7 @@ export default function RegisterPage() {
               </>
             ) : (
               <>
-                <span>Create Account ({selectedRole})</span>
+                <span>Create Account / Sign In</span>
                 <ArrowRight className="size-4" />
               </>
             )}

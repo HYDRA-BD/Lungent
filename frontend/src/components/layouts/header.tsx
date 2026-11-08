@@ -46,11 +46,13 @@ export function Header() {
   // Strict RBAC Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userRole, setUserRole] = useState<AppRole | null>(null)
+  const [isSigningOut, setIsSigningOut] = useState(false)
 
+  // Real-time Supabase Auth state listener for instant Navbar updates
   useEffect(() => {
     let mounted = true
 
-    function checkAuthCookies() {
+    function syncFromCookies() {
       if (typeof document === 'undefined') return
       const cookies = document.cookie.split(';').map((c) => c.trim())
       const demoCookie = cookies.find((c) => c.startsWith('lungent_auth_demo='))?.split('=')[1]
@@ -61,42 +63,47 @@ export function Header() {
           setIsAuthenticated(true)
           setUserRole(normalizeAppRole(decodeURIComponent(roleCookie || 'General User')))
         }
+      } else {
+        if (mounted) {
+          setIsAuthenticated(false)
+          setUserRole(null)
+        }
       }
     }
 
-    checkAuthCookies()
+    syncFromCookies()
 
     const supabase = createClient()
+
+    // Fetch initial user session
     supabase.auth
-      .getUser()
-      .then(({ data: { user } }) => {
+      .getSession()
+      .then(({ data: { session } }) => {
         if (!mounted) return
-        if (user) {
+        if (session?.user) {
           setIsAuthenticated(true)
-          setUserRole(normalizeAppRole(user.user_metadata?.role))
+          setUserRole(normalizeAppRole(session.user.user_metadata?.role))
         } else {
-          const cookies = document.cookie.split(';').map((c) => c.trim())
-          const demoCookie = cookies.find((c) => c.startsWith('lungent_auth_demo='))?.split('=')[1]
-          if (demoCookie !== 'true') {
-            setIsAuthenticated(false)
-            setUserRole(null)
-          }
+          syncFromCookies()
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        syncFromCookies()
+      })
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Real-time listener: instantly swaps Sign In / Sign Out
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return
-      if (session?.user) {
-        setIsAuthenticated(true)
-        setUserRole(normalizeAppRole(session.user.user_metadata?.role))
-      } else {
+      if (event === 'SIGNED_OUT' || !session) {
         const cookies = document.cookie.split(';').map((c) => c.trim())
         const demoCookie = cookies.find((c) => c.startsWith('lungent_auth_demo='))?.split('=')[1]
         if (demoCookie !== 'true') {
           setIsAuthenticated(false)
           setUserRole(null)
         }
+      } else if (session?.user) {
+        setIsAuthenticated(true)
+        setUserRole(normalizeAppRole(session.user.user_metadata?.role))
       }
     })
 
@@ -104,14 +111,56 @@ export function Header() {
       mounted = false
       authListener?.subscription?.unsubscribe()
     }
+  }, [])
+
+  // Sync on pathname change in case navigation followed a login/logout
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const cookies = document.cookie.split(';').map((c) => c.trim())
+    const demoCookie = cookies.find((c) => c.startsWith('lungent_auth_demo='))?.split('=')[1]
+    const roleCookie = cookies.find((c) => c.startsWith('lungent_role='))?.split('=')[1]
+
+    if (demoCookie === 'true' || roleCookie) {
+      setIsAuthenticated(true)
+      setUserRole(normalizeAppRole(decodeURIComponent(roleCookie || 'General User')))
+    } else {
+      const supabase = createClient()
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          setIsAuthenticated(true)
+          setUserRole(normalizeAppRole(session.user.user_metadata?.role))
+        } else {
+          setIsAuthenticated(false)
+          setUserRole(null)
+        }
+      }).catch(() => {})
+    }
   }, [pathname])
 
   const handleLogout = async () => {
-    await logout()
-    setIsAuthenticated(false)
-    setUserRole(null)
-    router.push('/')
-    router.refresh()
+    if (isSigningOut) return
+    setIsSigningOut(true)
+    try {
+      // Clear client-side session cookies immediately
+      if (typeof document !== 'undefined') {
+        document.cookie = 'lungent_auth_demo=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        document.cookie = 'lungent_role=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      }
+
+      const supabase = createClient()
+      await supabase.auth.signOut().catch(() => {})
+      await logout().catch(() => {})
+
+      setIsAuthenticated(false)
+      setUserRole(null)
+      router.push('/login')
+      router.refresh()
+    } catch (e) {
+      console.warn('[Navbar Logout Error]', e)
+      router.push('/login')
+    } finally {
+      setIsSigningOut(false)
+    }
   }
 
   // Close dropdown on outside click
@@ -317,7 +366,7 @@ export function Header() {
           <ThemeToggle />
 
           {isAuthenticated ? (
-            <>
+            <div className="flex items-center gap-2.5">
               {/* User Role Badge */}
               <div
                 className={cn(
@@ -330,32 +379,31 @@ export function Header() {
                 <span>{userRole || 'Signed In'}</span>
               </div>
 
-              {/* Sign Out Button */}
+              {/* Sign Out Button with Loading State */}
               <button
                 type="button"
                 onClick={handleLogout}
+                disabled={isSigningOut}
                 className={buttonVariants({
-                  variant: 'ghost',
-                  size: 'sm',
-                  className: 'text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-destructive cursor-pointer',
-                })}
-              >
-                <LogOut className="size-3.5 mr-1" />
-                <span>Sign Out</span>
-              </button>
-
-              <Link
-                href="/ai-assessment"
-                className={buttonVariants({
-                  variant: 'default',
+                  variant: 'outline',
                   size: 'default',
-                  className: 'text-sm font-bold shadow-sm hover:scale-105 active:scale-98 transition-all duration-200 hover:shadow-md hover:shadow-primary/25',
+                  className:
+                    'text-sm font-semibold rounded-xl text-destructive hover:bg-destructive/10 border-destructive/30 hover:border-destructive/60 cursor-pointer transition-all disabled:opacity-60',
                 })}
               >
-                <span>AI Assessment</span>
-                <ArrowRight className="size-4 ml-1.5" />
-              </Link>
-            </>
+                {isSigningOut ? (
+                  <>
+                    <span className="size-3.5 border-2 border-destructive border-t-transparent rounded-full animate-spin mr-1.5" />
+                    <span>Signing Out...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="size-3.5 mr-1.5" />
+                    <span>Sign Out</span>
+                  </>
+                )}
+              </button>
+            </div>
           ) : (
             <>
               <Link
@@ -524,36 +572,32 @@ export function Header() {
 
             <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
               {isAuthenticated ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false)
-                      handleLogout()
-                    }}
-                    className={buttonVariants({
-                      variant: 'outline',
-                      size: 'lg',
-                      className: 'w-full justify-center text-base font-semibold rounded-xl text-destructive hover:bg-destructive/10 cursor-pointer',
-                    })}
-                  >
-                    <LogOut className="size-4 mr-2" />
-                    <span>Sign Out ({userRole})</span>
-                  </button>
-
-                  <Link
-                    href="/ai-assessment"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={buttonVariants({
-                      variant: 'default',
-                      size: 'lg',
-                      className: 'w-full justify-center text-base font-bold shadow-md rounded-xl',
-                    })}
-                  >
-                    <span>AI Risk Assessment</span>
-                    <ArrowRight className="size-4 ml-2" />
-                  </Link>
-                </>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    handleLogout()
+                  }}
+                  disabled={isSigningOut}
+                  className={buttonVariants({
+                    variant: 'outline',
+                    size: 'lg',
+                    className:
+                      'w-full justify-center text-base font-semibold rounded-xl text-destructive hover:bg-destructive/10 border-destructive/30 cursor-pointer disabled:opacity-60',
+                  })}
+                >
+                  {isSigningOut ? (
+                    <>
+                      <span className="size-4 border-2 border-destructive border-t-transparent rounded-full animate-spin mr-2" />
+                      <span>Signing Out...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LogOut className="size-4 mr-2" />
+                      <span>Sign Out ({userRole})</span>
+                    </>
+                  )}
+                </button>
               ) : (
                 <>
                   <Link
