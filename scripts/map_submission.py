@@ -11,7 +11,8 @@ import json
 import os
 import re
 
-SCHEMA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "form_schema.json")
+SCHEMA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "full_form_schema.json")
+FALLBACK_SCHEMA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "form_schema.json")
 OUTPUT_MAPPED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "auto_fill_data.json")
 
 # ==============================================================================
@@ -113,9 +114,13 @@ CHECKBOX_POSITIVE_KEYWORDS = [
 
 def map_fields(schema_path=SCHEMA_FILE):
     if not os.path.exists(schema_path):
-        print(f"[!] Error: Schema file not found: {schema_path}")
-        print("    Please run `python scrape_form.py` first.")
-        return
+        if os.path.exists(FALLBACK_SCHEMA_FILE):
+            schema_path = FALLBACK_SCHEMA_FILE
+            print(f"[*] Using fallback schema: {schema_path}")
+        else:
+            print(f"[!] Error: Schema file not found: {schema_path}")
+            print("    Please run `python parse_static_html.py` first.")
+            return
 
     with open(schema_path, "r", encoding="utf-8") as f:
         schema = json.load(f)
