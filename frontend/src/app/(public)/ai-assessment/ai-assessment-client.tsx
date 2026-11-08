@@ -362,12 +362,20 @@ export function AIAssessmentClient() {
       low_access: form.lowAccess,
       state: form.state,
     }
+
     try {
+      console.log('[Lungent Assessment] Initiating AI stratification request with input:', input)
       const res = await analyzePatient(input)
       setResult(res)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Assessment failed. Please ensure the backend is running.')
+    } catch (e: unknown) {
+      console.error('[Lungent Assessment Error]', e)
+      const errorMessage =
+        e instanceof Error
+          ? e.message
+          : 'Failed to connect to the AI model. Please verify the backend service is running and reachable.'
+      setError(errorMessage)
     } finally {
+      // Guaranteed termination of loading animation
       setLoading(false)
     }
   }
@@ -394,6 +402,7 @@ export function AIAssessmentClient() {
         low_access: form.lowAccess,
         state: form.state,
       }
+      console.log('[Lungent Report] Requesting clinical PDF for patient:', input)
       const blob = await downloadReport(input)
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -401,8 +410,9 @@ export function AIAssessmentClient() {
       a.download = `Lungent_Clinical_Report_${Date.now()}.pdf`
       a.click()
       URL.revokeObjectURL(url)
-    } catch (e) {
-      setError('PDF download failed: ' + (e instanceof Error ? e.message : 'Unknown error'))
+    } catch (e: unknown) {
+      console.error('[Lungent Report Download Error]', e)
+      setError('PDF report download failed: ' + (e instanceof Error ? e.message : 'Unknown error occurred'))
     } finally {
       setDownloading(false)
     }
@@ -917,14 +927,61 @@ export function AIAssessmentClient() {
               </div>
             </motion.div>
 
-            {/* Error Banner if API Fails */}
+            {/* Error Banner with Diagnostics & Retry */}
             {error && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="rounded-2xl border border-red-300 bg-red-50 dark:bg-red-950/40 p-5 text-sm text-red-800 dark:text-red-200 font-medium"
+                initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="rounded-2xl border border-red-300 dark:border-red-900/60 bg-red-50 dark:bg-red-950/40 p-5 sm:p-6 space-y-3.5 shadow-sm"
               >
-                <strong>Error:</strong> {error}
+                <div className="flex items-start gap-3.5">
+                  <div className="size-9 rounded-xl bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <ShieldAlert className="size-5" />
+                  </div>
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <h4 className="text-base font-bold text-red-900 dark:text-red-200">
+                      AI Model Connection Failed
+                    </h4>
+                    <p className="text-sm text-red-800 dark:text-red-300 leading-relaxed break-words">
+                      {error}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-white/60 dark:bg-slate-900/40 p-3.5 text-xs text-red-700 dark:text-red-300 space-y-1.5">
+                  <p className="font-semibold text-red-900 dark:text-red-200">
+                    Troubleshooting Tips:
+                  </p>
+                  <ul className="list-disc pl-4 space-y-1 text-slate-600 dark:text-slate-300">
+                    <li>
+                      <strong>Render Free Tier Cold Start:</strong> Inactivity causes free Render instances to sleep. The first wake-up request can take 50–60 seconds.
+                    </li>
+                    <li>
+                      <strong>Vercel Environment Variable:</strong> Verify in your Vercel Project Settings that <code className="bg-red-100 dark:bg-red-900/60 px-1 py-0.5 rounded text-red-900 dark:text-red-100 font-mono">NEXT_PUBLIC_API_URL</code> is set to your active Render backend (e.g. <code className="font-mono">https://lungent-backend.onrender.com</code>).
+                    </li>
+                    <li>
+                      <strong>Browser Console:</strong> Press <kbd className="px-1.5 py-0.5 rounded bg-muted border font-mono">F12</kbd> or open developer tools &rarr; <em>Console</em> / <em>Network</em> tab to inspect the exact network request.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="flex items-center gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5"
+                  >
+                    <RefreshCw className="size-3.5" />
+                    <span>Retry Request</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setError(null)}
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </motion.div>
             )}
 

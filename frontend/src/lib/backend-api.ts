@@ -1,12 +1,94 @@
 /**
  * Backend API client for Lungent V2.0
- * Connects to the FastAPI backend at http://localhost:8000
+ * Connects dynamically to Render Cloud Backend or local development server.
  */
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL ??
-  process.env.NEXT_PUBLIC_API_BASE_URL ??
-  'http://localhost:8000'
+// 60-second default timeout to accommodate Render free-tier cold starts
+export const DEFAULT_API_TIMEOUT_MS = 60000
+
+/**
+ * Resolves the backend base URL dynamically from environment variables.
+ * Priority: NEXT_PUBLIC_API_URL -> NEXT_PUBLIC_BACKEND_URL -> NEXT_PUBLIC_API_BASE_URL.
+ */
+export function getBackendUrl(): string {
+  const envUrl =
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL
+
+  if (envUrl && envUrl.trim() !== '') {
+    // Strip trailing slashes
+    return envUrl.trim().replace(/\/+$/, '')
+  }
+
+  // If in browser production environment and no env var is provided
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+    console.warn(
+      '[Lungent API] Warning: NEXT_PUBLIC_API_URL is not set in production. ' +
+      'Please configure NEXT_PUBLIC_API_URL in your Vercel Dashboard to your Render backend URL.'
+    )
+  }
+
+  return 'http://localhost:8000'
+}
+
+/**
+ * Safely constructs an API endpoint URL preventing duplicate `/api` path segments.
+ */
+export function getApiEndpoint(path: string): string {
+  const base = getBackendUrl()
+  const cleanPath = path.startsWith('/') ? path : `/${path}`
+
+  // If base URL already ends with /api and the requested path starts with /api
+  if (base.endsWith('/api') && cleanPath.startsWith('/api')) {
+    return `${base}${cleanPath.slice(4)}`
+  }
+  return `${base}${cleanPath}`
+}
+
+/**
+ * Wrapper around fetch with explicit timeout via AbortController and detailed network error diagnostics.
+ */
+export async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs: number = DEFAULT_API_TIMEOUT_MS
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => {
+    controller.abort()
+  }, timeoutMs)
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+    return response
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new Error(
+        `Backend request timed out after ${timeoutMs / 1000}s. If your backend is hosted on a free Render tier, it may be waking up from sleep. Please wait a moment and try again.`
+      )
+    }
+
+    if (err instanceof TypeError && (err.message.includes('fetch') || err.message.includes('NetworkError'))) {
+      let origin = url
+      try {
+        origin = new URL(url).origin
+      } catch {
+        // use fallback url string
+      }
+      throw new Error(
+        `Unable to reach the AI model backend at ${origin}. Please verify that the backend is awake, CORS is configured, and NEXT_PUBLIC_API_URL in Vercel points to your live Render backend.`
+      )
+    }
+
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
 
 export interface PatientInput {
   age: number
@@ -71,41 +153,82 @@ export interface AnalyzeResponse {
   summary: string
   aqi: AQIData
   patient: Record<string, unknown>
+  disclaimer?: string
 }
 
-export async function analyzePatient(input: PatientInput): Promise<AnalyzeResponse> {
-  const response = await fetch(`${BACKEND_URL}/api/analyze?include_summary=true`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...input, include_summary: true }),
-  })
+export async function analyzePatient(
+  input: PatientInput,
+  timeoutMs: number = DEFAULT_API_TIMEOUT_MS
+): Promise<AnalyzeResponse> {
+  const endpoint = getApiEndpoint('/api/analyze?include_summary=true')
+  console.log(`[Lungent API] POST -> ${endpoint}`)
+
+  const response = await fetchWithTimeout(
+    endpoint,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({ ...input, include_summary: true }),
+    },
+    timeoutMs
+  )
+
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ detail: 'Unknown error' }))
-    throw new Error(error.detail ?? `HTTP ${response.status}`)
+    const errorBody = await response.json().catch(() => null)
+    const errorMsg =
+      errorBody?.detail ||
+      errorBody?.message ||
+      `Backend error HTTP ${response.status}: ${response.statusText || 'Internal Server Error'}`
+    throw new Error(errorMsg)
   }
+
   return response.json()
 }
 
-export async function downloadReport(input: PatientInput): Promise<Blob> {
-  const response = await fetch(`${BACKEND_URL}/api/report`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
-  })
+export async function downloadReport(
+  input: PatientInput,
+  timeoutMs: number = DEFAULT_API_TIMEOUT_MS
+): Promise<Blob> {
+  const endpoint = getApiEndpoint('/api/report')
+  console.log(`[Lungent API] POST (Report) -> ${endpoint}`)
+
+  const response = await fetchWithTimeout(
+    endpoint,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    },
+    timeoutMs
+  )
+
   if (!response.ok) {
     throw new Error(`Report generation failed: HTTP ${response.status}`)
   }
   return response.blob()
 }
 
-export async function checkBackendHealth(): Promise<{ status: string; aqi_states_cached: number }> {
-  const response = await fetch(`${BACKEND_URL}/health`, { cache: 'no-store' })
-  if (!response.ok) throw new Error('Backend unreachable')
+export async function checkBackendHealth(
+  timeoutMs: number = 10000
+): Promise<{ status: string; aqi_states_cached?: number; version?: string }> {
+  const endpoint = getApiEndpoint('/health')
+  const response = await fetchWithTimeout(endpoint, { cache: 'no-store' }, timeoutMs)
+  if (!response.ok) throw new Error(`Backend health check failed: HTTP ${response.status}`)
   return response.json()
 }
 
-export async function getStates(): Promise<Array<{ name: string; aqi_5yr: number | null; pm25_5yr: number | null }>> {
-  const response = await fetch(`${BACKEND_URL}/api/states`)
-  if (!response.ok) return []
-  return response.json()
+export async function getStates(
+  timeoutMs: number = 10000
+): Promise<Array<{ name: string; aqi_5yr: number | null; pm25_5yr: number | null }>> {
+  try {
+    const endpoint = getApiEndpoint('/api/states')
+    const response = await fetchWithTimeout(endpoint, {}, timeoutMs)
+    if (!response.ok) return []
+    return response.json()
+  } catch {
+    return []
+  }
 }

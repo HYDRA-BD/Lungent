@@ -239,7 +239,7 @@ def _ollama_summary(prompt: str) -> Optional[str]:
                 "stream": False,
                 "options": {"temperature": 0.2, "num_predict": 200},
             },
-            timeout=30,
+            timeout=3,
         )
         if r.status_code == 200:
             txt = r.json().get("response", "").strip()

@@ -38,6 +38,7 @@ import { Footer } from '@/components/layouts/footer'
 import { SectionContainer } from '@/components/layouts/section-container'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
+import { getBackendUrl } from '@/lib/backend-api'
 
 type TabKey = 'overview' | 'ai-architecture' | 'guidelines' | 'mcp' | 'governance' | 'api'
 
@@ -125,7 +126,7 @@ export function DocsClient() {
                   Try Live Assessment
                 </Link>
                 <a
-                  href="http://localhost:8000/docs"
+                  href={`${getBackendUrl()}/docs`}
                   target="_blank"
                   rel="noreferrer"
                   className={buttonVariants({ variant: 'outline', size: 'default', className: 'rounded-xl font-semibold hover:border-primary/50 transition-all' })}
@@ -916,7 +917,7 @@ export function DocsClient() {
                       </p>
                     </div>
                     <a
-                      href="http://localhost:8000/docs"
+                      href={`${getBackendUrl()}/docs`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all self-start sm:self-auto shrink-0 shadow-xs hover:scale-105"
