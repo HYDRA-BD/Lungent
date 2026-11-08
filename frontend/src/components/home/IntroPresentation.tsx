@@ -51,6 +51,9 @@ export function IntroPresentation({
   const [currentScene, setCurrentScene] = useState(0)
   const sceneDurationMs = 6000 // 6 seconds per scene for comfortable reading
 
+  const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastTransitionTimeRef = useRef<number>(0)
+
   // Lock body scroll
   useEffect(() => {
     const originalOverflow = document.body.style.overflow
@@ -69,7 +72,56 @@ export function IntroPresentation({
     }
   }, [onProceedToAuth, router])
 
-  // In idle mode, any user interaction instantly dismisses the presentation
+  // Advance to next scene immediately with 1000ms throttle and timer reset
+  const nextScene = useCallback(() => {
+    if (isIdle) return
+
+    const now = Date.now()
+    if (now - lastTransitionTimeRef.current < 1000) {
+      return // Throttled: ignore rapid clicks/scrolls within 1s
+    }
+    lastTransitionTimeRef.current = now
+
+    // Clear any existing automatic timer
+    if (autoTimerRef.current) {
+      clearTimeout(autoTimerRef.current)
+      autoTimerRef.current = null
+    }
+
+    setCurrentScene((prev) => (prev < 4 ? prev + 1 : 4))
+  }, [isIdle])
+
+  // Automatic Scene Transition Timer (restarts fresh 6s on every scene change)
+  useEffect(() => {
+    if (autoTimerRef.current) {
+      clearTimeout(autoTimerRef.current)
+      autoTimerRef.current = null
+    }
+
+    // In entry mode, if reached final scene (index 4), hold on Scene 5 + CTA
+    if (isEntry && currentScene === 4) {
+      return
+    }
+
+    autoTimerRef.current = setTimeout(() => {
+      lastTransitionTimeRef.current = Date.now()
+      setCurrentScene((prev) => {
+        if (isEntry) {
+          return prev < 4 ? prev + 1 : 4
+        }
+        return (prev + 1) % 5
+      })
+    }, sceneDurationMs)
+
+    return () => {
+      if (autoTimerRef.current) {
+        clearTimeout(autoTimerRef.current)
+        autoTimerRef.current = null
+      }
+    }
+  }, [currentScene, isEntry, sceneDurationMs])
+
+  // In idle mode, any user interaction instantly dismisses the presentation entirely
   useEffect(() => {
     if (!isIdle) return
 
@@ -79,7 +131,15 @@ export function IntroPresentation({
       }
     }
 
-    const activityEvents = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'wheel']
+    const activityEvents = [
+      'mousemove',
+      'mousedown',
+      'click',
+      'keydown',
+      'touchstart',
+      'touchmove',
+      'wheel',
+    ]
     activityEvents.forEach((evt) => {
       window.addEventListener(evt, handleDismissOnActivity, { passive: true })
     })
@@ -91,39 +151,62 @@ export function IntroPresentation({
     }
   }, [isIdle, onDismiss])
 
-  // Escape key in entry mode routes to /login
+  // In entry mode, manual user triggers (Click, Wheel scroll, Touch, Keys) advance the scene
   useEffect(() => {
     if (isIdle) return
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target && target.closest('button, a, input')) {
+        return // Let interactive buttons and links handle their own clicks
+      }
+      nextScene()
+    }
+
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > 15 || Math.abs(e.deltaX) > 15) {
+        nextScene()
+      }
+    }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target && target.closest('button, a, input')) {
+        return
+      }
+      nextScene()
+    }
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         handleAuthRedirect()
+      } else if (
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowDown' ||
+        e.key === ' ' ||
+        e.key === 'Enter' ||
+        e.key === 'PageDown'
+      ) {
+        const target = e.target as HTMLElement | null
+        if (target && target.closest('button, a, input')) {
+          return
+        }
+        nextScene()
       }
     }
 
+    window.addEventListener('click', handleClick)
+    window.addEventListener('wheel', handleWheel, { passive: true })
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isIdle, handleAuthRedirect])
 
-  // Scene transition timer
-  useEffect(() => {
-    // If in entry mode and reached the final scene (index 4), hold on Scene 5 + CTA
-    if (isEntry && currentScene === 4) {
-      return
+    return () => {
+      window.removeEventListener('click', handleClick)
+      window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('keydown', handleKeyDown)
     }
-
-    const timer = setTimeout(() => {
-      setCurrentScene((prev) => {
-        if (isEntry) {
-          return prev < 4 ? prev + 1 : 4
-        }
-        // In idle mode, loop seamlessly from 4 back to 0
-        return (prev + 1) % 5
-      })
-    }, sceneDurationMs)
-
-    return () => clearTimeout(timer)
-  }, [currentScene, isEntry, sceneDurationMs])
+  }, [isIdle, nextScene, handleAuthRedirect])
 
   // ========================================================
   // NATIVE CANVAS PARTICLE SYSTEM (ABSTRACT NEURAL LUNGS)
