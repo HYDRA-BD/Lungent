@@ -28,6 +28,14 @@ export const registerSchema = z
       .max(72, 'Password cannot exceed 72 characters'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     preferredLanguage: z.enum(['en', 'bn']),
+    role: z.enum([
+      'General User',
+      'Clinician',
+      'AI Builders Congress',
+      'Health Worker',
+      'Admin',
+      'Governance',
+    ]),
     acceptTerms: z.boolean().refine((val) => val === true, {
       message: 'You must accept the terms of service and privacy information',
     }),

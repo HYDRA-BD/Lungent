@@ -11,8 +11,9 @@ import { FormField } from '@/components/forms/form-field'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { loginSchema, type LoginInput } from '@/modules/authentication/validation'
-import { login } from '@/modules/authentication/service'
-import { LogIn, Mail, Lock, CheckCircle2, Sparkles, ArrowRight } from 'lucide-react'
+import { login, quickDemoLogin } from '@/modules/authentication/service'
+import { APP_ROLES, type AppRole } from '@/lib/auth-roles'
+import { LogIn, Mail, Lock, CheckCircle2, Sparkles, ArrowRight, ShieldCheck, Stethoscope, Building2, User, Scale } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 function LoginForm() {
@@ -48,6 +49,23 @@ function LoginForm() {
     setValue('email', 'patient@lungent.org', { shouldValidate: true })
     setValue('password', 'Lungent2026!', { shouldValidate: true })
     setServerError(null)
+  }
+
+  const handleRoleSimulation = async (role: AppRole) => {
+    setIsSubmitting(true)
+    setServerError(null)
+    try {
+      await quickDemoLogin(role)
+      setSuccessMessage(`Logged in as ${role}! Redirecting...`)
+      setTimeout(() => {
+        const target = redirectTo || (role === 'General User' ? '/ai-assessment' : role === 'Clinician' ? '/portal/clinician' : role === 'Health Worker' ? '/portal/community' : '/portal/admin')
+        router.push(target)
+        router.refresh()
+      }, 500)
+    } catch {
+      setServerError('Failed to switch role session')
+      setIsSubmitting(false)
+    }
   }
 
   const onSubmit = async (data: LoginInput) => {
@@ -101,16 +119,37 @@ function LoginForm() {
             </Link>
           </p>
 
-          {/* Quick Demo Credentials shortcut */}
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-            <button
-              type="button"
-              onClick={fillDemoCredentials}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-primary transition-colors py-1 px-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-            >
-              <Sparkles className="size-3 text-primary" />
-              <span>Fill Demo Credentials (patient@lungent.org)</span>
-            </button>
+          {/* Quick Demo & RBAC Role Simulation for Judges & Reviewers */}
+          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1 text-primary font-bold">
+                <Sparkles className="size-3.5" /> Fast RBAC Role Switcher
+              </span>
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">Evaluation Mode</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pt-1">
+              {APP_ROLES.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => handleRoleSimulation(r)}
+                  disabled={isSubmitting}
+                  className="px-2 py-1.5 text-xs font-medium rounded-lg border border-border/80 bg-muted/40 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-all text-left truncate cursor-pointer"
+                  title={`Sign in as ${r}`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+            <div className="pt-1 text-center">
+              <button
+                type="button"
+                onClick={fillDemoCredentials}
+                className="text-[11px] text-muted-foreground hover:text-primary transition-colors hover:underline"
+              >
+                Or fill standard credentials (patient@lungent.org)
+              </button>
+            </div>
           </div>
         </div>
       }

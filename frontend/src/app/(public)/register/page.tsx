@@ -13,7 +13,8 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { registerSchema, type RegisterInput } from '@/modules/authentication/validation'
 import { register } from '@/modules/authentication/service'
-import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2 } from 'lucide-react'
+import { APP_ROLES, type AppRole, ROLE_DESCRIPTIONS } from '@/lib/auth-roles'
+import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2, UserCheck, Stethoscope, Sparkles, Building2, Shield, Scale } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 export default function RegisterPage() {
@@ -39,12 +40,14 @@ export default function RegisterPage() {
       phoneNumber: '',
       password: '',
       confirmPassword: '',
+      role: 'General User',
       preferredLanguage: 'en',
       acceptTerms: false,
     },
   })
 
   const acceptTermsValue = useWatch({ control, name: 'acceptTerms' })
+  const selectedRole = useWatch({ control, name: 'role' })
 
   const onSubmit = async (data: RegisterInput) => {
     setIsSubmitting(true)
@@ -60,13 +63,33 @@ export default function RegisterPage() {
         return
       }
 
-      setSuccessMessage('Account registered successfully! Redirecting to Patient Portal...')
+      setSuccessMessage(`Account registered successfully as ${data.role}! Redirecting...`)
 
       setTimeout(() => {
         if (result.data.requiresVerification) {
           router.push(`/verify-email?email=${encodeURIComponent(data.email)}`)
         } else {
-          router.push('/portal/patient')
+          switch (data.role) {
+            case 'General User':
+              router.push('/ai-assessment')
+              break
+            case 'Clinician':
+              router.push('/portal/clinician')
+              break
+            case 'Health Worker':
+              router.push('/portal/community')
+              break
+            case 'Governance':
+              router.push('/portal/admin')
+              break
+            case 'Admin':
+            case 'AI Builders Congress':
+              router.push('/portal/admin')
+              break
+            default:
+              router.push('/ai-assessment')
+          }
+          router.refresh()
         }
       }, 700)
     } catch (err: unknown) {
@@ -79,8 +102,8 @@ export default function RegisterPage() {
   return (
     <AuthLayout
       title="Create an Account"
-      subtitle="Join Lungent for clinical AI pre-screening, risk stratification, and patient decision support."
-      badge="Patient Registration"
+      subtitle="Join Lungent for clinical AI pre-screening, risk stratification, and RBAC workspace access."
+      badge="Secure Registration"
       footer={
         <p className="text-sm text-slate-600 dark:text-slate-400">
           {auth.alreadyHaveAccount}{' '}
@@ -158,6 +181,32 @@ export default function RegisterPage() {
           />
         </FormField>
 
+        {/* Role Selection (6 Canonical RBAC Roles) */}
+        <FormField
+          label="Account Role & Designation"
+          required
+          error={errors.role?.message}
+          helperText={
+            selectedRole && ROLE_DESCRIPTIONS[selectedRole]
+              ? `${selectedRole}: ${ROLE_DESCRIPTIONS[selectedRole].description}`
+              : 'Select your operational designation to configure role-based permissions.'
+          }
+        >
+          <div className="relative">
+            <select
+              disabled={isSubmitting}
+              className="w-full h-11 px-3.5 rounded-xl border border-input bg-background text-sm sm:text-base font-semibold text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary cursor-pointer shadow-2xs"
+              {...formRegister('role')}
+            >
+              {APP_ROLES.map((r) => (
+                <option key={r} value={r} className="py-1.5 text-foreground bg-background">
+                  {r} — {ROLE_DESCRIPTIONS[r].title}
+                </option>
+              ))}
+            </select>
+          </div>
+        </FormField>
+
         {/* Password & Confirm Password */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FormField
@@ -231,7 +280,7 @@ export default function RegisterPage() {
               </>
             ) : (
               <>
-                <span>Create Patient Account</span>
+                <span>Create Account ({selectedRole})</span>
                 <ArrowRight className="size-4" />
               </>
             )}

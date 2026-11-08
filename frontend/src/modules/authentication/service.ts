@@ -18,6 +18,7 @@ import {
 import { logAuditEvent } from './audit'
 import { ROLE_PERMISSIONS_MAP } from '@/lib/security/permissions'
 import type { UserWithRoles, UserRole } from '@/types'
+import { type AppRole, normalizeAppRole } from '@/lib/auth-roles'
 
 export type AuthResult<T = unknown> =
   | { success: true; data: T; message?: string }
@@ -47,7 +48,7 @@ function createFallbackUser(id: string, email: string, fullName?: string): UserW
  * Registers a new user account with default 'patient' privileges.
  * Privileged roles (clinician, healthcare worker, administrator) can NEVER be selected via registration.
  */
-export async function register(input: RegisterInput): Promise<AuthResult<{ userId: string; requiresVerification: boolean }>> {
+export async function register(input: RegisterInput): Promise<AuthResult<{ userId: string; requiresVerification: boolean; role: AppRole }>> {
   const validation = registerSchema.safeParse(input)
   if (!validation.success) {
     return {
@@ -56,17 +57,21 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
     }
   }
 
-  const { email, password, fullName, phoneNumber, preferredLanguage } = validation.data
+  const { email, password, fullName, phoneNumber, preferredLanguage, role } = validation.data
 
   // If Supabase environment is not configured, supply immediate mock registration
   if (!isSupabaseConfigured()) {
+    const cookieStore = await cookies()
+    cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+    cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
     return {
       success: true,
       data: {
-        userId: 'demo-patient-' + Math.random().toString(36).substring(2, 9),
+        userId: 'demo-user-' + Math.random().toString(36).substring(2, 9),
         requiresVerification: false,
+        role,
       },
-      message: 'Account registered successfully (Demo Mode).',
+      message: `Account registered successfully as ${role} (Demo Mode).`,
     }
   }
 
@@ -85,6 +90,7 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
           full_name: fullName,
           phone_number: phoneNumber || null,
           preferred_language: preferredLanguage,
+          role,
         },
         emailRedirectTo,
       },
@@ -154,11 +160,15 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
 
     const requiresVerification = !authUser.email_confirmed_at
 
+    const cookieStore = await cookies()
+    cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+
     return {
       success: true,
       data: {
         userId: authUser.id,
         requiresVerification,
+        role,
       },
       message: requiresVerification
         ? 'Account created successfully. Please check your email to verify your account.'
@@ -176,7 +186,7 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
 /**
  * Authenticates user credentials and checks account activation status.
  */
-export async function login(input: LoginInput): Promise<AuthResult<{ user: UserWithRoles; defaultWorkspace: string }>> {
+export async function login(input: LoginInput): Promise<AuthResult<{ user: UserWithRoles; defaultWorkspace: string; role?: AppRole }>> {
   const validation = loginSchema.safeParse(input)
   if (!validation.success) {
     return {
@@ -191,12 +201,15 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
   if (!isSupabaseConfigured()) {
     const mockUser = createFallbackUser('demo-patient-1', email)
     const cookieStore = await cookies()
+    const existingRole = (cookieStore.get('lungent_role')?.value as AppRole) || 'General User'
     cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+    cookieStore.set('lungent_role', existingRole, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
     return {
       success: true,
       data: {
         user: mockUser,
         defaultWorkspace: '/portal/patient',
+        role: existingRole,
       },
       message: 'Signed in successfully in demo mode.',
     }
@@ -217,6 +230,11 @@ export async function login(input: LoginInput): Promise<AuthResult<{ user: UserW
         code: authError?.code || 'INVALID_CREDENTIALS',
       }
     }
+
+    // Extract and persist the 6-role RBAC role in cookie for lightning-fast edge resolution
+    const assignedRole = normalizeAppRole(authData.user.user_metadata?.role)
+    const cookieStore = await cookies()
+    cookieStore.set('lungent_role', assignedRole, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
 
     // Fetch application profile & role assignments
     const profileWithRoles = (await getCurrentUserWithRoles()) || createFallbackUser(authData.user.id, email, authData.user.user_metadata?.full_name)
@@ -287,6 +305,7 @@ export async function logout(): Promise<AuthResult<void>> {
   try {
     const cookieStore = await cookies()
     cookieStore.delete('lungent_auth_demo')
+    cookieStore.delete('lungent_role')
   } catch {}
 
   const supabase = await createServerClient()
@@ -301,6 +320,50 @@ export async function logout(): Promise<AuthResult<void>> {
 
   await supabase.auth.signOut()
   return { success: true, data: undefined }
+}
+
+/**
+ * Quick role simulation for Hackathon judges & reviewers.
+ * Establishes an instant demo session with any of the 6 canonical RBAC roles.
+ */
+export async function quickDemoLogin(role: AppRole): Promise<AuthResult<{ role: AppRole }>> {
+  const cookieStore = await cookies()
+  cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+  cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+  return {
+    success: true,
+    data: { role },
+    message: `Signed in as ${role}`,
+  }
+}
+
+/**
+ * Retrieves the currently active application role.
+ */
+export async function getCurrentAppRole(): Promise<AppRole | null> {
+  const cookieStore = await cookies()
+  const roleCookie = cookieStore.get('lungent_role')?.value
+  const hasDemo = cookieStore.get('lungent_auth_demo')?.value === 'true'
+
+  if (roleCookie) {
+    return normalizeAppRole(roleCookie)
+  }
+
+  if (hasDemo) {
+    return 'General User'
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createServerClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        return normalizeAppRole(user.user_metadata?.role)
+      }
+    } catch {}
+  }
+
+  return null
 }
 
 /**
