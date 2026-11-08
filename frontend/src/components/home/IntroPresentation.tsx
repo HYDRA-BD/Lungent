@@ -49,7 +49,7 @@ export function IntroPresentation({
 
   // Current Scene Index: 0 to 4 (5 Scenes)
   const [currentScene, setCurrentScene] = useState(0)
-  const sceneDurationMs = 3800 // 3.8 seconds per scene
+  const sceneDurationMs = 6000 // 6 seconds per scene for comfortable reading
 
   // Lock body scroll
   useEffect(() => {
