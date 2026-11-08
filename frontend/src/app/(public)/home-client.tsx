@@ -40,7 +40,7 @@ export function HomeClient() {
 
   // Authentication Guard State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  const [showIntro, setShowIntro] = useState(false)
+  const [isIdle, setIsIdle] = useState(false)
 
   // Verify authentication session
   useEffect(() => {
@@ -92,18 +92,21 @@ export function HomeClient() {
     }
   }, [])
 
-  // Replay intro presentation if the user is completely idle for 120 seconds (2 minutes)
+  // Replay intro presentation on continuous infinite loop if user is idle for exactly 90 seconds
   useIdleTimer({
-    timeoutMs: 120000,
-    enabled: !showIntro && isAuthenticated === true,
+    timeoutMs: 90000,
+    enabled: isAuthenticated === true,
     onIdle: () => {
-      setShowIntro(true)
+      setIsIdle(true)
+    },
+    onActive: () => {
+      setIsIdle(false)
     },
   })
 
-  // Prevent background scrolling while intro is active
+  // Prevent background scrolling while idle overlay or unauthenticated entry is active
   useEffect(() => {
-    if (showIntro || isAuthenticated === false || isAuthenticated === null) {
+    if (isIdle || isAuthenticated === false || isAuthenticated === null) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -111,7 +114,7 @@ export function HomeClient() {
     return () => {
       document.body.style.overflow = ''
     }
-  }, [showIntro, isAuthenticated])
+  }, [isIdle, isAuthenticated])
 
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
@@ -127,12 +130,12 @@ export function HomeClient() {
   const rightY = useTransform(scrollYProgress, [0, 1], [0, 105])
   const rightOpacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.6, 0])
 
-  // If unauthenticated or verifying, intercept and render ONLY the locked Cinematic Presentation
+  // If unauthenticated or verifying, intercept and render ONLY the locked Cinematic Presentation in 'entry' mode
   if (isAuthenticated === false || isAuthenticated === null) {
     return (
       <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950">
         <IntroPresentation
-          isAuthenticated={false}
+          mode="entry"
           onProceedToAuth={() => router.push('/login')}
         />
       </div>
@@ -184,13 +187,12 @@ export function HomeClient() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-background selection:bg-primary/20">
-      {/* Cinematic Presentation Intro Overlay with AnimatePresence */}
+      {/* Cinematic Idle Screensaver with AnimatePresence */}
       <AnimatePresence>
-        {showIntro && (
+        {isIdle && (
           <IntroPresentation
-            isAuthenticated={true}
-            onDismiss={() => setShowIntro(false)}
-            onProceedToAuth={() => setShowIntro(false)}
+            mode="idle"
+            onDismiss={() => setIsIdle(false)}
           />
         )}
       </AnimatePresence>
