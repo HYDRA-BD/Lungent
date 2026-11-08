@@ -28,6 +28,7 @@ import { analyzePatient, downloadReport, getBackendUrl, type AnalyzeResponse, ty
 import { Header } from '@/components/layouts/header'
 import { Footer } from '@/components/layouts/footer'
 import { SectionContainer } from '@/components/layouts/section-container'
+import { AILoadingSequence } from '@/components/ai-assessment/ai-loading-sequence'
 
 // ── Types ────────────────────────────────────────────────────────────
 interface FormData {
@@ -344,6 +345,12 @@ export function AIAssessmentClient() {
   async function handleSubmit() {
     setLoading(true)
     setError(null)
+    setResult(null)
+
+    // Smooth scroll down to loading sequence so the user sees live progress
+    setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 120)
 
     const targetUrl = getBackendUrl()
     console.log('[Lungent Assessment] Target Backend API URL (process.env.NEXT_PUBLIC_API_URL):', targetUrl)
@@ -1015,18 +1022,27 @@ export function AIAssessmentClient() {
                   </>
                 )}
               </button>
-              {loading && (
-                <p className="text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed animate-pulse">
-                  <span className="font-semibold text-primary">Note:</span> The AI model is hosted on a free tier and may take up to 90 seconds to start up for the first time. Please be patient.
-                </p>
-              )}
             </motion.div>
 
             {/* RESULT SECTION (Appears below the button after running assessment) */}
             <div ref={resultRef} className="pt-2">
-              <AnimatePresence>
-                {result && tierCfg && (
+              <AnimatePresence mode="wait">
+                {loading && (
                   <motion.div
+                    key="ai-loading-sequence"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.35, ease: 'easeOut' }}
+                    className="pt-4"
+                  >
+                    <AILoadingSequence />
+                  </motion.div>
+                )}
+
+                {!loading && result && tierCfg && (
+                  <motion.div
+                    key="ai-result-content"
                     initial={{ opacity: 0, y: 25 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
