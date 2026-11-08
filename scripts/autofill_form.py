@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Lungent — Automated Form Autofiller
-Reads auto_fill_data.json and uses Playwright to populate the form fields
-accurately while respecting React/Next.js dynamic synthetic event cycles.
+Lungent — Upgraded Multi-Tab Autofiller (Playwright)
+Populates the multi-tab AI Builders Congress form by systematically switching
+between tabs (Overview, Story, Proof, AI-Native Build, Data Lifecycle,
+Prompt Library, etc.) and filling inputs, textareas, and ARIA checkboxes.
 """
 
 import json
@@ -15,9 +16,9 @@ DEFAULT_SUBMISSION_URL = "https://cloudcampbd.com/submissions/8dee8cdb-0cda-49c6
 SESSION_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".browser_session")
 MAPPED_DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "auto_fill_data.json")
 
-def autofill_form(url=DEFAULT_SUBMISSION_URL):
+def autofill_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
     print("\n========================================================")
-    print("  Lungent Form Autofiller (Playwright)")
+    print("  Lungent Multi-Tab Form Autofiller (Playwright)")
     print("========================================================")
     print(f"Target URL: {url}")
     print(f"Data File:  {MAPPED_DATA_FILE}\n")
@@ -34,7 +35,7 @@ def autofill_form(url=DEFAULT_SUBMISSION_URL):
         context = p.chromium.launch_persistent_context(
             user_data_dir=SESSION_DIR,
             headless=False,
-            viewport={"width": 1400, "height": 950},
+            viewport={"width": 1440, "height": 950},
             args=["--disable-blink-features=AutomationControlled"]
         )
 
@@ -53,12 +54,41 @@ def autofill_form(url=DEFAULT_SUBMISSION_URL):
         print("--------------------------------------------------------")
         input(">> When the form is visible on screen, press ENTER to start autofilling: ")
 
-        print("\n[*] Waiting 2 seconds for DOM stabilization...")
+        print("\n[*] Waiting 2 seconds for initial DOM stabilization...")
         page.wait_for_timeout(2000)
 
+        # Collect all unique tabs that have items to fill
+        all_tabs = set()
+        for key in ["text_inputs", "textareas", "checkboxes", "selects"]:
+            for item in fill_data.get(key, []):
+                tab = item.get("tab")
+                if tab:
+                    all_tabs.add(tab)
+
+        print(f"[*] Found {len(all_tabs)} tabs requiring automation: {list(all_tabs)}")
+
+        def switch_to_tab(tab_name):
+            if not tab_name:
+                return
+            try:
+                locator = page.locator(f'[role="tab"]:has-text("{tab_name}"), button:has-text("{tab_name}")').first
+                if locator.count() > 0:
+                    locator.scroll_into_view_if_needed()
+                    locator.click()
+                    page.wait_for_timeout(1000)
+            except Exception as e:
+                print(f"    [!] Error switching to tab {tab_name}: {e}")
+
+        current_active_tab = None
+
         # 1. Fill Text Inputs
-        print(f"\n[*] Filling {len(fill_data.get('text_inputs', []))} Text Inputs...")
+        print(f"\n[*] Processing {len(fill_data.get('text_inputs', []))} Text Inputs...")
         for item in fill_data.get("text_inputs", []):
+            tab = item.get("tab")
+            if tab and tab != current_active_tab:
+                switch_to_tab(tab)
+                current_active_tab = tab
+
             selector = item["selector"]
             val = item["value"]
             label = item.get("label", selector)
@@ -68,16 +98,19 @@ def autofill_form(url=DEFAULT_SUBMISSION_URL):
                     el.scroll_into_view_if_needed()
                     el.click()
                     el.fill(str(val))
-                    print(f"  [✓] Filled: {label[:40]} -> {str(val)[:30]}...")
-                    page.wait_for_timeout(300)
-                else:
-                    print(f"  [-] Selector not found: {selector}")
+                    print(f"  [✓] [{tab}] Filled: {label[:30]} -> {str(val)[:25]}...")
+                    page.wait_for_timeout(250)
             except Exception as e:
-                print(f"  [!] Failed to fill {label[:30]}: {e}")
+                print(f"  [!] Failed to fill input {label[:25]}: {e}")
 
         # 2. Fill Textareas
-        print(f"\n[*] Filling {len(fill_data.get('textareas', []))} Textareas...")
+        print(f"\n[*] Processing {len(fill_data.get('textareas', []))} Textareas...")
         for item in fill_data.get("textareas", []):
+            tab = item.get("tab")
+            if tab and tab != current_active_tab:
+                switch_to_tab(tab)
+                current_active_tab = tab
+
             selector = item["selector"]
             val = item["value"]
             label = item.get("label", selector)
@@ -87,36 +120,51 @@ def autofill_form(url=DEFAULT_SUBMISSION_URL):
                     el.scroll_into_view_if_needed()
                     el.click()
                     el.fill(str(val))
-                    print(f"  [✓] Filled Textarea: {label[:40]}")
-                    page.wait_for_timeout(500)
-                else:
-                    print(f"  [-] Textarea selector not found: {selector}")
+                    print(f"  [✓] [{tab}] Filled Textarea: {label[:35]}")
+                    page.wait_for_timeout(350)
             except Exception as e:
-                print(f"  [!] Failed to fill textarea {label[:30]}: {e}")
+                print(f"  [!] Failed to fill textarea {label[:25]}: {e}")
 
-        # 3. Check Checkboxes
-        print(f"\n[*] Checking {len(fill_data.get('checkboxes', []))} Checkboxes...")
+        # 3. Check Checkboxes (Native + ARIA)
+        print(f"\n[*] Processing {len(fill_data.get('checkboxes', []))} Checkboxes...")
         for item in fill_data.get("checkboxes", []):
+            tab = item.get("tab")
+            if tab and tab != current_active_tab:
+                switch_to_tab(tab)
+                current_active_tab = tab
+
             selector = item["selector"]
             label = item.get("label", selector)
             try:
                 el = page.locator(selector).first
                 if el.count() > 0:
                     el.scroll_into_view_if_needed()
-                    if not el.is_checked():
-                        el.check(force=True)
-                        print(f"  [✓] Checked: {label[:50]}")
+                    # Check if standard or custom ARIA
+                    role = el.get_attribute("role") or ""
+                    data_state = el.get_attribute("data-state") or ""
+                    aria_checked = el.get_attribute("aria-checked") or ""
+
+                    is_checked = (data_state == "checked") or (aria_checked == "true")
+                    if not is_checked:
+                        try:
+                            el.check(force=True)
+                        except Exception:
+                            el.click(force=True)
+                        print(f"  [✓] [{tab}] Checked: {label[:45]}")
                         page.wait_for_timeout(200)
                     else:
-                        print(f"  [=] Already Checked: {label[:50]}")
-                else:
-                    print(f"  [-] Checkbox selector not found: {selector}")
+                        print(f"  [=] [{tab}] Already checked: {label[:45]}")
             except Exception as e:
-                print(f"  [!] Failed to check {label[:30]}: {e}")
+                print(f"  [!] Failed to check {label[:25]}: {e}")
 
         # 4. Select Dropdowns
-        print(f"\n[*] Setting {len(fill_data.get('selects', []))} Dropdown selections...")
+        print(f"\n[*] Processing {len(fill_data.get('selects', []))} Selects...")
         for item in fill_data.get("selects", []):
+            tab = item.get("tab")
+            if tab and tab != current_active_tab:
+                switch_to_tab(tab)
+                current_active_tab = tab
+
             selector = item["selector"]
             val = item["value"]
             label = item.get("label", selector)
@@ -125,23 +173,23 @@ def autofill_form(url=DEFAULT_SUBMISSION_URL):
                 if el.count() > 0:
                     el.scroll_into_view_if_needed()
                     el.select_option(val)
-                    print(f"  [✓] Selected {val} for: {label[:40]}")
-                    page.wait_for_timeout(300)
+                    print(f"  [✓] [{tab}] Selected {val} for: {label[:30]}")
+                    page.wait_for_timeout(250)
             except Exception as e:
-                print(f"  [!] Failed to select {val} for {label[:30]}: {e}")
+                print(f"  [!] Failed dropdown {label[:25]}: {e}")
 
         print("\n========================================================")
-        print("  🎉 AUTO-FILL COMPLETE!")
+        print("  🎉 MULTI-TAB AUTO-FILL COMPLETE!")
         print("========================================================")
-        print("The form fields have been populated in your open browser.")
-        print("1. Review each field on the page.")
-        print("2. If a YouTube video link is required, make sure to add it.")
-        print("3. Click the final Submit button when you are satisfied!")
+        print("All tabs have been automated with the Lungent project data.")
+        print("1. Review each tab in your open browser.")
+        print("2. Check the completeness score.")
+        print("3. Click Submit when you are ready!")
         print("--------------------------------------------------------")
-        input(">> Press ENTER in this terminal when you are done to close the browser: ")
+        input(">> Press ENTER in this terminal when you want to close the browser: ")
 
         context.close()
 
 if __name__ == "__main__":
-    url_to_fill = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SUBMISSION_URL
-    autofill_form(url_to_fill)
+    url_arg = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SUBMISSION_URL
+    autofill_multi_tab_form(url_arg)

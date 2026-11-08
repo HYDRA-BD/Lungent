@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 """
-Lungent — AI Builders Congress Form Scraper
-Uses Playwright to launch a persistent browser session, navigate to the
-submission form, and dump the complete DOM form schema into form_schema.json.
+Lungent — Upgraded Multi-Tab Form Scraper (Playwright)
+Iterates through all navigation tabs (Overview, Story, Proof, AI-Native Build,
+Data Lifecycle, Prompt Library, Team, Audit, Build Provenance) and extracts
+both native HTML inputs and dynamic React/Radix/Shadcn custom controls:
+- inputs, textareas
+- native and ARIA checkboxes (button[role="checkbox"], input[type="checkbox"])
+- native and ARIA dropdowns (select, button[role="combobox"])
+- native and ARIA radio buttons (button[role="radio"], input[type="radio"])
+- custom switch toggles (button[role="switch"])
 """
 
 import json
@@ -15,21 +21,33 @@ DEFAULT_SUBMISSION_URL = "https://cloudcampbd.com/submissions/8dee8cdb-0cda-49c6
 SESSION_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".browser_session")
 OUTPUT_SCHEMA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "form_schema.json")
 
-def scrape_form(url=DEFAULT_SUBMISSION_URL):
-    print(f"\n========================================================")
-    print(f"  Lungent Form Scraper (Playwright)")
-    print(f"========================================================")
-    print(f"Target URL: {url}")
+# Known tabs from CloudCamp submission form
+TARGET_TABS = [
+    "Overview",
+    "Story",
+    "Proof",
+    "AI-Native Build",
+    "Data Lifecycle",
+    "Prompt Library",
+    "Team",
+    "Audit",
+    "Build Provenance"
+]
+
+def scrape_multi_tab_form(url=DEFAULT_SUBMISSION_URL):
+    print("\n========================================================")
+    print("  Lungent Multi-Tab Form Scraper (Playwright)")
+    print("========================================================")
+    print(f"Target URL:  {url}")
     print(f"Session Dir: {SESSION_DIR}\n")
 
     os.makedirs(SESSION_DIR, exist_ok=True)
 
     with sync_playwright() as p:
-        # Launch persistent browser context so login session is preserved across runs
         context = p.chromium.launch_persistent_context(
             user_data_dir=SESSION_DIR,
             headless=False,
-            viewport={"width": 1400, "height": 950},
+            viewport={"width": 1440, "height": 950},
             args=["--disable-blink-features=AutomationControlled"]
         )
 
@@ -39,153 +57,290 @@ def scrape_form(url=DEFAULT_SUBMISSION_URL):
         try:
             page.goto(url, wait_until="domcontentloaded", timeout=45000)
         except Exception as e:
-            print(f"[!] Warning on initial load: {e}")
+            print(f"[!] Note on initial load: {e}")
 
-        # Check if the page is currently on a login / auth wall
         print("\n--------------------------------------------------------")
         print("ACTION REQUIRED IN BROWSER:")
-        print("1. Look at the opened browser window.")
-        print("2. If prompted to Sign In, please log in now.")
-        print("3. Ensure the submission form page is fully loaded on screen.")
+        print("1. If prompted to Sign In, please complete login now.")
+        print("2. Ensure the submission page with its tabs is visible.")
         print("--------------------------------------------------------")
-        input(">> When you see the submission form loaded in the browser, press ENTER to scrape: ")
+        input(">> When you see the form in the browser, press ENTER to start multi-tab scraping: ")
 
-        print("\n[*] Waiting 3 seconds for dynamic components and animations to stabilize...")
-        page.wait_for_timeout(3000)
+        print("\n[*] Initializing DOM scanner...")
+        page.wait_for_timeout(2000)
 
-        print("[*] Extracting form elements from DOM...")
-
-        # Inject JavaScript to extract every interactive field with rich context
-        extraction_script = """
-        () => {
-            const result = {
-                title: document.title,
-                url: window.location.href,
-                sections: [],
+        # Extraction function executed inside the browser context for each tab
+        extract_tab_dom_js = """
+        (currentTabName) => {
+            const data = {
+                tab: currentTabName,
                 inputs: [],
                 textareas: [],
                 selects: [],
                 checkboxes: [],
-                radios: [],
-                buttons: []
+                radios: []
             };
 
-            // Helper to get nearest label or text descriptor
-            function getLabelText(el) {
-                // 1. Direct label via 'for'
-                if (el.id) {
-                    const label = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
-                    if (label) return label.innerText.trim();
-                }
-                // 2. Parent label
-                const parentLabel = el.closest('label');
-                if (parentLabel) return parentLabel.innerText.trim();
-
-                // 3. Aria-label / aria-labelledby
-                if (el.getAttribute('aria-label')) return el.getAttribute('aria-label').trim();
-                if (el.getAttribute('aria-labelledby')) {
-                    const ref = document.getElementById(el.getAttribute('aria-labelledby'));
-                    if (ref) return ref.innerText.trim();
-                }
-
-                // 4. Closest preceding label or legend or bold header
-                const container = el.closest('div.space-y-2, div.form-group, div.mb-4, div.flex, fieldset');
-                if (container) {
-                    const heading = container.querySelector('label, legend, p.font-medium, span.font-medium, h4, h5');
-                    if (heading && heading !== el) return heading.innerText.trim();
-                }
-
-                return el.placeholder || el.name || el.id || '';
+            function cleanText(str) {
+                return (str || '').replace(/\\s+/g, ' ').trim();
             }
 
-            // Extract all inputs
-            document.querySelectorAll('input').forEach((input, index) => {
-                const type = (input.type || 'text').toLowerCase();
-                const info = {
-                    index,
-                    id: input.id || '',
-                    name: input.name || '',
+            function findLabel(el) {
+                // 1. Direct label with 'for' attribute
+                if (el.id) {
+                    const l = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+                    if (l) return cleanText(l.innerText);
+                }
+                // 2. Parent or ancestor label
+                const parentLabel = el.closest('label');
+                if (parentLabel) return cleanText(parentLabel.innerText);
+
+                // 3. Aria attributes
+                if (el.getAttribute('aria-label')) return cleanText(el.getAttribute('aria-label'));
+                if (el.getAttribute('aria-labelledby')) {
+                    const ref = document.getElementById(el.getAttribute('aria-labelledby'));
+                    if (ref) return cleanText(ref.innerText);
+                }
+
+                // 4. Sibling label or text container
+                const parent = el.parentElement;
+                if (parent) {
+                    const siblingLabel = parent.querySelector('label, span.text-sm, span.font-medium, p');
+                    if (siblingLabel && siblingLabel !== el) return cleanText(siblingLabel.innerText);
+                }
+
+                // 5. Card / Form row heading
+                const row = el.closest('.space-y-2, .space-y-1, .form-group, .flex.items-center, .grid, fieldset');
+                if (row) {
+                    const heading = row.querySelector('label, legend, h4, h5, p.font-medium, span.font-medium');
+                    if (heading && heading !== el) return cleanText(heading.innerText);
+                }
+
+                return cleanText(el.placeholder || el.name || el.id || '');
+            }
+
+            // A. Native Inputs
+            document.querySelectorAll('input').forEach((inp, idx) => {
+                const type = (inp.type || 'text').toLowerCase();
+                const label = findLabel(inp);
+                const item = {
+                    tab: currentTabName,
+                    id: inp.id || '',
+                    name: inp.name || '',
                     type: type,
-                    placeholder: input.placeholder || '',
-                    value: input.value || '',
-                    required: input.required,
-                    disabled: input.disabled,
-                    label: getLabelText(input),
-                    selector: input.id ? `#${CSS.escape(input.id)}` : (input.name ? `input[name="${CSS.escape(input.name)}"]` : `input:nth-of-type(${index + 1})`)
+                    placeholder: inp.placeholder || '',
+                    value: inp.value || '',
+                    checked: inp.checked || false,
+                    label: label,
+                    selector: inp.id ? `#${CSS.escape(inp.id)}` : (inp.name ? `input[name="${CSS.escape(inp.name)}"]` : `input[type="${type}"]:nth-of-type(${idx + 1})`)
                 };
 
                 if (type === 'checkbox') {
-                    info.checked = input.checked;
-                    result.checkboxes.push(info);
+                    data.checkboxes.push(item);
                 } else if (type === 'radio') {
-                    info.checked = input.checked;
-                    result.radios.push(info);
+                    data.radios.push(item);
                 } else if (type !== 'hidden' && type !== 'submit') {
-                    result.inputs.push(info);
+                    data.inputs.push(item);
                 }
             });
 
-            // Extract all textareas
-            document.querySelectorAll('textarea').forEach((ta, index) => {
-                result.textareas.push({
-                    index,
+            // B. ARIA / Radix / Shadcn Checkboxes (button[role="checkbox"], [role="switch"])
+            document.querySelectorAll('[role="checkbox"], button[role="switch"], [role="switch"]').forEach((cb, idx) => {
+                const label = findLabel(cb);
+                const isChecked = cb.getAttribute('aria-checked') === 'true' || 
+                                  cb.getAttribute('data-state') === 'checked' || 
+                                  cb.getAttribute('data-state') === 'on';
+                data.checkboxes.push({
+                    tab: currentTabName,
+                    id: cb.id || '',
+                    name: cb.getAttribute('name') || '',
+                    type: 'custom_checkbox',
+                    ariaRole: cb.getAttribute('role') || 'checkbox',
+                    dataState: cb.getAttribute('data-state') || '',
+                    checked: isChecked,
+                    label: label,
+                    selector: cb.id ? `#${CSS.escape(cb.id)}` : `[role="${cb.getAttribute('role') || 'checkbox'}"]:nth-of-type(${idx + 1})`
+                });
+            });
+
+            // C. Textareas
+            document.querySelectorAll('textarea').forEach((ta, idx) => {
+                data.textareas.push({
+                    tab: currentTabName,
                     id: ta.id || '',
                     name: ta.name || '',
                     placeholder: ta.placeholder || '',
                     value: ta.value || '',
-                    required: ta.required,
-                    disabled: ta.disabled,
-                    label: getLabelText(ta),
-                    selector: ta.id ? `#${CSS.escape(ta.id)}` : (ta.name ? `textarea[name="${CSS.escape(ta.name)}"]` : `textarea:nth-of-type(${index + 1})`)
+                    label: findLabel(ta),
+                    selector: ta.id ? `#${CSS.escape(ta.id)}` : (ta.name ? `textarea[name="${CSS.escape(ta.name)}"]` : `textarea:nth-of-type(${idx + 1})`)
                 });
             });
 
-            // Extract all selects
-            document.querySelectorAll('select').forEach((sel, index) => {
-                const options = Array.from(sel.options).map(opt => ({
-                    value: opt.value,
-                    text: opt.text.trim(),
-                    selected: opt.selected
-                }));
-                result.selects.push({
-                    index,
+            // D. Selects (Native + Radix comboboxes)
+            document.querySelectorAll('select').forEach((sel, idx) => {
+                const options = Array.from(sel.options).map(o => ({ value: o.value, text: cleanText(o.text), selected: o.selected }));
+                data.selects.push({
+                    tab: currentTabName,
+                    type: 'native_select',
                     id: sel.id || '',
                     name: sel.name || '',
-                    label: getLabelText(sel),
+                    label: findLabel(sel),
                     options: options,
-                    selector: sel.id ? `#${CSS.escape(sel.id)}` : (sel.name ? `select[name="${CSS.escape(sel.name)}"]` : `select:nth-of-type(${index + 1})`)
+                    selector: sel.id ? `#${CSS.escape(sel.id)}` : `select:nth-of-type(${idx + 1})`
                 });
             });
 
-            // Extract visible section headers / tabs
-            document.querySelectorAll('h1, h2, h3, h4, [role="tab"], button[aria-expanded]').forEach((header) => {
-                const text = header.innerText ? header.innerText.trim() : '';
-                if (text && text.length < 80) {
-                    result.sections.push(text);
-                }
+            document.querySelectorAll('[role="combobox"]').forEach((cb, idx) => {
+                data.selects.push({
+                    tab: currentTabName,
+                    type: 'custom_combobox',
+                    id: cb.id || '',
+                    label: findLabel(cb),
+                    text: cleanText(cb.innerText),
+                    selector: cb.id ? `#${CSS.escape(cb.id)}` : `[role="combobox"]:nth-of-type(${idx + 1})`
+                });
             });
 
-            return result;
+            // E. Radios (Radix/Shadcn)
+            document.querySelectorAll('[role="radio"]').forEach((r, idx) => {
+                const isChecked = r.getAttribute('aria-checked') === 'true' || r.getAttribute('data-state') === 'checked';
+                data.radios.push({
+                    tab: currentTabName,
+                    type: 'custom_radio',
+                    id: r.id || '',
+                    label: findLabel(r),
+                    checked: isChecked,
+                    selector: r.id ? `#${CSS.escape(r.id)}` : `[role="radio"]:nth-of-type(${idx + 1})`
+                });
+            });
+
+            return data;
         }
         """
 
-        schema = page.evaluate(extraction_script)
+        master_schema = {
+            "title": page.title(),
+            "url": page.url,
+            "tabs_scraped": [],
+            "inputs": [],
+            "textareas": [],
+            "selects": [],
+            "checkboxes": [],
+            "radios": []
+        }
 
-        # Write to JSON file
+        # Step 1: Detect all tab buttons currently rendered
+        print("\n[*] Detecting navigation tabs on page...")
+        tab_buttons = page.locator('[role="tab"], button[data-state], nav button, [role="tablist"] button')
+        tab_count = tab_buttons.count()
+        print(f"    Found {tab_count} potential tab elements.")
+
+        # Identify unique clickable tab texts
+        available_tabs = []
+        for i in range(tab_count):
+            try:
+                txt = tab_buttons.nth(i).inner_text().strip()
+                first_line = txt.split('\n')[0].strip()
+                if first_line and first_line not in available_tabs and len(first_line) < 40:
+                    available_tabs.append(first_line)
+            except Exception:
+                pass
+
+        print(f"    Tabs detected: {available_tabs}")
+
+        # If detected list is empty or minimal, use TARGET_TABS fallback
+        tabs_to_visit = available_tabs if len(available_tabs) >= 3 else TARGET_TABS
+
+        # Step 2: Click through each tab and extract DOM
+        seen_keys = set()
+
+        for tab_name in tabs_to_visit:
+            print(f"\n---> Switching to tab: [{tab_name}]...")
+            try:
+                # Find tab by text or role
+                tab_locator = page.locator(f'[role="tab"]:has-text("{tab_name}"), button:has-text("{tab_name}")').first
+                if tab_locator.count() > 0:
+                    tab_locator.scroll_into_view_if_needed()
+                    tab_locator.click()
+                    page.wait_for_timeout(1200) # Wait for React tab panel to mount
+                else:
+                    print(f"     [!] Could not locate clickable element for '{tab_name}'")
+            except Exception as e:
+                print(f"     [!] Click error on '{tab_name}': {e}")
+
+            # Expand any closed accordions in this tab
+            try:
+                closed_accordions = page.locator('button[data-state="closed"], [aria-expanded="false"]')
+                acc_count = closed_accordions.count()
+                if acc_count > 0:
+                    print(f"     Expanding {acc_count} collapsible sections in '{tab_name}'...")
+                    for a_idx in range(acc_count):
+                        try:
+                            closed_accordions.nth(a_idx).click()
+                            page.wait_for_timeout(300)
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+
+            # Extract data from this tab
+            tab_data = page.evaluate(extract_tab_dom_js, tab_name)
+            master_schema["tabs_scraped"].append(tab_name)
+
+            # Deduplicate and append inputs
+            for inp in tab_data.get("inputs", []):
+                key = (inp["tab"], inp["type"], inp["placeholder"], inp["label"], inp["selector"])
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    master_schema["inputs"].append(inp)
+
+            # Deduplicate and append textareas
+            for ta in tab_data.get("textareas", []):
+                key = (ta["tab"], ta["placeholder"], ta["label"], ta["selector"])
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    master_schema["textareas"].append(ta)
+
+            # Deduplicate and append checkboxes
+            for cb in tab_data.get("checkboxes", []):
+                key = (cb["tab"], cb.get("label", ""), cb["selector"])
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    master_schema["checkboxes"].append(cb)
+
+            # Deduplicate and append selects
+            for sel in tab_data.get("selects", []):
+                key = (sel["tab"], sel.get("label", ""), sel["selector"])
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    master_schema["selects"].append(sel)
+
+            # Deduplicate and append radios
+            for r in tab_data.get("radios", []):
+                key = (r["tab"], r.get("label", ""), r["selector"])
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    master_schema["radios"].append(r)
+
+            print(f"     Scraped from '{tab_name}': {len(tab_data.get('inputs', []))} inputs, {len(tab_data.get('textareas', []))} textareas, {len(tab_data.get('checkboxes', []))} checkboxes, {len(tab_data.get('selects', []))} selects")
+
+        # Step 3: Write complete master schema to disk
         with open(OUTPUT_SCHEMA_FILE, "w", encoding="utf-8") as f:
-            json.dump(schema, f, indent=2, ensure_ascii=False)
+            json.dump(master_schema, f, indent=2, ensure_ascii=False)
 
-        print(f"\n[+] Successfully scraped form structure!")
-        print(f"    - Text Inputs found:    {len(schema.get('inputs', []))}")
-        print(f"    - Textarea fields:      {len(schema.get('textareas', []))}")
-        print(f"    - Checkbox fields:      {len(schema.get('checkboxes', []))}")
-        print(f"    - Radio options:        {len(schema.get('radios', []))}")
-        print(f"    - Select dropdowns:     {len(schema.get('selects', []))}")
-        print(f"    - Detected Sections:    {len(schema.get('sections', []))}")
-        print(f"\n[✓] Saved complete schema to: {OUTPUT_SCHEMA_FILE}\n")
+        print("\n========================================================")
+        print("  ✓ MULTI-TAB SCRAPING COMPLETE!")
+        print("========================================================")
+        print(f"Tabs Scraped:           {len(master_schema['tabs_scraped'])}")
+        print(f"Total Text Inputs:      {len(master_schema['inputs'])}")
+        print(f"Total Textarea Fields:  {len(master_schema['textareas'])}")
+        print(f"Total Checkboxes:       {len(master_schema['checkboxes'])}")
+        print(f"Total Radio Buttons:    {len(master_schema['radios'])}")
+        print(f"Total Select Dropdowns: {len(master_schema['selects'])}")
+        print(f"\n[✓] Master schema saved to: {OUTPUT_SCHEMA_FILE}\n")
 
         context.close()
 
 if __name__ == "__main__":
-    url_to_scrape = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SUBMISSION_URL
-    scrape_form(url_to_scrape)
+    url_arg = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SUBMISSION_URL
+    scrape_multi_tab_form(url_arg)
