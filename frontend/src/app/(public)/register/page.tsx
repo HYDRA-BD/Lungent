@@ -14,7 +14,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { registerSchema, type RegisterInput, ACTIVE_ACCESS_ROLES } from '@/modules/authentication/validation'
 import { register } from '@/modules/authentication/service'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
-import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2, Eye, EyeOff } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 export default function RegisterPage() {
@@ -25,6 +25,8 @@ export default function RegisterPage() {
   const [serverError, setServerError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const {
     register: formRegister,
@@ -62,17 +64,32 @@ export default function RegisterPage() {
         return
       }
 
-      // Invalidate any client-side session to guarantee strict manual sign-in
-      try {
-        const browserClient = createBrowserClient()
-        await browserClient.auth.signOut()
-      } catch {}
+      if (data.role === 'General User') {
+        // Immediate login and redirect to Home page
+        setSuccessMessage('Registration successful! Redirecting to home...')
+        setTimeout(() => {
+          router.push('/')
+          router.refresh()
+        }, 500)
+      } else if (data.role === 'Admin') {
+        // Invalidate any client-side session and display required verification message
+        try {
+          const browserClient = createBrowserClient()
+          await browserClient.auth.signOut()
+        } catch {}
 
-      setSuccessMessage('Account created successfully. Redirecting to sign in...')
-
-      setTimeout(() => {
-        router.push('/login?registered=true')
-      }, 500)
+        setSuccessMessage('Registration successful. An administrator must verify your account before you can log in.')
+        setTimeout(() => {
+          router.push('/login?admin_pending=true')
+        }, 1800)
+      } else {
+        // Other roles (e.g. AI Builders Congress)
+        setSuccessMessage('Registration successful! Redirecting...')
+        setTimeout(() => {
+          router.push('/')
+          router.refresh()
+        }, 500)
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected registration error occurred.'
       setServerError(msg)
@@ -191,11 +208,22 @@ export default function RegisterPage() {
             error={errors.password?.message}
           >
             <Input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               autoComplete="new-password"
               disabled={isSubmitting}
               leftIcon={<Lock className="size-4 text-slate-400" />}
+              rightIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              }
               className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
               {...formRegister('password')}
             />
@@ -207,11 +235,22 @@ export default function RegisterPage() {
             error={errors.confirmPassword?.message}
           >
             <Input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder="••••••••"
               autoComplete="new-password"
               disabled={isSubmitting}
               leftIcon={<Lock className="size-4 text-slate-400" />}
+              rightIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                  title={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              }
               className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
               {...formRegister('confirmPassword')}
             />

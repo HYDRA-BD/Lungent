@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react'
+import { motion, useScroll, useTransform } from 'motion/react'
 import {
   Activity,
   HeartPulse,
@@ -29,8 +29,6 @@ import { cn } from '@/lib/utils'
 import { Hero3DPeople } from '@/components/hero/hero-3d-people'
 import { Hero3DLungs } from '@/components/hero/hero-3d-lungs'
 import { ModelPerformanceSection } from '@/components/home/model-performance-section'
-import { IntroPresentation } from '@/components/home/IntroPresentation'
-import { useIdleTimer } from '@/hooks/use-idle-timer'
 import { useLanguage } from '@/i18n'
 import { createClient } from '@/lib/supabase/client'
 
@@ -38,9 +36,8 @@ export function HomeClient() {
   const router = useRouter()
   const { dict } = useLanguage()
 
-  // Authentication Guard State
+  // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  const [isIdle, setIsIdle] = useState(false)
 
   // Verify authentication session
   useEffect(() => {
@@ -92,30 +89,6 @@ export function HomeClient() {
     }
   }, [])
 
-  // Replay intro presentation on continuous infinite loop if user is idle for exactly 90 seconds
-  useIdleTimer({
-    timeoutMs: 90000,
-    enabled: isAuthenticated === true,
-    onIdle: () => {
-      setIsIdle(true)
-    },
-    onActive: () => {
-      setIsIdle(false)
-    },
-  })
-
-  // Prevent background scrolling while idle overlay or unauthenticated entry is active
-  useEffect(() => {
-    if (isIdle || isAuthenticated === false || isAuthenticated === null) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isIdle, isAuthenticated])
-
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -129,18 +102,6 @@ export function HomeClient() {
   // Right 3D Parallax: drifts down at a slightly different speed (organic depth) and fades out
   const rightY = useTransform(scrollYProgress, [0, 1], [0, 105])
   const rightOpacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.6, 0])
-
-  // If unauthenticated or verifying, intercept and render ONLY the locked Cinematic Presentation in 'entry' mode
-  if (isAuthenticated === false || isAuthenticated === null) {
-    return (
-      <div className="relative min-h-screen bg-slate-50 dark:bg-slate-950">
-        <IntroPresentation
-          mode="entry"
-          onProceedToAuth={() => router.push('/login')}
-        />
-      </div>
-    )
-  }
 
   const workspaceCards = [
     {
@@ -187,16 +148,6 @@ export function HomeClient() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-background selection:bg-primary/20">
-      {/* Cinematic Idle Screensaver with AnimatePresence */}
-      <AnimatePresence>
-        {isIdle && (
-          <IntroPresentation
-            mode="idle"
-            onDismiss={() => setIsIdle(false)}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Ambient Respiration & Floating Glow (Pulmonary AI Aesthetic) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[680px] pointer-events-none overflow-hidden -z-10">
         <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-teal-400/15 dark:bg-teal-500/10 blur-3xl animate-lung-breathe" />

@@ -11,8 +11,8 @@ describe('Strict Role-Based Authentication & Manual Sign-In Verification', () =>
     expect(ACTIVE_ACCESS_ROLES).not.toContain('Governance')
   })
 
-  describe('Task 1: Enforce manual sign-in after registration', () => {
-    it('successfully registers an account and returns prompt to sign in manually', async () => {
+  describe('Task 4: Role-specific registration flow', () => {
+    it('successfully registers a General User with immediate auto-login', async () => {
       const email = `newpatient-${Date.now()}@example.com`
       const res = await register({
         fullName: 'Jane Doe',
@@ -26,8 +26,29 @@ describe('Strict Role-Based Authentication & Manual Sign-In Verification', () =>
 
       expect(res.success).toBe(true)
       if (res.success) {
-        expect(res.message).toBe('Account created successfully. Please sign in.')
         expect(res.data.role).toBe('General User')
+        expect(res.data.autoLogin).toBe(true)
+      }
+    })
+
+    it('requires administrator verification when registering as an Admin', async () => {
+      const email = `newadmin-${Date.now()}@example.com`
+      const res = await register({
+        fullName: 'Pending Admin',
+        email,
+        password: 'Password123!',
+        confirmPassword: 'Password123!',
+        role: 'Admin',
+        preferredLanguage: 'en',
+        acceptTerms: true,
+      })
+
+      expect(res.success).toBe(true)
+      if (res.success) {
+        expect(res.message).toBe('Registration successful. An administrator must verify your account before you can log in.')
+        expect(res.data.role).toBe('Admin')
+        expect(res.data.autoLogin).toBe(false)
+        expect(res.data.requiresApproval).toBe(true)
       }
     })
   })
@@ -129,5 +150,19 @@ describe('Strict Role-Based Authentication & Manual Sign-In Verification', () =>
         expect(loginRes.data.defaultWorkspace).toBe('/portal/admin')
       }
     })
+    it('authenticates pre-seeded hackathon judge account aibuilderscongress@aibc.com', async () => {
+      const loginRes = await login({
+        email: 'aibuilderscongress@aibc.com',
+        password: '!A1i9n7k1',
+        role: 'AI Builders Congress',
+      })
+
+      expect(loginRes.success).toBe(true)
+      if (loginRes.success) {
+        expect(loginRes.data.role).toBe('AI Builders Congress')
+        expect(loginRes.data.defaultWorkspace).toBe('/portal/admin')
+      }
+    })
   })
 })
+

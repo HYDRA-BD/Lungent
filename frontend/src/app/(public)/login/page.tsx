@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { loginSchema, type LoginInput, ACTIVE_ACCESS_ROLES } from '@/modules/authentication/validation'
 import { login } from '@/modules/authentication/service'
-import { LogIn, Mail, Lock, CheckCircle2, ArrowRight } from 'lucide-react'
+import { LogIn, Mail, Lock, CheckCircle2, ArrowRight, Eye, EyeOff } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
 function LoginForm() {
@@ -24,6 +24,7 @@ function LoginForm() {
     searchParams.get('next')
   const verified = searchParams.get('verified')
   const registered = searchParams.get('registered')
+  const adminPending = searchParams.get('admin_pending')
 
   const { dict } = useLanguage()
   const auth = dict.auth
@@ -31,6 +32,7 @@ function LoginForm() {
   const [serverError, setServerError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     register,
@@ -103,6 +105,21 @@ function LoginForm() {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <AnimatePresence mode="wait">
+          {adminPending && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <Alert className="rounded-xl border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300">
+                <CheckCircle2 className="size-4 text-amber-600 shrink-0" />
+                <AlertTitle className="text-amber-800 dark:text-amber-300 font-semibold leading-relaxed">
+                  Registration successful. An administrator must verify your account before you can log in.
+                </AlertTitle>
+              </Alert>
+            </motion.div>
+          )}
+
           {registered && (
             <motion.div
               initial={{ opacity: 0, y: -6 }}
@@ -215,11 +232,22 @@ function LoginForm() {
             error={errors.password?.message}
           >
             <Input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               autoComplete="current-password"
               disabled={isSubmitting}
               leftIcon={<Lock className="size-4 text-slate-400" />}
+              rightIcon={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              }
               className="h-11 rounded-xl text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary"
               {...register('password')}
             />

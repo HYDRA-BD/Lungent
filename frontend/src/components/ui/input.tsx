@@ -49,16 +49,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2.5 p-1 text-muted-foreground hover:text-foreground rounded focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="absolute right-2.5 p-1 text-muted-foreground hover:text-foreground rounded focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none cursor-pointer"
             aria-label={showPassword ? "Hide password" : "Show password"}
+            title={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
         )}
-        {rightIcon && !isPassword && (
-          <span className="absolute right-3 text-muted-foreground pointer-events-none size-4 flex items-center justify-center">
+        {rightIcon && (
+          <div className="absolute right-2.5 flex items-center justify-center">
             {rightIcon}
-          </span>
+          </div>
         )}
       </div>
     )

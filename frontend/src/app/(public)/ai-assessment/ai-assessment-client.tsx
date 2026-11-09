@@ -954,26 +954,9 @@ export function AIAssessmentClient() {
                       AI Model Connection Failed
                     </h4>
                     <p className="text-sm text-red-800 dark:text-red-300 leading-relaxed break-words">
-                      {error}
+                      The AI assessment engine is currently experiencing high traffic or starting up. Please wait a moment and try again.
                     </p>
                   </div>
-                </div>
-
-                <div className="rounded-xl border border-red-200 dark:border-red-900/50 bg-white/60 dark:bg-slate-900/40 p-3.5 text-xs text-red-700 dark:text-red-300 space-y-1.5">
-                  <p className="font-semibold text-red-900 dark:text-red-200">
-                    Troubleshooting Tips:
-                  </p>
-                  <ul className="list-disc pl-4 space-y-1 text-slate-600 dark:text-slate-300">
-                    <li>
-                      <strong>Render Free Tier Cold Start:</strong> Inactivity causes free Render instances to sleep. The first wake-up request can take 50–60 seconds.
-                    </li>
-                    <li>
-                      <strong>Vercel Environment Variable:</strong> Verify in your Vercel Project Settings that <code className="bg-red-100 dark:bg-red-900/60 px-1 py-0.5 rounded text-red-900 dark:text-red-100 font-mono">NEXT_PUBLIC_API_URL</code> is set to your active Render backend (e.g. <code className="font-mono">https://lungent-backend.onrender.com</code>).
-                    </li>
-                    <li>
-                      <strong>Browser Console:</strong> Press <kbd className="px-1.5 py-0.5 rounded bg-muted border font-mono">F12</kbd> or open developer tools &rarr; <em>Console</em> / <em>Network</em> tab to inspect the exact network request.
-                    </li>
-                  </ul>
                 </div>
 
                 <div className="flex items-center gap-3 pt-1">

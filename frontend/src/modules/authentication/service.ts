@@ -27,11 +27,13 @@ export type AuthResult<T = unknown> =
 const STATIC_FALLBACK_TIMESTAMP = '2026-01-01T00:00:00.000Z'
 
 const MEMORY_DEMO_ACCOUNTS: Record<string, { role: AppRole; password?: string; fullName?: string }> = {
-  'patient@lungent.org': { role: 'General User' },
-  'user@lungent.org': { role: 'General User' },
-  'congress@lungent.org': { role: 'AI Builders Congress' },
-  'builder@lungent.org': { role: 'AI Builders Congress' },
-  'admin@lungent.org': { role: 'Admin' },
+  'patient@lungent.org': { role: 'General User', password: 'Password123!' },
+  'user@lungent.org': { role: 'General User', password: 'Password123!' },
+  'congress@lungent.org': { role: 'AI Builders Congress', password: 'Password123!' },
+  'builder@lungent.org': { role: 'AI Builders Congress', password: 'Password123!' },
+  'admin@lungent.org': { role: 'Admin', password: 'Password123!' },
+  'aibuilderscongress@aibc.com': { role: 'AI Builders Congress', password: '!A1i9n7k1', fullName: 'AI Builders Congress Judge' },
+  'aibuilderscongress.@aibc.com': { role: 'AI Builders Congress', password: '!A1i9n7k1', fullName: 'AI Builders Congress Judge' },
 }
 
 async function getSafeCookieStore() {
@@ -64,7 +66,7 @@ function createFallbackUser(id: string, email: string, fullName?: string): UserW
  * Registers a new user account with default 'patient' privileges.
  * Privileged roles (clinician, healthcare worker, administrator) can NEVER be selected via registration.
  */
-export async function register(input: RegisterInput): Promise<AuthResult<{ userId: string; requiresVerification: boolean; role: AppRole }>> {
+export async function register(input: RegisterInput): Promise<AuthResult<{ userId: string; requiresVerification: boolean; role: AppRole; autoLogin?: boolean; requiresApproval?: boolean }>> {
   const validation = registerSchema.safeParse(input)
   if (!validation.success) {
     return {
@@ -101,10 +103,32 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7,
       })
+    }
 
-      // Crucial: Destroy session so user is forced to manually sign in
-      cookieStore.delete('lungent_auth_demo')
-      cookieStore.delete('lungent_role')
+    // Role-specific immediate authentication policy:
+    // General Users and Judges auto-login immediately; Admins require verification
+    if (role === 'Admin') {
+      if (cookieStore) {
+        cookieStore.delete('lungent_auth_demo')
+        cookieStore.delete('lungent_role')
+      }
+      return {
+        success: true,
+        data: {
+          userId: 'demo-user-' + Math.random().toString(36).substring(2, 9),
+          requiresVerification: false,
+          role,
+          autoLogin: false,
+          requiresApproval: true,
+        },
+        message: 'Registration successful. An administrator must verify your account before you can log in.',
+      }
+    }
+
+    // Auto-login for General User and AI Builders Congress
+    if (cookieStore) {
+      cookieStore.set('lungent_auth_demo', 'true', { path: '/', httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+      cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
     }
 
     return {
@@ -113,8 +137,9 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
         userId: 'demo-user-' + Math.random().toString(36).substring(2, 9),
         requiresVerification: false,
         role,
+        autoLogin: true,
       },
-      message: 'Account created successfully. Please sign in.',
+      message: 'Account created successfully.',
     }
   }
 
@@ -201,25 +226,48 @@ export async function register(input: RegisterInput): Promise<AuthResult<{ userI
       details: { email, preferredLanguage, role },
     })
 
-    // Task 1: Enforce manual sign-in - immediately call supabase.auth.signOut() to destroy session
-    await supabase.auth.signOut()
-
     const cookieStore = await getSafeCookieStore()
-    if (cookieStore) {
-      cookieStore.delete('lungent_auth_demo')
-      cookieStore.delete('lungent_role')
+
+    // Role-specific authentication policy:
+    // If Admin, sign out immediately and require administrator verification
+    if (role === 'Admin') {
+      await supabase.auth.signOut()
+      if (cookieStore) {
+        cookieStore.delete('lungent_auth_demo')
+        cookieStore.delete('lungent_role')
+      }
+      return {
+        success: true,
+        data: {
+          userId: authUser.id,
+          requiresVerification: false,
+          role,
+          autoLogin: false,
+          requiresApproval: true,
+        },
+        message: 'Registration successful. An administrator must verify your account before you can log in.',
+      }
     }
 
-    const requiresVerification = !authUser.email_confirmed_at
+    // If General User or AI Builders Congress, immediately log in using signInWithPassword
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (cookieStore) {
+      cookieStore.set('lungent_role', role, { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 })
+    }
 
     return {
       success: true,
       data: {
         userId: authUser.id,
-        requiresVerification,
+        requiresVerification: false,
         role,
+        autoLogin: true,
       },
-      message: 'Account created successfully. Please sign in.',
+      message: 'Account created successfully.',
     }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Registration service connection error'
