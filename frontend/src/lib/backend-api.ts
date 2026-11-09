@@ -25,7 +25,7 @@ export function getBackendUrl(): string {
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
     console.warn(
       '[Lungent API] Warning: NEXT_PUBLIC_API_URL is not set in production. ' +
-      'Please configure NEXT_PUBLIC_API_URL in your Vercel Dashboard to your Render backend URL.'
+      'Please configure NEXT_PUBLIC_API_URL in your Vercel Dashboard to your live backend URL (e.g. https://<username>-<space>.hf.space).'
     )
   }
 
