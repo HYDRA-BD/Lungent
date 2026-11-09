@@ -117,6 +117,26 @@ class ClinicalPredictor:
             except Exception as e:
                 logger.warning(f"Failed to load meta_model.pkl: {e}")
 
+        # Eagerly load all 9 base models (XGBoost, LightGBM, CatBoost x 3 variants) into memory (16 GB RAM allocation)
+        self.models = {}
+        model_names = [
+            "xgb|case", "xgb|balanced", "xgb|control",
+            "lgb|case", "lgb|balanced", "lgb|control",
+            "cat|case", "cat|balanced", "cat|control",
+        ]
+        base_fold_dir = BASE_DIR / "artifacts" / "base_fold_models"
+        if base_fold_dir.exists():
+            try:
+                import joblib
+                for name in model_names:
+                    algo, variant = name.split("|")
+                    model_file = base_fold_dir / f"{algo}_{variant}_r0_f0.pkl"
+                    if model_file.exists():
+                        self.models[name] = joblib.load(model_file)
+                logger.info(f"Loaded all {len(self.models)} base ensemble models into memory.")
+            except Exception as e:
+                logger.warning(f"Ensemble models loading notice: {e}")
+
         # Pre-warm inference pipeline with float32 array structures
         dummy = {
             "age": np.float32(50.0),

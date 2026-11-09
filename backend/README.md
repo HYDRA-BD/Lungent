@@ -56,3 +56,4 @@ NEXT_PUBLIC_API_URL=https://<your-hf-username>-<space-name>.hf.space
 ```
 
 > **Note:** Ensure your Hugging Face Space visibility is set to **Public** in Space Settings so external clients can query the API without bearer tokens.
+

@@ -11,3 +11,4 @@ venv/
 .dockerignore
 *.log
 .pytest_cache
+

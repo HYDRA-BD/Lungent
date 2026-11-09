@@ -38,3 +38,4 @@ EXPOSE 7860
 
 # Start Uvicorn on 0.0.0.0:7860
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+
