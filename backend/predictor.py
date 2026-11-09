@@ -11,9 +11,14 @@ Implements:
 from __future__ import annotations
 
 import json
+import logging
 import math
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
+import numpy as np
+
+logger = logging.getLogger("lungent.predictor")
 
 BASE_DIR = Path(__file__).parent
 POLICY_PATH = BASE_DIR / "artifacts" / "policy.json"
@@ -86,29 +91,68 @@ class ClinicalPredictor:
     def __init__(self):
         self.policy = load_policy()
         self.shap_weights = load_shap_weights()
-        self.t_out = self.policy.get("t_out", DEFAULT_POLICY["t_out"])
-        self.t_in = self.policy.get("t_in", DEFAULT_POLICY["t_in"])
-        self.unc_cutoff = self.policy.get("unc_cutoff", DEFAULT_POLICY["unc_cutoff"])
+        self.t_out = float(self.policy.get("t_out", DEFAULT_POLICY["t_out"]))
+        self.t_in = float(self.policy.get("t_in", DEFAULT_POLICY["t_in"]))
+        self.unc_cutoff = float(self.policy.get("unc_cutoff", DEFAULT_POLICY["unc_cutoff"]))
+        self.meta_model_data: Any = None
+        self._is_loaded = False
+
+    def load_models(self) -> bool:
+        """
+        Loads models, calibrators, and reference matrices into memory globally once.
+        Warms up inference pipeline using float32 arrays (optimized for Apple Silicon NEON & low RAM).
+        """
+        self.policy = load_policy()
+        self.shap_weights = load_shap_weights()
+        self.t_out = float(self.policy.get("t_out", DEFAULT_POLICY["t_out"]))
+        self.t_in = float(self.policy.get("t_in", DEFAULT_POLICY["t_in"]))
+        self.unc_cutoff = float(self.policy.get("unc_cutoff", DEFAULT_POLICY["unc_cutoff"]))
+
+        meta_path = BASE_DIR / "artifacts" / "meta_model.pkl"
+        if meta_path.exists():
+            try:
+                import joblib
+                self.meta_model_data = joblib.load(meta_path)
+                logger.info("Loaded meta_model.pkl into memory.")
+            except Exception as e:
+                logger.warning(f"Failed to load meta_model.pkl: {e}")
+
+        # Pre-warm inference pipeline with float32 array structures
+        dummy = {
+            "age": np.float32(50.0),
+            "bmi": np.float32(25.0),
+            "pack_years": np.float32(10.0),
+            "resp_burden": 0,
+            "chronic_burden": 0,
+            "low_access": False,
+            "sex": 1,
+            "aqi_5yr": np.float32(40.0),
+            "pm25_5yr": np.float32(8.0),
+        }
+        _ = self.predict(dummy)
+        self._is_loaded = True
+        logger.info("ClinicalPredictor warmed up and ready.")
+        return True
 
     def predict(self, patient_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Calculates unified risk score, triage tier, local SHAP attribution,
-        and uncertainty bounds for a single patient profile.
+        and uncertainty bounds for a single patient profile using float32 math.
         """
         try:
-            age = max(18.0, min(float(patient_data.get("age", 50)), 120.0))
+            age = np.float32(max(18.0, min(float(patient_data.get("age", 50)), 120.0)))
         except (TypeError, ValueError):
-            age = 50.0
+            age = np.float32(50.0)
 
         try:
-            bmi = max(10.0, min(float(patient_data.get("bmi", 25.0)), 90.0))
+            bmi = np.float32(max(10.0, min(float(patient_data.get("bmi", 25.0)), 90.0)))
         except (TypeError, ValueError):
-            bmi = 25.0
+            bmi = np.float32(25.0)
 
         try:
-            pack_years = max(0.0, min(float(patient_data.get("pack_years", 0.0)), 250.0))
+            pack_years = np.float32(max(0.0, min(float(patient_data.get("pack_years", 0.0)), 250.0)))
         except (TypeError, ValueError):
-            pack_years = 0.0
+            pack_years = np.float32(0.0)
 
         resp_burden = 1 if patient_data.get("resp_burden") else 0
         chronic_burden = 1 if patient_data.get("chronic_burden") else 0
@@ -118,14 +162,14 @@ class ClinicalPredictor:
         aqi_raw = patient_data.get("aqi_5yr")
         pm25_raw = patient_data.get("pm25_5yr")
         try:
-            effective_aqi = max(0.0, min(float(aqi_raw), 500.0)) if aqi_raw is not None else POPULATION_BASELINES["aqi_5yr"]
+            effective_aqi = np.float32(max(0.0, min(float(aqi_raw), 500.0))) if aqi_raw is not None else np.float32(POPULATION_BASELINES["aqi_5yr"])
         except (TypeError, ValueError):
-            effective_aqi = POPULATION_BASELINES["aqi_5yr"]
+            effective_aqi = np.float32(POPULATION_BASELINES["aqi_5yr"])
 
         try:
-            effective_pm25 = max(0.0, min(float(pm25_raw), 500.0)) if pm25_raw is not None else POPULATION_BASELINES["pm25_5yr"]
+            effective_pm25 = np.float32(max(0.0, min(float(pm25_raw), 500.0))) if pm25_raw is not None else np.float32(POPULATION_BASELINES["pm25_5yr"])
         except (TypeError, ValueError):
-            effective_pm25 = POPULATION_BASELINES["pm25_5yr"]
+            effective_pm25 = np.float32(POPULATION_BASELINES["pm25_5yr"])
 
         # -------------------------------------------------------------
         # 1. Base Multi-Predictor Log-Odds Modeling (Calibrated Ensemble)
@@ -217,15 +261,15 @@ class ClinicalPredictor:
             control_logit - 0.02, # cat|control
         ]
 
-        # Calculate cross-model disagreement standard deviation
-        mean_logit = sum(base_logits) / len(base_logits)
-        logit_variance = sum((x - mean_logit) ** 2 for x in base_logits) / len(base_logits)
-        uncertainty_sd = math.sqrt(logit_variance)
+        # Calculate cross-model disagreement standard deviation using SIMD float32
+        base_logits_arr = np.array(base_logits, dtype=np.float32)
+        uncertainty_sd = float(np.std(base_logits_arr, dtype=np.float32))
         uncertainty_high = uncertainty_sd >= self.unc_cutoff
 
         # 95% Confidence Interval for Unified Risk Score
-        ci_lower = _sigmoid(meta_logit - 1.96 * uncertainty_sd * 0.15)
-        ci_upper = _sigmoid(meta_logit + 1.96 * uncertainty_sd * 0.15)
+        ci_lower = float(_sigmoid(meta_logit - 1.96 * uncertainty_sd * 0.15))
+        ci_upper = float(_sigmoid(meta_logit + 1.96 * uncertainty_sd * 0.15))
+        unified_risk = float(unified_risk)
 
         # -------------------------------------------------------------
         # 3. Decision Policy & Equity Guardrail Triage
@@ -379,6 +423,14 @@ class ClinicalPredictor:
 
 # Singleton instance
 _predictor = ClinicalPredictor()
+
+
+def load_all_models() -> bool:
+    """
+    Globally preloads ensemble models, policy, SHAP references and warms up inference.
+    Called once during FastAPI lifespan startup.
+    """
+    return _predictor.load_models()
 
 
 def get_prediction(patient_data: Dict[str, Any]) -> Dict[str, Any]:

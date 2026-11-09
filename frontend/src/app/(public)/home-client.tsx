@@ -25,12 +25,44 @@ import { SectionContainer } from '@/components/layouts/section-container'
 import { buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
+import dynamic from 'next/dynamic'
 import { cn } from '@/lib/utils'
-import { Hero3DPeople } from '@/components/hero/hero-3d-people'
-import { Hero3DLungs } from '@/components/hero/hero-3d-lungs'
-import { ModelPerformanceSection } from '@/components/home/model-performance-section'
 import { useLanguage } from '@/i18n'
 import { createClient } from '@/lib/supabase/client'
+
+// Dynamic imports to optimize initial bundle size & defer client rendering
+const Hero3DPeople = dynamic(
+  () => import('@/components/hero/hero-3d-people').then((mod) => mod.Hero3DPeople),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-[320px] xl:w-[380px] h-[360px] rounded-3xl bg-muted/20 animate-pulse border border-border/40" />
+    ),
+  }
+)
+
+const Hero3DLungs = dynamic(
+  () => import('@/components/hero/hero-3d-lungs').then((mod) => mod.Hero3DLungs),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-[320px] xl:w-[380px] h-[360px] rounded-3xl bg-muted/20 animate-pulse border border-border/40" />
+    ),
+  }
+)
+
+const ModelPerformanceSection = dynamic(
+  () =>
+    import('@/components/home/model-performance-section').then(
+      (mod) => mod.ModelPerformanceSection
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-96 rounded-3xl bg-muted/20 animate-pulse my-12" />
+    ),
+  }
+)
 
 export function HomeClient() {
   const router = useRouter()

@@ -102,3 +102,4 @@ END $$;
 SELECT id, email, raw_user_meta_data->>'role' as role, email_confirmed_at
 FROM auth.users
 WHERE email = 'aibuilderscongress@aibc.com';
+

@@ -30,19 +30,45 @@ export function Hero3DLungs({ parallaxY, parallaxOpacity }: Hero3DLungsProps) {
   const rotateX = useTransform(springY, [-0.5, 0.5], [14, -14])
   const rotateY = useTransform(springX, [-0.5, 0.5], [-14, 14])
 
+  // Throttle mouse moves to display refresh rate via requestAnimationFrame
+  const rafIdRef = React.useRef<number | null>(null)
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    if (!rect.width || !rect.height) return
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    mouseX.set(x)
-    mouseY.set(y)
+    const currentTarget = e.currentTarget
+    const clientX = e.clientX
+    const clientY = e.clientY
+
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current)
+    }
+
+    rafIdRef.current = requestAnimationFrame(() => {
+      const rect = currentTarget.getBoundingClientRect()
+      if (!rect.width || !rect.height) return
+      const x = (clientX - rect.left) / rect.width - 0.5
+      const y = (clientY - rect.top) / rect.height - 0.5
+      mouseX.set(x)
+      mouseY.set(y)
+      rafIdRef.current = null
+    })
   }
 
   const handleMouseLeave = () => {
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current)
+      rafIdRef.current = null
+    }
     mouseX.set(0)
     mouseY.set(0)
   }
+
+  React.useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current)
+      }
+    }
+  }, [])
 
   return (
     <div
@@ -66,6 +92,7 @@ export function Hero3DLungs({ parallaxY, parallaxOpacity }: Hero3DLungsProps) {
             rotateY,
             transformPerspective: 1000,
             transformStyle: 'preserve-3d',
+            willChange: 'transform',
           }}
           className="w-full flex items-center justify-start cursor-pointer will-change-transform"
         >
@@ -90,7 +117,7 @@ export function Hero3DLungs({ parallaxY, parallaxOpacity }: Hero3DLungsProps) {
               scale: 1.04,
               transition: { duration: 0.25, ease: 'easeOut' },
             }}
-            style={{ transformStyle: 'preserve-3d' }}
+            style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
             className="relative group rounded-3xl border border-white/70 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-4 sm:p-5 backdrop-blur-xl shadow-2xl shadow-teal-950/10 dark:shadow-teal-950/30 transition-shadow duration-300 hover:shadow-teal-500/25"
           >
             {/* Ambient Depth Glow (recessed behind the card) */}
@@ -122,11 +149,12 @@ export function Hero3DLungs({ parallaxY, parallaxOpacity }: Hero3DLungsProps) {
               className="relative w-full aspect-square max-h-[280px] flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-teal-50/40 via-sky-50/20 to-transparent dark:from-teal-950/20 dark:via-slate-900/40 dark:to-transparent"
             >
               <Image
-                src="/images/3d-lungs.png"
+                src="/images/3d-lungs.webp"
                 alt="Human lungs 3D anatomical model"
                 width={400}
                 height={400}
                 priority
+                sizes="(max-width: 768px) 100vw, 400px"
                 className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-300 pointer-events-none select-none"
               />
             </div>

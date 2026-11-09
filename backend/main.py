@@ -102,14 +102,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"User seed failed: {e}")
 
-    # Warm-up predictor to verify model is loaded
+    # Global Model Loading (Task 1): Preload ML models & meta-model once globally into memory
     try:
-        # lightweight probe — just import; get_prediction will fail fast if models missing
-        from predictor import get_prediction as _gp  # noqa: F401
+        from predictor import load_all_models
+        load_all_models()
         _model_loaded = True
-        logger.info("Predictor module loaded successfully")
+        logger.info("ML ensemble models, meta-model, and policy loaded globally into memory")
     except Exception as e:
-        logger.warning(f"Predictor load check failed: {e}")
+        logger.warning(f"Predictor global load failed: {e}")
 
     try:
         _aqi_cache = _load_cache()
@@ -357,9 +357,10 @@ def _check_rag_available() -> bool:
 # ── Health endpoints ──────────────────────────────────────────────
 @app.get("/health")
 def health_simple():
-    """Quick liveness check (original endpoint preserved)."""
+    """Quick liveness probe returning {'status': 'ok'} immediately."""
     return {
         "status": "ok",
+        "model_loaded": _model_loaded,
         "aqi_states_cached": len(_aqi_cache.get("states", {})),
         "timestamp": datetime.now().isoformat(),
     }

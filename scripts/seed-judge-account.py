@@ -62,3 +62,4 @@ try:
     print(f"Role:     {account['role']}")
 except Exception as e:
     print(f"\033[93m[Notice or Error]\033[0m {e}")
+

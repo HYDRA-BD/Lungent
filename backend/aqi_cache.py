@@ -15,8 +15,8 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from pathlib import Path
+import csv
 
-import pandas as pd
 import requests
 
 CACHE_DIR = Path(__file__).parent / "artifacts"
@@ -88,27 +88,44 @@ def _seed_from_training() -> dict:
         if not path.exists():
             continue
         try:
-            df = pd.read_csv(path)
+            with open(path, mode="r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                rows = list(reader)
         except Exception as e:
             print(f"[aqi] training cache {path} unreadable: {e}")
             continue
-        if not {"_STATE", "YEAR", "AQI_AVG", "PM25_AVG"}.issubset(df.columns):
+
+        if not rows or not {"_STATE", "YEAR", "AQI_AVG", "PM25_AVG"}.issubset(rows[0].keys()):
             print(f"[aqi] training cache {path} missing expected columns")
             continue
 
+        state_groups: dict[str, list[dict]] = {}
+        for r in rows:
+            st = r.get("_STATE")
+            if st:
+                state_groups.setdefault(st, []).append(r)
+
         seeded: dict[str, dict] = {}
-        for code, grp in df.groupby("_STATE"):
-            name = STATE_CODE_TO_NAME.get(int(code))
+        for code_str, grp in state_groups.items():
+            try:
+                code_int = int(float(code_str))
+            except ValueError:
+                continue
+            name = STATE_CODE_TO_NAME.get(code_int)
             if not name:
                 continue
-            grp = grp.sort_values("YEAR").tail(YEARS_WINDOW)
-            if len(grp) >= 3:
-                seeded[name] = {
-                    "aqi_5yr": float(grp["AQI_AVG"].mean()),
-                    "pm25_5yr": float(grp["PM25_AVG"].mean()),
-                    "source": f"training_cache:{path.name}",
-                    "years_covered": len(grp),
-                }
+            grp.sort(key=lambda x: int(float(x.get("YEAR", 0))))
+            recent = grp[-YEARS_WINDOW:]
+            if len(recent) >= 3:
+                aqi_vals = [float(x["AQI_AVG"]) for x in recent if x.get("AQI_AVG")]
+                pm25_vals = [float(x["PM25_AVG"]) for x in recent if x.get("PM25_AVG")]
+                if aqi_vals and pm25_vals:
+                    seeded[name] = {
+                        "aqi_5yr": float(sum(aqi_vals) / len(aqi_vals)),
+                        "pm25_5yr": float(sum(pm25_vals) / len(pm25_vals)),
+                        "source": f"training_cache:{path.name}",
+                        "years_covered": len(recent),
+                    }
         if seeded:
             print(f"[aqi] seeded {len(seeded)} states from {path}")
             return seeded
