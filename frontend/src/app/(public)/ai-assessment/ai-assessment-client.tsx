@@ -376,10 +376,11 @@ export function AIAssessmentClient() {
 
     try {
       console.log('[Lungent Assessment] Initiating AI stratification request with input:', input)
+      console.log('[Lungent Assessment] Exact JSON payload being sent:', JSON.stringify(input, null, 2))
       const res = await analyzePatient(input)
       setResult(res)
     } catch (e: unknown) {
-      console.error('[Lungent Assessment Error]', e)
+      console.error('AI API Error Details:', e)
       const errorMessage =
         e instanceof Error
           ? e.message
@@ -949,12 +950,16 @@ export function AIAssessmentClient() {
                   <div className="size-9 rounded-xl bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0 mt-0.5">
                     <ShieldAlert className="size-5" />
                   </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="space-y-2 flex-1 min-w-0">
                     <h4 className="text-base font-bold text-red-900 dark:text-red-200">
-                      AI Model Connection Failed
+                      {error.includes('422') || error.toLowerCase().includes('validation')
+                        ? 'Data Validation Failed (HTTP 422)'
+                        : error.includes('Cannot connect') || error.toLowerCase().includes('network error')
+                        ? 'Backend Connection Failed'
+                        : 'AI Assessment Error'}
                     </h4>
-                    <p className="text-sm text-red-800 dark:text-red-300 leading-relaxed break-words">
-                      The AI assessment engine is currently experiencing high traffic or starting up. Please wait a moment and try again.
+                    <p className="text-sm text-red-800 dark:text-red-300 leading-relaxed break-words font-mono text-xs bg-red-100/70 dark:bg-red-900/30 p-3 rounded-xl border border-red-200/80 dark:border-red-800/40 select-all">
+                      {error}
                     </p>
                   </div>
                 </div>

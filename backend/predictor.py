@@ -374,9 +374,11 @@ class ClinicalPredictor:
             },
         ]
 
-        # Sort SHAP factors by impact magnitude and populate alias fields
+        # Sort SHAP factors by impact magnitude and populate alias fields as standard Python floats
         for s in shap_items:
-            s["value"] = s["shap_value"]
+            s["shap_value"] = float(s["shap_value"])
+            s["impact"] = float(s["impact"])
+            s["value"] = float(s["shap_value"])
         shap_items.sort(key=lambda x: x["impact"], reverse=True)
 
         # -------------------------------------------------------------
@@ -384,9 +386,9 @@ class ClinicalPredictor:
         # -------------------------------------------------------------
         factors = []
         if pack_years >= 20.0:
-            factors.append(("warning", f"Significant cumulative smoking history: {pack_years:.1f} pack-years (USPSTF Threshold Met)"))
+            factors.append(("warning", f"Significant cumulative smoking history: {float(pack_years):.1f} pack-years (USPSTF Threshold Met)"))
         elif pack_years > 0:
-            factors.append(("info", f"Documented smoking history: {pack_years:.1f} pack-years"))
+            factors.append(("info", f"Documented smoking history: {float(pack_years):.1f} pack-years"))
         else:
             factors.append(("ok", "Lifetime non-smoker / minimal tobacco exposure"))
 
@@ -395,27 +397,27 @@ class ClinicalPredictor:
         if chronic_burden:
             factors.append(("warning", "Documented cardiovascular or metabolic comorbidities present"))
         if effective_aqi > 50:
-            factors.append(("warning", f"Elevated 5-year ambient air pollution exposure (AQI {effective_aqi:.1f})"))
+            factors.append(("warning", f"Elevated 5-year ambient air pollution exposure (AQI {float(effective_aqi):.1f})"))
         if low_access:
             factors.append(("alert", "Low-access subgroup flag active: Access-Aware Cost Multiplier (1.5x) applied to prevent missed triage"))
 
         return {
-            "risk_score": unified_risk,
-            "risk_percent": unified_risk * 100.0,
-            "ci_lower": ci_lower,
-            "ci_upper": ci_upper,
+            "risk_score": float(unified_risk),
+            "risk_percent": float(unified_risk * 100.0),
+            "ci_lower": float(ci_lower),
+            "ci_upper": float(ci_upper),
             "tier": tier,
             "tier_label": tier_label,
             "tier_color": tier_color,
             "tier_hex": tier_hex,
             "recommendation": recommendation,
-            "uncertainty_score": uncertainty_sd,
-            "uncertainty_high": uncertainty_high,
-            "uncertainty_flag": uncertainty_high,
-            "equity_guard_triggered": equity_guard_triggered,
-            "equity_override": equity_guard_triggered,
-            "t_out": self.t_out,
-            "t_in": self.t_in,
+            "uncertainty_score": float(uncertainty_sd),
+            "uncertainty_high": bool(uncertainty_high),
+            "uncertainty_flag": bool(uncertainty_high),
+            "equity_guard_triggered": bool(equity_guard_triggered),
+            "equity_override": bool(equity_guard_triggered),
+            "t_out": float(self.t_out),
+            "t_in": float(self.t_in),
             "shap_items": shap_items,
             "contributing_factors": factors,
         }

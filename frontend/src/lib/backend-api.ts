@@ -29,7 +29,7 @@ export function getBackendUrl(): string {
     )
   }
 
-  return 'http://localhost:8000'
+  return 'http://127.0.0.1:8000'
 }
 
 /**
@@ -72,7 +72,12 @@ export async function fetchWithTimeout(
       )
     }
 
-    if (err instanceof TypeError && (err.message.includes('fetch') || err.message.includes('NetworkError'))) {
+    if (
+      err instanceof TypeError &&
+      (err.message.includes('fetch') ||
+        err.message.includes('NetworkError') ||
+        err.message.includes('Failed to fetch'))
+    ) {
       let origin = url
       try {
         origin = new URL(url).origin
@@ -80,7 +85,7 @@ export async function fetchWithTimeout(
         // use fallback url string
       }
       throw new Error(
-        `Unable to reach the AI model backend at ${origin}. Please verify that the backend is awake, CORS is configured, and NEXT_PUBLIC_API_URL in Vercel points to your live Render backend.`
+        `Cannot connect to backend at ${origin}. (Network Error / Connection Refused). Please verify FastAPI is running on ${origin} and CORS allows this origin.`
       )
     }
 
@@ -161,7 +166,9 @@ export async function analyzePatient(
   timeoutMs: number = DEFAULT_API_TIMEOUT_MS
 ): Promise<AnalyzeResponse> {
   const endpoint = getApiEndpoint('/api/analyze?include_summary=true')
-  console.log(`[Lungent API] POST -> ${endpoint}`)
+  console.log(`[Lungent API] Active Target Endpoint: ${endpoint}`)
+  console.log(`[Lungent API] process.env.NEXT_PUBLIC_API_URL:`, process.env.NEXT_PUBLIC_API_URL || '(default: http://127.0.0.1:8000)')
+  console.log(`[Lungent API] Request Payload:`, JSON.stringify({ ...input, include_summary: true }, null, 2))
 
   const response = await fetchWithTimeout(
     endpoint,
@@ -178,8 +185,25 @@ export async function analyzePatient(
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => null)
+    let errorDetail = ''
+    if (errorBody?.detail) {
+      if (Array.isArray(errorBody.detail)) {
+        errorDetail = errorBody.detail
+          .map((d: any) => `${d.loc ? d.loc.slice(1).join('.') : 'field'}: ${d.msg}`)
+          .join('; ')
+      } else if (typeof errorBody.detail === 'string') {
+        errorDetail = errorBody.detail
+      } else {
+        errorDetail = JSON.stringify(errorBody.detail)
+      }
+    }
+
+    if (response.status === 422) {
+      throw new Error(`Data validation failed (HTTP 422): ${errorDetail || 'Invalid input schema'}`)
+    }
+
     const errorMsg =
-      errorBody?.detail ||
+      errorDetail ||
       errorBody?.message ||
       `Backend error HTTP ${response.status}: ${response.statusText || 'Internal Server Error'}`
     throw new Error(errorMsg)
