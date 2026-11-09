@@ -65,19 +65,13 @@ function LoginForm() {
         return
       }
 
-      const target =
-        redirectTo ||
-        (data.role === 'Admin' || data.role === 'AI Builders Congress'
-          ? '/portal/admin'
-          : '/ai-assessment')
-
-      setSuccessMessage('Authentication verified! Redirecting...')
+      setSuccessMessage('Authentication verified! Redirecting to home...')
 
       // Brief delay to display smooth success feedback
       setTimeout(() => {
-        router.push(target)
+        router.push('/')
         router.refresh()
-      }, 600)
+      }, 500)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected authentication error occurred.'
       setServerError(msg)

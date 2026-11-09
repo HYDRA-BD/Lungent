@@ -82,9 +82,9 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
       request.nextUrl.searchParams.get('redirect') ||
       request.nextUrl.searchParams.get('redirectTo') ||
       request.nextUrl.searchParams.get('next') ||
-      '/ai-assessment'
+      '/'
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = target
+    redirectUrl.pathname = target.startsWith('/') ? target : '/'
     redirectUrl.searchParams.delete('redirect')
     redirectUrl.searchParams.delete('redirectTo')
     redirectUrl.searchParams.delete('next')

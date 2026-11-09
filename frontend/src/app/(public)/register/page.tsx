@@ -13,7 +13,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { registerSchema, type RegisterInput, ACTIVE_ACCESS_ROLES } from '@/modules/authentication/validation'
 import { register } from '@/modules/authentication/service'
-import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import { ArrowRight, ShieldCheck, User, Mail, Lock, CheckCircle2, Eye, EyeOff } from 'lucide-react'
 import { useLanguage } from '@/i18n'
 
@@ -64,32 +63,11 @@ export default function RegisterPage() {
         return
       }
 
-      if (data.role === 'General User') {
-        // Immediate login and redirect to Home page
-        setSuccessMessage('Registration successful! Redirecting to home...')
-        setTimeout(() => {
-          router.push('/')
-          router.refresh()
-        }, 500)
-      } else if (data.role === 'Admin') {
-        // Invalidate any client-side session and display required verification message
-        try {
-          const browserClient = createBrowserClient()
-          await browserClient.auth.signOut()
-        } catch {}
-
-        setSuccessMessage('Registration successful. An administrator must verify your account before you can log in.')
-        setTimeout(() => {
-          router.push('/login?admin_pending=true')
-        }, 1800)
-      } else {
-        // Other roles (e.g. AI Builders Congress)
-        setSuccessMessage('Registration successful! Redirecting...')
-        setTimeout(() => {
-          router.push('/')
-          router.refresh()
-        }, 500)
-      }
+      setSuccessMessage('Registration successful! Redirecting to home...')
+      setTimeout(() => {
+        router.push('/')
+        router.refresh()
+      }, 500)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected registration error occurred.'
       setServerError(msg)
