@@ -381,6 +381,7 @@ export function AIAssessmentClient() {
       setResult(res)
     } catch (e: unknown) {
       console.error('AI API Error Details:', e)
+      console.error('[Lungent Assessment Failed Payload]:', input)
       const errorMessage =
         e instanceof Error
           ? e.message

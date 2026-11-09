@@ -113,29 +113,19 @@ class ClinicalPredictor:
             try:
                 import joblib
                 self.meta_model_data = joblib.load(meta_path)
-                logger.info("Loaded meta_model.pkl into memory.")
+                logger.info("Loaded meta_model.pkl (single best meta-model) into memory.")
             except Exception as e:
                 logger.warning(f"Failed to load meta_model.pkl: {e}")
 
-        # Eagerly load all 9 base models (XGBoost, LightGBM, CatBoost x 3 variants) into memory (16 GB RAM allocation)
-        self.models = {}
-        model_names = [
-            "xgb|case", "xgb|balanced", "xgb|control",
-            "lgb|case", "lgb|balanced", "lgb|control",
-            "cat|case", "cat|balanced", "cat|control",
-        ]
-        base_fold_dir = BASE_DIR / "artifacts" / "base_fold_models"
-        if base_fold_dir.exists():
+        # In Render Free Tier (512MB RAM cap), load ONLY the single best-performing calibrated model
+        single_xgb_path = BASE_DIR / "artifacts" / "xgb_balanced_cal.pkl"
+        if single_xgb_path.exists():
             try:
                 import joblib
-                for name in model_names:
-                    algo, variant = name.split("|")
-                    model_file = base_fold_dir / f"{algo}_{variant}_r0_f0.pkl"
-                    if model_file.exists():
-                        self.models[name] = joblib.load(model_file)
-                logger.info(f"Loaded all {len(self.models)} base ensemble models into memory.")
+                self.best_model = joblib.load(single_xgb_path)
+                logger.info("Loaded single best-performing model (xgb_balanced_cal.pkl) into memory.")
             except Exception as e:
-                logger.warning(f"Ensemble models loading notice: {e}")
+                logger.warning(f"Failed to load single xgb model: {e}")
 
         # Pre-warm inference pipeline with float32 array structures
         dummy = {

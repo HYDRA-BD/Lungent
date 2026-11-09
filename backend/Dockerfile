@@ -33,9 +33,10 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application source code and artifacts
 COPY --chown=user . .
 
-# Expose default Hugging Face Spaces internal routing port
+# Expose default routing port
 EXPOSE 7860
 
-# Start Uvicorn on 0.0.0.0:7860
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Start Uvicorn with 1 worker and 10 concurrency limit to stay under 512MB RAM
+ENV PORT=7860
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-7860} --workers 1 --limit-concurrency 10"]
 
